@@ -20,7 +20,14 @@ body {
     justify-content: center;[cite: 1]
     align-items: flex-start;[cite: 1]
 }
-
+.auth-logo {
+    display: block;        /* Memastikan logo dianggap sebagai blok[cite: 2] */
+    width: 100%;           /* Responsif terhadap container[cite: 1] */
+    max-width: 150px;      /* UBAH DI SINI: Perkecil dari 200px ke 150px atau 120px[cite: 1] */
+    height: auto;          /* Menjaga proporsi gambar agar tidak gepeng[cite: 1] */
+    margin: 0 auto 15px auto; /* Mengetengahkan logo dan memberi jarak bawah */
+    border-radius: 5px;    /* Memberikan sudut tumpul halus[cite: 1] */
+}
 /* --- GRID & LAYOUT --- */
 .container {
     width: 100%;[cite: 1, 2]
