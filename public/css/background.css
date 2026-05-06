@@ -37,19 +37,55 @@ body {
 .col-12 { width: 100%; float: left; }[cite: 2]
 
 /* --- NAVIGASI & LOGO --- */
+/* Pastikan container navigasi menggunakan Flexbox agar isinya ke samping */
 .nav-bar-split {
-    display: flex;[cite: 1]
-    align-items: center;[cite: 1]
-    justify-content: flex-start; /* Logo dan Kategori berdekatan di kiri */
-    gap: 20px;
-    margin-bottom: 20px;
-    padding: 10px 20px;
-    background: rgba(255, 255, 255, 0.12);[cite: 1]
-    backdrop-filter: blur(12px);[cite: 1]
-    border: 1px solid rgba(255, 255, 255, 0.18);[cite: 1]
-    border-radius: 12px;[cite: 1]
+    display: flex;[cite: 1, 4]
+    flex-direction: row; /* Mengatur arah elemen ke samping */
+    align-items: center; /* Menyejajarkan logo dan tombol secara vertikal[cite: 1, 4] */
+    justify-content: flex-start;
+    gap: 20px; /* Memberi jarak antara logo dan tombol kategori[cite: 1, 4] */
+    padding: 10px 20px;[cite: 1, 4]
+    background: rgba(255, 255, 255, 0.12);[cite: 1, 4]
+    backdrop-filter: blur(12px);[cite: 1, 4]
+    border-radius: 12px;[cite: 1, 4]
 }
 
+/* Memastikan logo tidak memaksa pindah baris */
+.nav-bar-split a {
+    display: flex;
+    align-items: center;
+}
+
+/* Mengatur ulang dropdown agar isinya tetap tersembunyi */
+.dropdown {
+    position: relative;
+    display: inline-block;[cite: 4]
+}
+
+.dropdown-content {
+    display: none; /* Menyembunyikan isi kategori[cite: 4] */
+    position: absolute; /* Muncul melayang tanpa menggeser konten lain[cite: 4] */
+    top: 100%;[cite: 4]
+    left: 0;[cite: 4]
+    background: rgba(255, 255, 255, 0.12) !important;[cite: 1, 4]
+    backdrop-filter: blur(12px);[cite: 1, 4]
+    min-width: 180px;[cite: 4]
+    z-index: 100;[cite: 4]
+    border-radius: 8px;[cite: 4]
+}
+
+/* Munculkan isi saat tombol di-hover */
+.dropdown:hover .dropdown-content {
+    display: block;[cite: 4]
+}
+
+/* Mengatur link kategori agar tersusun ke bawah di dalam dropdown */
+.dropdown-content a {
+    display: block !important;[cite: 2, 4]
+    padding: 12px 16px;[cite: 4]
+    color: white !important;[cite: 4]
+    text-decoration: none;[cite: 4]
+}
 .nav-bar-split img {
     max-width: 130px;[cite: 1]
     height: auto;[cite: 1]
