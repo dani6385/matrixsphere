@@ -1,110 +1,198 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <title>MatrixSphere | Hotspot Service</title>
-    <meta charset="UTF-8" />
-    <meta http-equiv="pragma" content="no-cache" />
-    <meta http-equiv="expires" content="-1" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-    <!-- Link CSS -->
-    <link rel="stylesheet" href="css/background.css">
-    <!-- Pastikan Anda memiliki framework CSS seperti Bootstrap jika menggunakan class 'row', 'col', 'card' -->
-    <!-- Jika tidak pakai Bootstrap, Anda harus mendefinisikan class tersebut di background.css -->
-    
-    <link rel="icon" href="img/favicon.png" />
+/* --- GAYA DASAR & VARIABEL --- */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "segoe ui", Roboto, "helvetica neue", Arial, sans-serif, "apple color emoji", "segoe ui emoji", "segoe ui symbol";[cite: 2]
+    font-size: 14px;[cite: 2]
+    font-weight: 400;[cite: 2]
+    line-height: 1.5;[cite: 2]
+    text-align: left;[cite: 2]
+    margin: 0;[cite: 1, 2]
+}
 
-    <style>
-        /* Tambahan CSS untuk memastikan tampilan 'Glass Box' terlihat cantik */
-        .glass-box {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 15px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-            overflow: hidden;
-            margin-bottom: 20px;
-            color: white;
-        }
-        
-        .card-header {
-            padding: 15px;
-            font-weight: bold;
-        }
+.background {
+    background-image: url('../img/bg.jpg'); /* Pastikan file bg.jpg ada di folder img */[cite: 1]
+    background-size: cover;[cite: 1]
+    background-attachment: fixed;[cite: 1]
+    background-position: center;[cite: 1]
+    background-repeat: no-repeat;[cite: 1]
+    min-height: 100vh;[cite: 1]
+    padding: 20px 0;[cite: 1]
+    display: flex;[cite: 1]
+    justify-content: center;[cite: 1]
+    align-items: flex-start;[cite: 1]
+}
 
-        .index-content {
-            padding-top: 50px;
-            max-width: 600px;
-            margin: auto;
-        }
+/* --- GRID & LAYOUT --- */
+.container {
+    width: 100%;[cite: 1, 2]
+    max-width: 920px;[cite: 1]
+    margin: 0 auto;[cite: 1]
+    padding: 0 16px;[cite: 1]
+    box-sizing: border-box;[cite: 1]
+}
 
-        /* Perbaikan untuk teks yang memuat agar tidak menempel */
-        #load-home-text {
-            padding: 20px 0;
-            font-weight: 500;
-        }
-    </style>
-</head>
+.row::after {
+    content: "";[cite: 2]
+    clear: both;[cite: 2]
+    display: table;[cite: 2]
+}
 
-<body class="background">
-    <div class="container">
-        <div class="index-content">
-            
-            <!-- Welcome Section -->
-            <div class="row">
-                <div class="col-12">
-                    <div class="card index-welcome-card glass-box">
-                        <div class="card-header bg-primary">
-                            <h3 style="margin:0;">Selamat Datang di MatrixSphere</h3>
-                        </div>
-                        
-                        <div class="card-body text-center">
-                            <!-- Tempat logo jika ingin dipasang -->
-                            <!-- <img src="img/logo.png" alt="MatrixSphere" style="width: 80px; margin-bottom: 15px;"> -->
-                            
-                            <!-- ID ini akan diisi oleh script.js -->
-                            <div id="load-home-text">Memuat informasi...</div>
-                            
-                            <p style="font-size: 13px; margin-top: 15px; opacity: 0.8;">
-                                Gunakan menu navigasi untuk mengakses fitur hotspot.
-                            </p>
-                        </div>
+[class*="col-"] {
+    float: left;[cite: 2]
+}
 
-                        <div class="card-footer text-center" style="background: rgba(0,0,0,0.2);">
-                            <small><i>MatrixSphere Hotspot Service</i></small>
-                        </div>
-                    </div>
-                </div>
-            </div>
+.col-12 { width: 100%; }[cite: 2]
+.col-6 { width: 50%; }[cite: 2]
 
-            <!-- About Section -->
-            <div id="about" class="row">
-                <div class="col-12">
-                    <div class="card glass-box">
-                        <div class="card-header bg-success">
-                            <h3 style="margin:0;">Tentang MatrixSphere</h3>
-                        </div>
-                        <div class="card-body">
-                            <p>MatrixSphere menyediakan layanan hotspot internet dengan paket yang sangat terjangkau.</p>
-                            <ul>
-                                <li>Paket Hemat: 3 Jam</li>
-                                <li>Paket Harian: 24 Jam</li>
-                                <li>Paket Bulanan: 30 Hari</li>
-                            </ul>
-                            <p>Untuk informasi lebih lanjut, silakan hubungi admin di lokasi Anda.</p>
-                        </div>
-                        <div class="card-footer text-center" style="background: rgba(0,0,0,0.2);">
-                            <small><i>Powered by Mikhmon & Firebase</i></small>
-                        </div>
-                    </div>
-                </div>
-            </div>
+/* --- KOMPONEN UI (CARD & BOX) --- */
+.card {
+    margin: 5px;[cite: 2]
+    border-radius: 3px;[cite: 2]
+    background-color: #fff;[cite: 2]
+}
 
-        </div>
-    </div>
+.card-header {
+    padding: 5px 10px;[cite: 2]
+    border-bottom: 1px solid #ccc;[cite: 2]
+}
 
-    <!-- Script diletakkan sebelum tutup body -->
-    <script src="js/script.js"></script>
-</body>
-</html>
+.card-body {
+    padding: 5px 10px;[cite: 2]
+}
+
+/* --- GLASSMORPHISM (KHUSUS MATRIXSPHERE) --- */
+.glass-box {
+    background: rgba(255, 255, 255, 0.12) !important;[cite: 1]
+    backdrop-filter: blur(12px);[cite: 1]
+    -webkit-backdrop-filter: blur(12px);[cite: 1]
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;[cite: 1]
+    border-radius: 12px;[cite: 1]
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);[cite: 1]
+}
+
+.card.glass-box {
+    color: white;[cite: 1]
+}
+
+/* --- NAVIGASI --- */
+.nav-bar, .nav-bar-split {
+    display: flex;[cite: 1]
+    align-items: center;[cite: 1]
+    flex-wrap: wrap;[cite: 1]
+    gap: 10px;[cite: 1]
+    margin: 20px auto;[cite: 1]
+    padding: 10px;[cite: 1]
+    width: 100%;[cite: 1]
+    max-width: 920px;[cite: 1]
+    background: rgba(255, 255, 255, 0.12);[cite: 1]
+    backdrop-filter: blur(12px);[cite: 1]
+    border: 1px solid rgba(255, 255, 255, 0.18);[cite: 1]
+    border-radius: 12px;[cite: 1]
+}
+
+.nav-bar-split {
+    justify-content: space-between;[cite: 1]
+}
+
+.nav-btn {
+    padding: 8px 16px;[cite: 1]
+    background: rgba(32, 168, 216, 0.28);[cite: 1]
+    color: #f3f4f5;[cite: 1]
+    border: 1px solid rgba(255, 255, 255, 0.22);[cite: 1]
+    border-radius: 6px;[cite: 1]
+    cursor: pointer;[cite: 1]
+    transition: 0.3s;[cite: 1]
+}
+
+.nav-btn:hover {
+    background: rgba(32, 168, 216, 0.4);[cite: 1]
+    transform: translateY(-2px);[cite: 1]
+}
+
+/* --- FORM & INPUT --- */
+.form-control-md {
+    display: block;[cite: 2]
+    width: 100%;[cite: 2]
+    padding: 10px;[cite: 2]
+    border-radius: 3px;[cite: 2]
+    box-sizing: border-box;[cite: 2]
+    background: rgba(255, 255, 255, 0.15) !important;[cite: 1]
+    color: #fff !important;[cite: 1]
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;[cite: 1]
+}
+
+/* --- HALAMAN AUTH / LOGIN --- */
+.auth-page {
+    display: flex;[cite: 1]
+    flex-direction: column;[cite: 1]
+    justify-content: center;[cite: 1]
+    align-items: center;[cite: 1]
+    min-height: 100vh;[cite: 1]
+    padding: 20px;[cite: 1]
+}
+
+.main-auth-container {
+    width: 100%;[cite: 1]
+    max-width: 400px;[cite: 1]
+    margin: 0 auto;[cite: 1]
+}
+
+/* --- HALAMAN STATUS & LOGOUT --- */
+.status-centered {
+    margin: 5% auto;[cite: 1]
+    width: 95%;[cite: 1]
+    max-width: 500px;[cite: 1]
+}
+
+.btn-logout {
+    width: 100%;[cite: 1]
+    padding: 12px;[cite: 1]
+    background-color: rgba(217, 83, 79, 0.8);[cite: 1]
+    color: white;[cite: 1]
+    border: none;[cite: 1]
+    border-radius: 8px;[cite: 1]
+    font-weight: bold;[cite: 1]
+    cursor: pointer;[cite: 1]
+}
+
+/* --- MENU GRID SELECTOR --- */
+.menu-grid-selector {
+    display: grid;[cite: 1]
+    grid-template-columns: repeat(2, 1fr);[cite: 1]
+    gap: 15px;[cite: 1]
+    justify-items: center;[cite: 1]
+    align-items: center;[cite: 1]
+    margin: 0 auto;[cite: 1]
+    width: 100%;[cite: 1]
+    padding: 20px 0;[cite: 1]
+}
+
+/* --- HELPER COLORS --- */
+.bg-primary { background-color: #20a8d8; color: #f3f4f5; }[cite: 2]
+.bg-success { background-color: rgba(92, 184, 92, 0.8) !important; color: white; }[cite: 1]
+.bg-danger { background-color: rgba(217, 83, 79, 0.8) !important; color: white; }[cite: 1]
+
+/* --- RESPONSIVE DESIGN --- */
+@media screen and (max-width: 768px) {
+    .nav-bar-split {
+        flex-direction: column;[cite: 1]
+        width: 90%;[cite: 1]
+    }
+
+    .nav-group-left, .nav-group-right {
+        justify-content: center;[cite: 1]
+        width: 100%;[cite: 1]
+    }
+
+    .index-welcome-card, .main-auth-container, .status-centered {
+        width: 95% !important;[cite: 1]
+        margin: 10px auto !important;[cite: 1]
+    }
+}
+
+@media screen and (min-width: 769px) {
+    .nav-bar-split {
+        flex-direction: row;[cite: 1]
+        justify-content: space-between;[cite: 1]
+        max-width: 900px;[cite: 1]
+    }
+}
