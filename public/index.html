@@ -1,59 +1,110 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="id">
 <head>
-<title>MatrixSphere</title>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta http-equiv="pragma" content="no-cache" />
-<meta http-equiv="expires" content="-1" />
-<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0;"/>
-<link rel="stylesheet" href="css/background.css">
-<link rel="icon" href="img/favicon.png" />
+    <title>MatrixSphere | Hotspot Service</title>
+    <meta charset="UTF-8" />
+    <meta http-equiv="pragma" content="no-cache" />
+    <meta http-equiv="expires" content="-1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Link CSS -->
+    <link rel="stylesheet" href="css/background.css">
+    <!-- Pastikan Anda memiliki framework CSS seperti Bootstrap jika menggunakan class 'row', 'col', 'card' -->
+    <!-- Jika tidak pakai Bootstrap, Anda harus mendefinisikan class tersebut di background.css -->
+    
+    <link rel="icon" href="img/favicon.png" />
+
+    <style>
+        /* Tambahan CSS untuk memastikan tampilan 'Glass Box' terlihat cantik */
+        .glass-box {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            overflow: hidden;
+            margin-bottom: 20px;
+            color: white;
+        }
+        
+        .card-header {
+            padding: 15px;
+            font-weight: bold;
+        }
+
+        .index-content {
+            padding-top: 50px;
+            max-width: 600px;
+            margin: auto;
+        }
+
+        /* Perbaikan untuk teks yang memuat agar tidak menempel */
+        #load-home-text {
+            padding: 20px 0;
+            font-weight: 500;
+        }
+    </style>
 </head>
+
 <body class="background">
     <div class="container">
         <div class="index-content">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card index-welcome-card glass-box">
-                            <div class="card-header bg-primary"><h3>Selamat Datang di MatrixSphere</h3></div>
-                                <div class="card-body text-center">
-                                    <div class="card-body text-center">
-    <!-- Teks ini akan digantikan otomatis oleh isi dari home.txt -->
-                                    <div id="load-home-text">Memuat informasi...</div>
-    
-                                        <p style="font-size: 12px; margin-top: 10px; color: #f3f4f5;">
-                                            Gunakan menu navigasi di atas untuk mengakses fitur hotspot.
-                                        </p>
-                                    </div>
-                                </div>
-                            <div class="card-footer bg-cyan text-center">
-                                <i>MatrixSphere Hotspot</i>
-                            </div>
+            
+            <!-- Welcome Section -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card index-welcome-card glass-box">
+                        <div class="card-header bg-primary">
+                            <h3 style="margin:0;">Selamat Datang di MatrixSphere</h3>
                         </div>
-                    
+                        
+                        <div class="card-body text-center">
+                            <!-- Tempat logo jika ingin dipasang -->
+                            <!-- <img src="img/logo.png" alt="MatrixSphere" style="width: 80px; margin-bottom: 15px;"> -->
+                            
+                            <!-- ID ini akan diisi oleh script.js -->
+                            <div id="load-home-text">Memuat informasi...</div>
+                            
+                            <p style="font-size: 13px; margin-top: 15px; opacity: 0.8;">
+                                Gunakan menu navigasi untuk mengakses fitur hotspot.
+                            </p>
+                        </div>
+
+                        <div class="card-footer text-center" style="background: rgba(0,0,0,0.2);">
+                            <small><i>MatrixSphere Hotspot Service</i></small>
+                        </div>
                     </div>
                 </div>
             </div>
 
-        <!-- About Section -->
+            <!-- About Section -->
             <div id="about" class="row">
                 <div class="col-12">
                     <div class="card glass-box">
-                        <div class="card-header bg-success"><h3>Tentang MatrixSphere</h3></div>
-                        <div class="card-body">
-                            <p>MatrixSphere menyediakan layanan hotspot internet dengan paket yang terjangkau.</p>
-                            <p>Paket tersedia mulai dari 3 jam hingga 30 hari.</p>
-                            <p>Untuk informasi lebih lanjut, hubungi admin di lokasi voucher.</p>
+                        <div class="card-header bg-success">
+                            <h3 style="margin:0;">Tentang MatrixSphere</h3>
                         </div>
-                        <div class="card-footer bg-cyan text-center">
-                            <i>Powered by Mikhmon</i>
+                        <div class="card-body">
+                            <p>MatrixSphere menyediakan layanan hotspot internet dengan paket yang sangat terjangkau.</p>
+                            <ul>
+                                <li>Paket Hemat: 3 Jam</li>
+                                <li>Paket Harian: 24 Jam</li>
+                                <li>Paket Bulanan: 30 Hari</li>
+                            </ul>
+                            <p>Untuk informasi lebih lanjut, silakan hubungi admin di lokasi Anda.</p>
+                        </div>
+                        <div class="card-footer text-center" style="background: rgba(0,0,0,0.2);">
+                            <small><i>Powered by Mikhmon & Firebase</i></small>
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
-<script type="text/javascript" src="js/script.js"></script>
+
+    <!-- Script diletakkan sebelum tutup body -->
+    <script src="js/script.js"></script>
 </body>
 </html>
