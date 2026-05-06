@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin Dashboard - MatrixSphere</title>
+    <link rel="icon" type="image/png" href="img/logo_shop.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="css/background.css" rel="stylesheet">
+</head>
+<body class="bg-slate-900 text-white font-sans">
+
+    <nav class="nav-bar-split flex items-center justify-between p-4 shadow-lg">
+        <div class="flex items-center px-4">
+            <a href="index.html"><img src="img/logo_shop.png" alt="Logo" class="auth-logo-nav h-10"></a>
+            <span class="ml-4 font-bold text-sky-400 hidden md:block">ADMIN PANEL</span>
+        </div>
+        <div class="flex items-center space-x-4 px-4">
+            <a href="index.html" class="text-sm hover:text-sky-400 transition">Lihat Toko</a>
+            <div class="w-10 h-10 rounded-full bg-sky-600 flex items-center justify-center font-bold">A</div>
+        </div>
+    </nav>
+
+    <main class="pt-28 pb-12 container mx-auto px-4">
+        <div class="max-w-3xl mx-auto">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-sky-400">Tambah Produk Baru</h1>
+                <p class="text-slate-400">Lengkapi formulir di bawah untuk menambah stok warung digital.</p>
+            </div>
+
+            <form action="#" class="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-8 shadow-2xl">
+                <div class="grid grid-cols-1 gap-6">
+                    
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-300 mb-2">Nama Produk</label>
+                        <input type="text" placeholder="Contoh: Pakaian Anak Setelan Blue" 
+                               class="w-full bg-slate-800 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-sky-500 transition">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-300 mb-2">Pilih Kategori</label>
+                        <select class="w-full bg-slate-800 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-sky-500 transition">
+                            <option value="pakaian-anak">Pakaian Anak</option>
+                            <option value="voucher-hotspot">Voucher Hotspot</option>
+                            <option value="voucher-game">Voucher Game</option>
+                            <option value="pulsa-data">Pulsa & Data</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-300 mb-2">Harga (Rp)</label>
+                        <input type="number" placeholder="50000" 
+                               class="w-full bg-slate-800 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-sky-500 transition font-mono text-yellow-400">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-300 mb-2">Gambar Produk</label>
+                        <div class="border-2 border-dashed border-white/20 rounded-xl p-8 text-center hover:border-sky-500/50 transition cursor-pointer bg-white/5">
+                            <input type="file" class="hidden" id="fileInput" accept="image/*">
+                            <label for="fileInput" class="cursor-pointer">
+                                <svg class="w-12 h-12 text-slate-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 4v16m8-8H4" stroke-width="2" stroke-linecap="round"></path>
+                                </svg>
+                                <p class="text-slate-400">Klik atau seret gambar ke sini</p>
+                                <p class="text-xs text-slate-600 mt-2">Format PNG, JPG, atau WebP (Max. 2MB)</p>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="pt-4">
+                        <button type="submit" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-sky-600/20 transition-all active:scale-95">
+                            Simpan ke Database
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <main class="pt-28 pb-12 container mx-auto px-4">
+    <div class="max-w-3xl mx-auto">
+        <h1 class="text-3xl font-bold text-sky-400">Tambah Produk Baru</h1>
+        <form> ... </form>
+
+        <div class="max-w-3xl mx-auto mt-12">
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-sky-400">Manajemen Kategori</h2>
+                ...
+            </div>
+            ...
+        </div>
+    </div>
+</main>
+
+</body>
+</html>

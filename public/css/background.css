@@ -1,182 +1,193 @@
 /* --- GAYA DASAR --- */
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "segoe ui", Roboto, "helvetica neue", Arial, sans-serif;[cite: 2]
-    font-size: 14px;[cite: 2]
-    line-height: 1.5;[cite: 2]
-    margin: 0;[cite: 1, 2]
-    color: #fff;
+    font-family: -apple-system, BlinkMacSystemFont, "segoe ui", Roboto, Arial, sans-serif;
+    margin: 0;
+    color: white;
 }
 
 .background {
     background-image: url('../img/bg.jpg');
     background-size: cover;
-    background-attachment: fixed;[cite: 1]
-    background-position: center;[cite: 1]
-    min-height: 100vh;[cite: 1]
-    display: flex;[cite: 1]
-    justify-content: center;[cite: 1]
-    align-items: flex-start;[cite: 1]
-    padding: 20px 0;[cite: 1]
+    background-attachment: fixed;
+    background-position: center;
+    min-height: 100vh;
 }
 
-/* --- TATA LETAK & WADAH --- */
-.container {
-    width: 100%;[cite: 1, 2]
-    max-width: 920px;[cite: 1]
-    margin: 0 auto;[cite: 1]
-    padding: 0 16px;[cite: 1]
-    box-sizing: border-box;[cite: 1]
-}
-
-.row::after {
-    content: "";[cite: 2]
-    clear: both;[cite: 2]
-    display: table;[cite: 2]
-}
-
-.col-12 { width: 100%; float: left; }[cite: 2]
-
-/* --- NAVIGASI & LOGO --- */
-/* Pastikan container navigasi menggunakan Flexbox agar isinya ke samping */
+/* --- NAVIGASI LAYOUT KE SAMPING --- */
+/* --- HEADER FIX DI ATAS --- */
 .nav-bar-split {
-    display: flex;[cite: 1, 4]
-    flex-direction: row; /* Mengatur arah elemen ke samping */
-    align-items: center; /* Menyejajarkan logo dan tombol secara vertikal[cite: 1, 4] */
-    justify-content: flex-start;
-    gap: 20px; /* Memberi jarak antara logo dan tombol kategori[cite: 1, 4] */
-    padding: 10px 20px;[cite: 1, 4]
-    background: rgba(255, 255, 255, 0.12);[cite: 1, 4]
-    backdrop-filter: blur(12px);[cite: 1, 4]
-    border-radius: 12px;[cite: 1, 4]
-}
-
-/* Memastikan logo tidak memaksa pindah baris */
-.nav-bar-split a {
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    padding: 0 15px; /* Memberi ruang agar logo tidak terlalu mepet ke pinggir */
+    min-height: 60px; /* Header lebih ramping agar area produk lebih luas */
+    
+    /* Properti Fixed agar header tetap di atas saat di-scroll */
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+
+    /* Efek Glassmorphism MatrixSphere */
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+/* --- MEMBERI JARAK AGAR KONTEN TIDAK TERTUTUP --- */
+.index-content {
+    margin-top: 100px; /* Jarak agar konten tidak tertutup header */
+    padding: 20px;
 }
 
-/* Mengatur ulang dropdown agar isinya tetap tersembunyi */
-.dropdown {
-    position: relative;
-    display: inline-block;[cite: 4]
+/* Memastikan body tidak memiliki margin default */
+body {
+    margin: 0;
+    padding: 0;
+}
+.nav-group-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
-.dropdown-content {
-    display: none; /* Menyembunyikan isi kategori[cite: 4] */
-    position: absolute; /* Muncul melayang tanpa menggeser konten lain[cite: 4] */
-    top: 100%;[cite: 4]
-    left: 0;[cite: 4]
-    background: rgba(255, 255, 255, 0.12) !important;[cite: 1, 4]
-    backdrop-filter: blur(12px);[cite: 1, 4]
-    min-width: 180px;[cite: 4]
-    z-index: 100;[cite: 4]
-    border-radius: 8px;[cite: 4]
+.auth-logo-nav {
+    /* Gunakan height agar logo mengikuti tinggi header */
+    height: 100px; 
+    width: auto; /* Agar logo tidak gepeng saat ditarik */
+    
+    /* Menghilangkan batasan lebar jika ada */
+    max-width: none; 
+    
+    /* Memberikan sedikit ruang agar tidak menempel ke tepi */
+    margin: 5px 0; 
+    
+    display: block;
+    transition: transform 0.3s ease;
 }
 
-/* Munculkan isi saat tombol di-hover */
-.dropdown:hover .dropdown-content {
-    display: block;[cite: 4]
+/* Efek opsional: sedikit membesar saat diarahkan kursor */
+.auth-logo-nav:hover {
+    transform: scale(1.05);
+}
+/* --- PENCARIAN --- */
+.search-container {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    padding: 2px 12px;
+    margin: 0 15px; /* Memberi jarak antara pencarian dengan tombol lainnya */
 }
 
-/* Mengatur link kategori agar tersusun ke bawah di dalam dropdown */
-.dropdown-content a {
-    display: block !important;[cite: 2, 4]
-    padding: 12px 16px;[cite: 4]
-    color: white !important;[cite: 4]
-    text-decoration: none;[cite: 4]
-}
-.nav-bar-split img {
-    max-width: 130px;[cite: 1]
-    height: auto;[cite: 1]
-    display: block;[cite: 2]
+.search-input {
+    background: transparent;
+    border: none;
+    color: white;
+    padding: 8px;
+    outline: none;
+    /* Ubah ukuran di bawah ini */
+    width: 300px; /* Lebar default yang lebih panjang */
+    transition: width 0.4s ease-in-out;
 }
 
-.nav-btn {
-    padding: 8px 16px;[cite: 1]
-    background: rgba(32, 168, 216, 0.28);[cite: 1]
-    color: #f3f4f5;[cite: 1]
-    border: 1px solid rgba(255, 255, 255, 0.22);[cite: 1]
-    border-radius: 6px;[cite: 1]
-    cursor: pointer;[cite: 1]
-    transition: 0.3s;[cite: 1]
+/* Jika ingin kolom melebar lebih jauh lagi saat diklik */
+.search-input:focus {
+    width: 400px; 
+    background: rgba(255, 255, 255, 0.05); /* Sedikit highlight saat aktif */
+    border-radius: 4px;
+}
+.search-btn {
+    background: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
 }
 
-/* --- DROPDOWN --- */
+/* --- DROPDOWN (HIDDEN DEFAULT) --- */
+/* --- PERBAIKAN DROPDOWN --- */
 .dropdown {
     position: relative;
     display: inline-block;
 }
 
 .dropdown-content {
-    display: none; /* Sembunyi default */
+    display: none;
     position: absolute;
-    top: 100%;
+    /* Menghilangkan celah agar kursor tidak 'terputus' saat pindah ke bawah */
+    top: 100%; 
     left: 0;
     min-width: 180px;
     z-index: 100;
-    margin-top: 10px;
+    
+    /* Tambahkan padding tipis di atas untuk menyambung area hover */
+    padding-top: 5px; 
+    
+    background: transparent; /* Transparan agar tidak terlihat menumpuk */
+}
+
+/* Container dalam untuk efek glassmorphism */
+.dropdown-inner {
+    background: rgba(255, 255, 255, 0.15) !important;
+    backdrop-filter: blur(12px);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    overflow: hidden;
+}
+
+/* Mengatur kemunculan dengan sedikit jeda agar tidak terlalu sensitif */
+.dropdown:hover .dropdown-content {
+    display: block;
 }
 
 .dropdown-content a {
     color: white !important;
     padding: 12px 16px;
     text-decoration: none;
-    display: block; /* Susun vertikal */
-    transition: 0.3s;
+    display: block;
+    transition: background 0.3s;
 }
 
-.dropdown-content a:hover {
-    background: rgba(32, 168, 216, 0.4);[cite: 1]
-}
+.dropdown-content a:hover { background: rgba(32, 168, 216, 0.4); }
 
-.dropdown:hover .dropdown-content {
-    display: block; /* Muncul saat hover */
-}
-
-/* --- KOMPONEN CARD (GLASSMORPHISM) --- */
+/* --- GLASSMORPHISM --- */
 .glass-box {
-    background: rgba(255, 255, 255, 0.12) !important;[cite: 1]
-    backdrop-filter: blur(12px);[cite: 1]
-    border: 1px solid rgba(255, 255, 255, 0.18) !important;[cite: 1]
-    border-radius: 12px;[cite: 1]
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);[cite: 1]
+    background: rgba(255, 255, 255, 0.12) !important;
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
+    border-radius: 12px;
+}
+/* Container Ikon */
+.nav-icons {
+    display: flex;
+    gap: 15px; /* Jarak antar ikon */
+    align-items: center;
+    margin-left: 10px;
 }
 
-.card {
-    margin: 15px 0;
-    overflow: hidden;
+/* Gaya Tombol Ikon */
+.icon-btn img {
+    width: 24px; /* Sesuaikan ukuran ikon */
+    height: 24px;
+    transition: transform 0.2s, opacity 0.2s;
+    filter: brightness(0) invert(1); /* Membuat ikon hitam menjadi putih jika perlu */
 }
 
-.card-header {
-    padding: 10px 15px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+/* Efek saat kursor menyentuh ikon */
+.icon-btn:hover img {
+    transform: scale(1.2); /* Ikon sedikit membesar */
+    opacity: 0.8;
 }
 
-.card-body {
-    padding: 15px;
+/* Menghilangkan background bawaan tombol jika menggunakan tag <a> */
+.icon-btn {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
-
-.card-footer {
-    padding: 10px;
-    font-size: 12px;
-    background: rgba(0, 0, 0, 0.1);
-}
-
-/* --- WARNA PEMBANTU --- */
-.bg-primary { background-color: #20a8d8; }[cite: 2]
-.bg-success { background-color: #4dbd74; }[cite: 1]
-.text-center { text-align: center; }[cite: 2]
-
-/* --- RESPONSIF --- */
-@media screen and (max-width: 768px) {
-    .nav-bar-split {
-        flex-direction: row; /* Tetap sejajar di HP */
-        justify-content: center;
-        gap: 10px;
-    }
-    
-    .nav-bar-split img {
-        max-width: 100px;
-    }
+.icon-btn:hover i {
+    color: #20a8d8; /* Warna saat disentuh kursor */
 }

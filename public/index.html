@@ -1,74 +1,128 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
-<head>
-<title>MatrixSphere</title>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta http-equiv="pragma" content="no-cache" />
-<meta http-equiv="expires" content="-1" />
-<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0;"/>
+<!DOCTYPE html>
+<html lang="id">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>MatrixSphere - Shop</title>
+        <!-- Favicon MatrixSphere -->
+<link rel="icon" type="image/png" href="img/favicon.png">
 <link rel="stylesheet" href="css/background.css">
-<link rel="icon" href="img/favicon.png" />
-</head>
-<body class="background">
-    <div class="container">
-        <!-- Navigation Menu - Split Layout -->
-        <div class="nav-bar-split">
-            <div class="text-center" style="margin-bottom: 20px;">
-    <a href="index.html">
-    <img src="img/logo_shop.png" alt="Logo" style="max-width: 130px; height: auto; margin-bottom: 10px;">
-    </a>
-               <div class="dropdown">
-            <button class="nav-btn">Kategori ▼</button>
-            <div class="dropdown-content glass-box">
-                <a href="#">Voucher Hotspot</a>
-                <a href="#">Paket Bulanan</a>
-                <a href="#">Akun Premium</a>
-                <a href="#">Top Up Games</a>
-            </div>
+        <!-- Tailwind via CDN agar tidak perlu Laravel Mix/Vite -->
+        <script src="https://cdn.tailwindcss.com"></script>
         
-            <div class="index-content">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card index-welcome-card glass-box">
-                            <div class="card-header bg-primary"><h3>Selamat Datang di MatrixSphere</h3></div>
-                                <div class="card-body text-center">
-                                    <div class="card-body text-center">
-    <!-- Teks ini akan digantikan otomatis oleh isi dari home.txt -->
-                                    <div id="load-home-text">Memuat informasi...</div>
-    
-                                        <p style="font-size: 12px; margin-top: 10px; color: #f3f4f5;">
-                                            Gunakan menu navigasi di atas untuk mengakses fitur hotspot.
-                                        </p>
-                                    </div>
-                                </div>
-                            <div class="card-footer bg-cyan text-center">
-                                <i>MatrixSphere Hotspot</i>
-                            </div>
-                        </div>
-                    
-                    </div>
-                </div>
-            </div>
+        <!-- Menghubungkan CSS manual untuk Header & Glassmorphism -->
+        <link href="css/background.css" rel="stylesheet">
 
-        <!-- About Section -->
-            <div id="about" class="row">
-                <div class="col-12">
-                    <div class="card glass-box">
-                        <div class="card-header bg-success"><h3>Tentang MatrixSphere</h3></div>
-                        <div class="card-body">
-                            <p>MatrixSphere menyediakan layanan hotspot internet dengan paket yang terjangkau.</p>
-                            <p>Paket tersedia mulai dari 3 jam hingga 30 hari.</p>
-                            <p>Untuk informasi lebih lanjut, hubungi admin di lokasi voucher.</p>
-                        </div>
-                        <div class="card-footer bg-cyan text-center">
-                            <i>Powered by Mikhmon</i>
-                        </div>
-                    </div>
-                </div>
+        <style>
+            /* Tambahan agar konten tidak tertutup header fixed */
+            .index-content {
+                padding-top: 100px;
+                min-height: 100vh;
+            }
+            body {
+                background-color: #0f172a; /* Warna slate-900 */
+            }
+        </style>
+    </head>
+    <body class="text-white">
+
+        <!-- HEADER FIXED MATRIXSPHERE -->
+        <nav class="nav-bar-split">
+            <div class="nav-group-left">
+                <a href="index.html">
+                    <!-- Path gambar langsung ke folder img -->
+                    <img src="img/logo_shop.png" alt="MatrixSphere Logo" class="auth-logo-nav">
+                </a>
+            </div>
+<div id="nav-menu" class="w-full block flex-grow lg:flex lg:items-center lg:w-auto hidden">
+    <div class="text-sm lg:flex-grow font-semibold">
+        
+        <div class="relative group block mt-4 lg:inline-block lg:mt-0 mr-6">
+            <button class="flex items-center text-slate-300 group-hover:text-sky-400 transition font-semibold outline-none">
+                Kategori
+                <svg class="w-4 h-4 ml-1 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </button>
+
+            <div class="absolute left-0 mt-2 w-48 rounded-xl bg-slate-900/95 backdrop-blur-xl border border-white/10 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                <div class="py-2">
+    <a href="kategori.html?type=pakaian-anak" class="block px-4 py-2 text-sm text-slate-300 hover:bg-sky-500/20 hover:text-sky-400 transition">
+        Pakaian Anak
+    </a>
+    <a href="kategori.html?type=voucher-game" class="block px-4 py-2 text-sm text-slate-300 hover:bg-sky-500/20 hover:text-sky-400 transition">
+        Voucher Game
+    </a>
+    <a href="kategori.html?type=elektronik" class="block px-4 py-2 text-sm text-slate-300 hover:bg-sky-500/20 hover:text-sky-400 transition">
+        Elektronik
+    </a>
+</div>
             </div>
         </div>
-    </div>
-<script type="text/javascript" src="js/script.js"></script>
-</body>
+        </div>
+</div>
+            <!-- SEARCH BAR PANJANG -->
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Cari produk di MatrixSphere...">
+            </div>
+
+            <!-- IKON NAVIGASI (Manual, pengganti Livewire) -->
+            <div class="nav-icons flex space-x-4">
+                <a href="cart.html"><img src="img/cart.png" alt="Cart" class="w-6 h-6 invert"></a>
+                <a href="notifications.html"><img src="img/bell.png" alt="Notif" class="w-6 h-6 invert"></a>
+                <a href="chat.html"><img src="img/chat.png" alt="Chat" class="w-6 h-6 invert"></a>
+            </div>
+        </nav>
+        
+        <!-- KONTEN UTAMA -->
+        <div class="index-content container mx-auto px-4">
+            <div class="text-center">
+                <h1 class="text-4xl font-bold text-sky-400">Selamat Datang di MatrixSphere</h1>
+                <p class="text-slate-400 mt-2">Warung Digital & Layanan Hotspot Anda</p>
+            </div>
+
+            <!-- Bagian ini tempat Anda menaruh daftar barang/voucher -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+                <!-- Contoh Kartu Produk -->
+                <div class="bg-white/5 p-6 rounded-2xl border border-white/10 backdrop-blur-sm">
+                    <h3 class="text-xl font-semibold">Voucher Hotspot 3 Jam</h3>
+                    <p class="text-2xl font-bold text-yellow-400 mt-2">Rp 2.000</p>
+                    <button class="w-full mt-4 bg-sky-600 hover:bg-sky-500 py-2 rounded-lg transition">Beli Sekarang</button>
+                </div>
+            </div>
+            <!-- NAVIGASI HALAMAN (PAGINATION) -->
+<div class="flex justify-center mt-12">
+    <ul class="flex items-center space-x-2 bg-white/5 p-2 rounded-xl border border-white/10" role="navigation">
+        
+        <!-- Tombol Sebelumnya -->
+        <li class="inline-block">
+            <button class="px-4 py-2 rounded-lg bg-white/5 text-slate-400 hover:bg-sky-600 hover:text-white transition cursor-not-allowed" aria-label="Previous">
+                &lsaquo; <span class="hidden md:inline ml-1">Sebelumnya</span>
+            </button>
+        </li>
+
+        <!-- Nomor Halaman -->
+        <li class="hidden md:inline-block">
+            <span class="px-4 py-2 rounded-lg bg-sky-600 text-white font-bold">1</span>
+        </li>
+        <li class="hidden md:inline-block">
+            <a href="#" class="px-4 py-2 rounded-lg hover:bg-white/10 transition">2</a>
+        </li>
+        <li class="hidden md:inline-block">
+            <a href="#" class="px-4 py-2 rounded-lg hover:bg-white/10 transition">3</a>
+        </li>
+
+        <!-- Tombol Selanjutnya -->
+        <li class="inline-block">
+            <a href="#" class="px-4 py-2 rounded-lg bg-white/5 hover:bg-sky-600 transition" aria-label="Next">
+                <span class="hidden md:inline mr-1">Selanjutnya</span> &rsaquo;
+            </a>
+        </li>
+    </ul>
+</div>
+        </div>
+
+        <!-- JS Utama (Jika ada) -->
+        <script src="js/script.js"></script>
+    </body>
 </html>
