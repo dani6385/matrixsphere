@@ -1,34 +1,25 @@
-/* --- GAYA DASAR & VARIABEL --- */
+/* --- GAYA DASAR --- */
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "segoe ui", Roboto, "helvetica neue", Arial, sans-serif, "apple color emoji", "segoe ui emoji", "segoe ui symbol";[cite: 2]
+    font-family: -apple-system, BlinkMacSystemFont, "segoe ui", Roboto, "helvetica neue", Arial, sans-serif;[cite: 2]
     font-size: 14px;[cite: 2]
-    font-weight: 400;[cite: 2]
     line-height: 1.5;[cite: 2]
-    text-align: left;[cite: 2]
     margin: 0;[cite: 1, 2]
+    color: #fff;
 }
 
 .background {
-    background-image: url('../img/bg.jpg'); /* Pastikan file bg.jpg ada di folder img */[cite: 1]
-    background-size: cover;[cite: 1]
+    background-image: url('../img/bg.jpg');
+    background-size: cover;
     background-attachment: fixed;[cite: 1]
     background-position: center;[cite: 1]
-    background-repeat: no-repeat;[cite: 1]
     min-height: 100vh;[cite: 1]
-    padding: 20px 0;[cite: 1]
     display: flex;[cite: 1]
     justify-content: center;[cite: 1]
     align-items: flex-start;[cite: 1]
+    padding: 20px 0;[cite: 1]
 }
-.auth-logo {
-    display: block;        /* Memastikan logo dianggap sebagai blok[cite: 2] */
-    width: 100%;           /* Responsif terhadap container[cite: 1] */
-    max-width: 150px;      /* UBAH DI SINI: Perkecil dari 200px ke 150px atau 120px[cite: 1] */
-    height: auto;          /* Menjaga proporsi gambar agar tidak gepeng[cite: 1] */
-    margin: 0 auto 15px auto; /* Mengetengahkan logo dan memberi jarak bawah */
-    border-radius: 5px;    /* Memberikan sudut tumpul halus[cite: 1] */
-}
-/* --- GRID & LAYOUT --- */
+
+/* --- TATA LETAK & WADAH --- */
 .container {
     width: 100%;[cite: 1, 2]
     max-width: 920px;[cite: 1]
@@ -43,61 +34,26 @@ body {
     display: table;[cite: 2]
 }
 
-[class*="col-"] {
-    float: left;[cite: 2]
-}
+.col-12 { width: 100%; float: left; }[cite: 2]
 
-.col-12 { width: 100%; }[cite: 2]
-.col-6 { width: 50%; }[cite: 2]
-
-/* --- KOMPONEN UI (CARD & BOX) --- */
-.card {
-    margin: 5px;[cite: 2]
-    border-radius: 3px;[cite: 2]
-    background-color: #fff;[cite: 2]
-}
-
-.card-header {
-    padding: 5px 10px;[cite: 2]
-    border-bottom: 1px solid #ccc;[cite: 2]
-}
-
-.card-body {
-    padding: 5px 10px;[cite: 2]
-}
-
-/* --- GLASSMORPHISM (KHUSUS MATRIXSPHERE) --- */
-.glass-box {
-    background: rgba(255, 255, 255, 0.12) !important;[cite: 1]
-    backdrop-filter: blur(12px);[cite: 1]
-    -webkit-backdrop-filter: blur(12px);[cite: 1]
-    border: 1px solid rgba(255, 255, 255, 0.18) !important;[cite: 1]
-    border-radius: 12px;[cite: 1]
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);[cite: 1]
-}
-
-.card.glass-box {
-    color: white;[cite: 1]
-}
-
-/* --- NAVIGASI --- */
-.nav-bar, .nav-bar-split {
+/* --- NAVIGASI & LOGO --- */
+.nav-bar-split {
     display: flex;[cite: 1]
     align-items: center;[cite: 1]
-    flex-wrap: wrap;[cite: 1]
-    gap: 10px;[cite: 1]
-    margin: 20px auto;[cite: 1]
-    padding: 10px;[cite: 1]
-    width: 100%;[cite: 1]
-    max-width: 920px;[cite: 1]
+    justify-content: flex-start; /* Logo dan Kategori berdekatan di kiri */
+    gap: 20px;
+    margin-bottom: 20px;
+    padding: 10px 20px;
     background: rgba(255, 255, 255, 0.12);[cite: 1]
     backdrop-filter: blur(12px);[cite: 1]
     border: 1px solid rgba(255, 255, 255, 0.18);[cite: 1]
     border-radius: 12px;[cite: 1]
 }
 
-.nav-bar-split {
-    justify-content: space-between;[cite: 1]
+.nav-bar-split img {
+    max-width: 130px;[cite: 1]
+    height: auto;[cite: 1]
+    display: block;[cite: 2]
 }
 
 .nav-btn {
@@ -110,136 +66,81 @@ body {
     transition: 0.3s;[cite: 1]
 }
 
-.nav-btn:hover {
-    background: rgba(32, 168, 216, 0.4);[cite: 1]
-    transform: translateY(-2px);[cite: 1]
-}
-
-/* --- FORM & INPUT --- */
-.form-control-md {
-    display: block;[cite: 2]
-    width: 100%;[cite: 2]
-    padding: 10px;[cite: 2]
-    border-radius: 3px;[cite: 2]
-    box-sizing: border-box;[cite: 2]
-    background: rgba(255, 255, 255, 0.15) !important;[cite: 1]
-    color: #fff !important;[cite: 1]
-    border: 1px solid rgba(255, 255, 255, 0.3) !important;[cite: 1]
-}
-
-/* --- HALAMAN AUTH / LOGIN --- */
-.auth-page {
-    display: flex;[cite: 1]
-    flex-direction: column;[cite: 1]
-    justify-content: center;[cite: 1]
-    align-items: center;[cite: 1]
-    min-height: 100vh;[cite: 1]
-    padding: 20px;[cite: 1]
-}
-
-.main-auth-container {
-    width: 100%;[cite: 1]
-    max-width: 400px;[cite: 1]
-    margin: 0 auto;[cite: 1]
-}
-
-/* --- HALAMAN STATUS & LOGOUT --- */
-.status-centered {
-    margin: 5% auto;[cite: 1]
-    width: 95%;[cite: 1]
-    max-width: 500px;[cite: 1]
-}
-
-.btn-logout {
-    width: 100%;[cite: 1]
-    padding: 12px;[cite: 1]
-    background-color: rgba(217, 83, 79, 0.8);[cite: 1]
-    color: white;[cite: 1]
-    border: none;[cite: 1]
-    border-radius: 8px;[cite: 1]
-    font-weight: bold;[cite: 1]
-    cursor: pointer;[cite: 1]
-}
-
-/* --- MENU GRID SELECTOR --- */
-.menu-grid-selector {
-    display: grid;[cite: 1]
-    grid-template-columns: repeat(2, 1fr);[cite: 1]
-    gap: 15px;[cite: 1]
-    justify-items: center;[cite: 1]
-    align-items: center;[cite: 1]
-    margin: 0 auto;[cite: 1]
-    width: 100%;[cite: 1]
-    padding: 20px 0;[cite: 1]
-}
-
-/* --- HELPER COLORS --- */
-.bg-primary { background-color: #20a8d8; color: #f3f4f5; }[cite: 2]
-.bg-success { background-color: rgba(92, 184, 92, 0.8) !important; color: white; }[cite: 1]
-.bg-danger { background-color: rgba(217, 83, 79, 0.8) !important; color: white; }[cite: 1]
-
-/* --- RESPONSIVE DESIGN --- */
-@media screen and (max-width: 768px) {
-    .nav-bar-split {
-        flex-direction: column;[cite: 1]
-        width: 90%;[cite: 1]
-    }
-
-    .nav-group-left, .nav-group-right {
-        justify-content: center;[cite: 1]
-        width: 100%;[cite: 1]
-    }
-
-    .index-welcome-card, .main-auth-container, .status-centered {
-        width: 95% !important;[cite: 1]
-        margin: 10px auto !important;[cite: 1]
-    }
-}
-
-@media screen and (min-width: 769px) {
-    .nav-bar-split {
-        flex-direction: row;[cite: 1]
-        justify-content: space-between;[cite: 1]
-        max-width: 900px;[cite: 1]
-    }
-}
-/* Container utama dropdown */
+/* --- DROPDOWN --- */
 .dropdown {
     position: relative;
     display: inline-block;
 }
 
-/* MENYEMBUNYIKAN ISI: Secara default tidak terlihat */
 .dropdown-content {
-    display: none; 
+    display: none; /* Sembunyi default */
     position: absolute;
-    background: rgba(255, 255, 255, 0.12) !important; /* Efek Glass */
-    backdrop-filter: blur(12px);
-    min-width: 180px;
-    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
-    z-index: 100;
-    border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.18) !important;
-    top: 100%; /* Muncul tepat di bawah tombol */
+    top: 100%;
     left: 0;
+    min-width: 180px;
+    z-index: 100;
+    margin-top: 10px;
 }
 
-/* Mengatur link di dalam dropdown agar menurun (vertical) */
 .dropdown-content a {
     color: white !important;
     padding: 12px 16px;
     text-decoration: none;
-    display: block; /* Membuat link tersusun ke bawah */
-    text-align: left;
+    display: block; /* Susun vertikal */
     transition: 0.3s;
 }
 
-/* Hover effect untuk link */
 .dropdown-content a:hover {
-    background: rgba(32, 168, 216, 0.4); /* Warna biru Matrix[cite: 1] */
+    background: rgba(32, 168, 216, 0.4);[cite: 1]
 }
 
-/* MUNCULKAN SAAT HOVER: Menampilkan isi saat kursor di atas tombol */
 .dropdown:hover .dropdown-content {
-    display: block;
+    display: block; /* Muncul saat hover */
+}
+
+/* --- KOMPONEN CARD (GLASSMORPHISM) --- */
+.glass-box {
+    background: rgba(255, 255, 255, 0.12) !important;[cite: 1]
+    backdrop-filter: blur(12px);[cite: 1]
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;[cite: 1]
+    border-radius: 12px;[cite: 1]
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);[cite: 1]
+}
+
+.card {
+    margin: 15px 0;
+    overflow: hidden;
+}
+
+.card-header {
+    padding: 10px 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.card-body {
+    padding: 15px;
+}
+
+.card-footer {
+    padding: 10px;
+    font-size: 12px;
+    background: rgba(0, 0, 0, 0.1);
+}
+
+/* --- WARNA PEMBANTU --- */
+.bg-primary { background-color: #20a8d8; }[cite: 2]
+.bg-success { background-color: #4dbd74; }[cite: 1]
+.text-center { text-align: center; }[cite: 2]
+
+/* --- RESPONSIF --- */
+@media screen and (max-width: 768px) {
+    .nav-bar-split {
+        flex-direction: row; /* Tetap sejajar di HP */
+        justify-content: center;
+        gap: 10px;
+    }
+    
+    .nav-bar-split img {
+        max-width: 100px;
+    }
 }
