@@ -26,37 +26,7 @@
                 <a href="#">Akun Premium</a>
                 <a href="#">Top Up Games</a>
             </div>
-        </div>
-</div>
-            <div class="nav-group-right">
-                <nav class="status-nav">
-                        <div class="nav-container">
-            <!-- Menu ini hanya akan muncul jika user SUDAH login -->
-                            $(if logged-in == 'no')
-                            <a href="auth.html" class="nav-item status-link">
-                                <button class="nav-btn" onclick="window.location.href='index.html#about'">Login</button>
-                            </a>
-                            $(endif)
-                        </div>
-                        <div class="nav-container">
-            <!-- Menu ini hanya akan muncul jika user SUDAH login -->
-                            $(if logged-in == 'yes')
-                            <a href="status.html" class="nav-item status-link">
-                                <button class="nav-btn" onclick="window.location.href='index.html#about'">Status</button>
-                            </a>
-                            $(endif)
-                        </div>
-                        <div class="nav-container">
-            <!-- Menu ini hanya akan muncul jika user SUDAH login -->
-                            $(if logged-in == 'yes' && user-role == 'admin')
-                            <a href="https://matrix-sphere.web.app/admin-toko.html" class="nav-item status-link">
-                                <button class="nav-btn" onclick="window.location.href='index.html#about'">Update Harga</button>
-                            </a>
-                            $(endif)
-                        </div>
-                    </nav>
-            </div>
-
+        
             <div class="index-content">
                 <div class="row">
                     <div class="col-12">
