@@ -62,20 +62,21 @@
                     </div>
 
                     <div>
-                        <label class="block text-sm font-semibold text-slate-300 mb-2">Gambar Produk</label>
-                        <div id="dropArea" class="relative border-2 border-dashed border-white/20 rounded-xl p-8 text-center hover:border-sky-500/50 transition cursor-pointer bg-white/5 overflow-hidden min-h-[200px] flex items-center justify-center">
-                            <input type="file" class="hidden" id="fileInput" accept="image/*">
-                            
-                            <img id="imagePreview" src="" class="hidden absolute inset-0 w-full h-full object-cover z-0">
-                            
-                            <div id="labelContent" class="relative z-10 pointer-events-none">
-                                <svg class="w-12 h-12 text-slate-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path d="M12 4v16m8-8H4" stroke-width="2" stroke-linecap="round"></path>
-                                </svg>
-                                <p class="text-slate-400">Klik untuk pilih gambar</p>
-                            </div>
-                        </div>
-                    </div>
+    <label class="block text-sm font-semibold text-slate-300 mb-2">Gambar Produk</label>
+    <div id="dropArea" class="relative border-2 border-dashed border-white/20 rounded-xl p-8 text-center hover:border-sky-500/50 transition cursor-pointer bg-white/5 overflow-hidden min-h-[200px] flex items-center justify-center">
+        
+        <input type="file" id="fileInput" accept="image/*" class="hidden">
+        
+        <img id="imagePreview" src="" class="hidden absolute inset-0 w-full h-full object-cover z-0 pointer-events-none">
+        
+        <div id="labelContent" class="relative z-10 pointer-events-none text-center">
+            <svg class="w-12 h-12 text-slate-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M12 4v16m8-8H4" stroke-width="2" stroke-linecap="round"></path>
+            </svg>
+            <p class="text-slate-400">Klik di sini untuk pilih gambar</p>
+        </div>
+    </div>
+</div>
 
                     <div class="pt-4">
                         <button type="submit" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-sky-600/20 transition-all active:scale-95">
