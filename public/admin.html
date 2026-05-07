@@ -85,53 +85,9 @@
                 </div>
         </div>
     </main>
-
-    <script>
-        const fileInput = document.getElementById('fileInput');
-        const imagePreview = document.getElementById('imagePreview');
-        const labelContent = document.getElementById('labelContent');
-
-        fileInput.addEventListener('change', function() {
-            const file = this.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    imagePreview.src = e.target.result;
-                    imagePreview.classList.remove('hidden'); // Munculkan gambar
-                    labelContent.classList.add('hidden');    // Sembunyikan instruksi
-                }
-                reader.readAsDataURL(file);
-            }
-        });
-    </script>
-
     <script src="js/admin.js"></script>
     <script src="js/script.js"></script>
-    <script type="module">
-  import { saveProduct } from './firestorage.js';
-
-  const form = document.querySelector('form');
-  // Pastikan form menggunakan id atau selector yang benar
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    // Ambil nilai dari input yang Anda buat
-    const nama = document.getElementById('prodName').value;
-    const harga = document.getElementById('prodPrice').value;
-    const kategori = document.getElementById('prodCategory').value;
-    // Karena kita pilih Opsi 1 (Teks), kita gunakan link gambar sementara
-    const linkGambar = "https://via.placeholder.com/150"; 
-
-    // Panggil fungsi simpan dari firestorage.js
-    const result = await saveProduct(nama, harga, kategori, linkGambar);
-    
-    if(result.success) {
-      alert("Data Berhasil Disimpan ke MatrixSphere!");
-      form.reset(); // Kosongkan form kembali
-    } else {
-      alert("Gagal menyimpan: " + result.error);
-    }
-  });
-</script>
+    <script src="js/admin.js"></script>
+    <script src="js/script.js"></script>
 </body>
 </html>
