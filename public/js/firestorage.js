@@ -1,53 +1,41 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { db, storage } from "./firebase-config.js"; // Pastikan config sudah benar
+import { collection, addDoc } from "https://www.gstatic.com/firebasejs/10.x/firebase-firestore.js";
+import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.x/firebase-storage.js";
 
-// Konfigurasi Firebase Anda
-const firebaseConfig = {
-    apiKey: "AIzaSyApICU6wUb1dkvHhVDBhsDk9bwVMWAVKeo",
-    authDomain: "matrixsphere-shop.firebaseapp.com",
-    projectId: "matrixsphere-shop",
-    storageBucket: "matrixsphere-shop.firebasestorage.app",
-    messagingSenderId: "639761938336",
-    appId: "1:639761938336:web:347c97b498ddb1efd156c5"
-};
+document.getElementById('btnSimpan').addEventListener('click', async () => {
+    const name = document.getElementById('prodName').value;
+    const category = document.getElementById('prodCategory').value;
+    const price = document.getElementById('prodPrice').value;
+    const file = document.getElementById('fileInput').files[0];
 
-// Inisialisasi Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-/**
- * Fungsi untuk menyimpan produk baru ke Firestore
- */
-export async function saveProduct(name, price, category) {
-    try {
-        const docRef = await addDoc(collection(db, "products"), {
-            name: name,
-            price: parseInt(price),
-            category: category,
-            createdAt: new Date()
-        });
-        console.log("Produk disimpan dengan ID: ", docRef.id);
-        return { success: true, id: docRef.id };
-    } catch (error) {
-        console.error("Error menambah dokumen: ", error);
-        return { success: false, error: error };
+    if (!name || !price || !file) {
+        alert("Mohon lengkapi semua data dan gambar!");
+        return;
     }
-}
 
-/**
- * Fungsi untuk mengambil semua produk dari Firestore
- */
-export async function getProducts() {
     try {
-        const q = query(collection(db, "products"), orderBy("createdAt", "desc"));
-        const querySnapshot = await getDocs(q);
-        let products = [];
-        querySnapshot.forEach((doc) => {
-            products.push({ id: doc.id, ...doc.data() });
+        // 1. Unggah Gambar ke Firebase Storage
+        const storageRef = ref(storage, 'produk/' + file.name);
+        await uploadBytes(storageRef, file);
+        const imgUrl = await getDownloadURL(storageRef);
+
+        // 2. Simpan Data ke Firestore
+        await addDoc(collection(db, "products"), {
+            nama: name,
+            kategori: category,
+            harga: Number(price),
+            gambar: imgUrl,
+            timestamp: new Date()
         });
-        return products;
+
+        // 3. Notifikasi Berhasil
+        alert("Data berhasil di simpan ke MatrixSphere Database!");
+        
+        // Reset Form
+        location.reload(); 
+
     } catch (error) {
-        console.error("Error mengambil dokumen: ", error);
-        return [];
+        console.error("Error: ", error);
+        alert("Gagal menyimpan data.");
     }
-}
+});
