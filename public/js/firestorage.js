@@ -63,3 +63,21 @@ import { saveProduct } from './firestorage.js';
       alert("Gagal menyimpan: " + result.error);
     }
   });
+<script>
+        const fileInput = document.getElementById('fileInput');
+        const imagePreview = document.getElementById('imagePreview');
+        const labelContent = document.getElementById('labelContent');
+
+        fileInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    imagePreview.classList.remove('hidden'); // Munculkan gambar
+                    labelContent.classList.add('hidden');    // Sembunyikan instruksi
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
