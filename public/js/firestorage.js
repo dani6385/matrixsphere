@@ -1,4 +1,4 @@
-import { db, storage } from "./firebase-config.js"; // Pastikan config sudah benar
+import { db, storage } from "./firebase.js"; // Pastikan config sudah benar
 import { collection, addDoc } from "https://www.gstatic.com/firebasejs/10.x/firebase-firestore.js";
 import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.x/firebase-storage.js";
 
@@ -39,3 +39,27 @@ document.getElementById('btnSimpan').addEventListener('click', async () => {
         alert("Gagal menyimpan data.");
     }
 });
+import { saveProduct } from './firestorage.js';
+
+  const form = document.querySelector('form');
+  // Pastikan form menggunakan id atau selector yang benar
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    // Ambil nilai dari input yang Anda buat
+    const nama = document.getElementById('prodName').value;
+    const harga = document.getElementById('prodPrice').value;
+    const kategori = document.getElementById('prodCategory').value;
+    // Karena kita pilih Opsi 1 (Teks), kita gunakan link gambar sementara
+    const linkGambar = "https://via.placeholder.com/150"; 
+
+    // Panggil fungsi simpan dari firestorage.js
+    const result = await saveProduct(nama, harga, kategori, linkGambar);
+    
+    if(result.success) {
+      alert("Data Berhasil Disimpan ke MatrixSphere!");
+      form.reset(); // Kosongkan form kembali
+    } else {
+      alert("Gagal menyimpan: " + result.error);
+    }
+  });
