@@ -1,4 +1,4 @@
-import { saveProduct } from './firestorage.js';
+import { saveProduct } from './firestore.js';
 
 const fileInput = document.getElementById('fileInput');
 const imagePreview = document.getElementById('imagePreview');
