@@ -29,63 +29,53 @@
                 <p class="text-slate-400">Lengkapi formulir di bawah untuk menambah stok warung digital.</p>
             </div>
 
-            <form id="productForm" action="#" class="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-8 shadow-2xl mb-12">
-                <div class="grid grid-cols-1 gap-6">
-                    <div>
-                        <label class="block text-sm font-semibold text-slate-300 mb-2">Nama Produk</label>
-                        <input type="text" id="prodName" placeholder="Contoh: Pakaian Anak Setelan Blue" 
-                               class="w-full bg-slate-800 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-sky-500 transition">
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-semibold text-slate-300 mb-2">Pilih Kategori</label>
-                        <select id="prodCategory" class="w-full bg-slate-800 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-sky-500 transition">
-                            <option value="pakaian-anak">Pakaian Anak</option>
-                            <option value="voucher-hotspot">Voucher Hotspot</option>
-                            <option value="voucher-game">Voucher Game</option>
-                            <option value="pulsa-data">Pulsa & Data</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-semibold text-slate-300 mb-2">Harga (Rp)</label>
-                        <input type="number" id="prodPrice" placeholder="50000" 
-                               class="w-full bg-slate-800 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-sky-500 transition font-mono text-yellow-400">
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-semibold text-slate-300 mb-2">Gambar Produk</label>
-                        <div class="border-2 border-dashed border-white/20 rounded-xl p-8 text-center hover:border-sky-500/50 transition cursor-pointer bg-white/5 relative overflow-hidden" id="dropArea">
-                            <input type="file" class="hidden" id="fileInput" accept="image/*">
-                            
-                            <img id="imagePreview" src="" class="hidden absolute inset-0 w-full h-full object-cover z-0">
-                            
-                            <label for="fileInput" class="cursor-pointer relative z-10" id="labelContent">
-                                <svg class="w-12 h-12 text-slate-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path d="M12 4v16m8-8H4" stroke-width="2" stroke-linecap="round"></path>
-                                </svg>
-                                <p class="text-slate-400">Klik atau seret gambar ke sini</p>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="pt-4">
-                        <button type="submit" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-sky-600/20 transition-all active:scale-95">
-                            Simpan ke Database
-                        </button>
-                    </div>
-                </div>
-            </form>
-
-            <div class="max-w-3xl mx-auto mt-12 border-t border-white/10 pt-12">
-                <div class="mb-8">
-                    <h2 class="text-2xl font-bold text-sky-400">Manajemen Kategori</h2>
-                    <p class="text-slate-400">Tambah atau hapus kategori produk toko Anda.</p>
-                </div>
-                </div>
+            <form id="productForm" class="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-8 shadow-2xl">
+    <div class="grid grid-cols-1 gap-6">
+        <div>
+            <label class="block text-sm font-semibold text-slate-300 mb-2">Nama Produk</label>
+            <input type="text" id="prodName" required placeholder="Contoh: Pakaian Anak Setelan Blue" 
+                   class="w-full bg-slate-800 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-sky-500 transition">
         </div>
-    </main>
-    <script src="js/admin.js"></script>
+
+        <div>
+            <label class="block text-sm font-semibold text-slate-300 mb-2">Pilih Kategori</label>
+            <select id="prodCategory" class="w-full bg-slate-800 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-sky-500 transition">
+                <option value="pakaian-anak">Pakaian Anak</option>
+                <option value="voucher-hotspot">Voucher Hotspot</option>
+                <option value="voucher-game">Voucher Game</option>
+                <option value="pulsa-data">Pulsa & Data</option>
+            </select>
+        </div>
+
+        <div>
+            <label class="block text-sm font-semibold text-slate-300 mb-2">Harga (Rp)</label>
+            <input type="number" id="prodPrice" required placeholder="50000" 
+                   class="w-full bg-slate-800 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-sky-500 transition font-mono text-yellow-400">
+        </div>
+
+        <div>
+            <label class="block text-sm font-semibold text-slate-300 mb-2">Gambar Produk</label>
+            <div class="border-2 border-dashed border-white/20 rounded-xl p-8 text-center hover:border-sky-500/50 transition cursor-pointer bg-white/5 relative overflow-hidden">
+                <input type="file" class="hidden" id="fileInput" accept="image/*">
+                <img id="imagePreview" src="" class="hidden absolute inset-0 w-full h-full object-cover z-0">
+                <label for="fileInput" class="cursor-pointer relative z-10" id="labelContent">
+                    <svg class="w-12 h-12 text-slate-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 4v16m8-8H4" stroke-width="2" stroke-linecap="round"></path>
+                    </svg>
+                    <p class="text-slate-400">Klik untuk pilih gambar</p>
+                </label>
+            </div>
+        </div>
+
+        <div class="pt-4">
+            <button type="submit" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-4 rounded-xl shadow-lg transition-all active:scale-95">
+                Simpan ke Database
+            </button>
+        </div>
+    </div>
+</form>
+
+<script type="module" src="js/admin.js"></script>
     <script src="js/script.js"></script>
     <script src="js/admin.js"></script>
     <script src="js/script.js"></script>
