@@ -1,32 +1,31 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { saveProduct } from './firestorage.js';
 
-// Masukkan konfigurasi asli dari Firebase Console Anda di sini
-const firebaseConfig = {
-  apiKey: "AIzaSy...", 
-  authDomain: "matrixsphere-shop.firebaseapp.com",
-  projectId: "matrixsphere-shop",
-  storageBucket: "matrixsphere-shop.firebasestorage.app",
-  messagingSenderId: "639761938336",
-  appId: "1:639761938336:web:..."
-};
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.querySelector('form');
+    
+    if (form) {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Ambil data menggunakan ID yang ada di admin.html Anda
+            const name = document.getElementById('prodName')?.value || "";
+            const price = document.getElementById('prodPrice')?.value || 0;
+            const category = document.getElementById('prodCategory')?.value || "";
+            
+            // Link gambar sementara karena kita belum menggunakan Storage (Opsi 1)
+            const imageUrl = "https://via.placeholder.com/150";
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-// Fungsi utama untuk menyimpan data (Opsi 1: Teks + URL Gambar)
-export async function saveProduct(name, price, category, imageUrl) {
-    try {
-        const docRef = await addDoc(collection(db, "products"), {
-            nama: name,
-            harga: Number(price),
-            kategori: category,
-            gambar: imageUrl || "https://via.placeholder.com/150",
-            timestamp: new Date()
+            const result = await saveProduct(name, price, category, imageUrl);
+            
+            if (result.success) {
+                alert("Data MatrixSphere Berhasil Disimpan!");
+                form.reset();
+                // Opsional: bersihkan preview gambar
+                document.getElementById('imagePreview').classList.add('hidden');
+                document.getElementById('labelContent').classList.remove('hidden');
+            } else {
+                alert("Gagal menyimpan: " + result.error);
+            }
         });
-        return { success: true, id: docRef.id };
-    } catch (error) {
-        console.error("Firebase Error:", error);
-        return { success: false, error: error.message };
     }
-}
+});
