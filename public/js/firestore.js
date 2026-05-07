@@ -3,9 +3,7 @@ import { collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/fi
 
 export async function saveProduct(name, price, category, file) {
     try {
-        // --- 1. UPLOAD OTOMATIS KE IMGBB ---
-        // Ganti 'API_KEY_ANDA' dengan API Key dari https://api.imgbb.com/
-        const apiKey = "API_KEY_ANDA"; 
+        const apiKey = "03b625a99a13440c4387cc4c1ea2aff8"; 
         const formData = new FormData();
         formData.append("image", file);
 
@@ -15,26 +13,18 @@ export async function saveProduct(name, price, category, file) {
         });
 
         const imgbbData = await imgbbResponse.json();
-        
-        if (!imgbbData.success) {
-            throw new Error("Gagal mengunggah gambar ke ImgBB");
-        }
+        if (!imgbbData.success) throw new Error("Gagal upload ke ImgBB");
 
-        const imgUrl = imgbbData.data.url; // Link gambar otomatis
-
-        // --- 2. SIMPAN DATA TEKS KE FIRESTORE ---
         const docRef = await addDoc(collection(db, "products"), {
             nama: name,
             kategori: category,
             harga: Number(price),
-            gambar: imgUrl,
+            gambar: imgbbData.data.url, 
             timestamp: new Date()
         });
 
-        return { success: true, id: docRef.id };
-
+        return { success: true };
     } catch (error) {
-        console.error("Error Detail: ", error);
         return { success: false, error: error.message };
     }
 }
