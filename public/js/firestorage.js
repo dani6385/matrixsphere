@@ -1,83 +1,32 @@
-import { db, storage } from "./firebase.js"; // Pastikan config sudah benar
-import { collection, addDoc } from "https://www.gstatic.com/firebasejs/10.x/firebase-firestore.js";
-import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.x/firebase-storage.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-document.getElementById('btnSimpan').addEventListener('click', async () => {
-    const name = document.getElementById('prodName').value;
-    const category = document.getElementById('prodCategory').value;
-    const price = document.getElementById('prodPrice').value;
-    const file = document.getElementById('fileInput').files[0];
+// Masukkan konfigurasi asli dari Firebase Console Anda di sini
+const firebaseConfig = {
+  apiKey: "AIzaSy...", 
+  authDomain: "matrixsphere-shop.firebaseapp.com",
+  projectId: "matrixsphere-shop",
+  storageBucket: "matrixsphere-shop.firebasestorage.app",
+  messagingSenderId: "639761938336",
+  appId: "1:639761938336:web:..."
+};
 
-    if (!name || !price || !file) {
-        alert("Mohon lengkapi semua data dan gambar!");
-        return;
-    }
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
+// Fungsi utama untuk menyimpan data (Opsi 1: Teks + URL Gambar)
+export async function saveProduct(name, price, category, imageUrl) {
     try {
-        // 1. Unggah Gambar ke Firebase Storage
-        const storageRef = ref(storage, 'produk/' + file.name);
-        await uploadBytes(storageRef, file);
-        const imgUrl = await getDownloadURL(storageRef);
-
-        // 2. Simpan Data ke Firestore
-        await addDoc(collection(db, "products"), {
+        const docRef = await addDoc(collection(db, "products"), {
             nama: name,
-            kategori: category,
             harga: Number(price),
-            gambar: imgUrl,
+            kategori: category,
+            gambar: imageUrl || "https://via.placeholder.com/150",
             timestamp: new Date()
         });
-
-        // 3. Notifikasi Berhasil
-        alert("Data berhasil di simpan ke MatrixSphere Database!");
-        
-        // Reset Form
-        location.reload(); 
-
+        return { success: true, id: docRef.id };
     } catch (error) {
-        console.error("Error: ", error);
-        alert("Gagal menyimpan data.");
+        console.error("Firebase Error:", error);
+        return { success: false, error: error.message };
     }
-});
-import { saveProduct } from './firestorage.js';
-
-  const form = document.querySelector('form');
-  // Pastikan form menggunakan id atau selector yang benar
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    // Ambil nilai dari input yang Anda buat
-    const nama = document.getElementById('prodName').value;
-    const harga = document.getElementById('prodPrice').value;
-    const kategori = document.getElementById('prodCategory').value;
-    // Karena kita pilih Opsi 1 (Teks), kita gunakan link gambar sementara
-    const linkGambar = "https://via.placeholder.com/150"; 
-
-    // Panggil fungsi simpan dari firestorage.js
-    const result = await saveProduct(nama, harga, kategori, linkGambar);
-    
-    if(result.success) {
-      alert("Data Berhasil Disimpan ke MatrixSphere!");
-      form.reset(); // Kosongkan form kembali
-    } else {
-      alert("Gagal menyimpan: " + result.error);
-    }
-  });
-<script>
-        const fileInput = document.getElementById('fileInput');
-        const imagePreview = document.getElementById('imagePreview');
-        const labelContent = document.getElementById('labelContent');
-
-        fileInput.addEventListener('change', function() {
-            const file = this.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    imagePreview.src = e.target.result;
-                    imagePreview.classList.remove('hidden'); // Munculkan gambar
-                    labelContent.classList.add('hidden');    // Sembunyikan instruksi
-                }
-                reader.readAsDataURL(file);
-            }
-        });
-    </script>
+}
