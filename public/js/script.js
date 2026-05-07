@@ -43,3 +43,23 @@
     window.performSearch = performSearch;
     window.doLogin = function() { /* Logika Login MikroTik */ };
 })();
+/* Pengaturan khusus perangkat */
+
+/* Tampilan untuk Mobile (Android/iPhone) */
+@media (max-width: 768px) {
+    .product-grid {
+        grid-template-columns: repeat(1, minmax(0, 1dfr)); /* 1 kolom di HP */
+        gap: 1rem;
+    }
+    .admin-text {
+        display: none; /* Sembunyikan teks panjang di navigasi HP */
+    }
+}
+
+/* Tampilan untuk PC (Desktop) */
+@media (min-width: 1024px) {
+    .product-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr)); /* 3 kolom di PC */
+        gap: 2rem;
+    }
+}
