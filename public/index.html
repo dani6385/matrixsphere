@@ -124,5 +124,28 @@
 
         <!-- JS Utama (Jika ada) -->
         <script src="js/script.js"></script>
+        <script type="module">
+    import { getProducts } from './firestorage.js';
+
+    async function loadData() {
+        const products = await getProducts();
+        const grid = document.querySelector('.grid');
+        grid.innerHTML = ''; // Bersihkan contoh statis
+
+        products.forEach(p => {
+            grid.innerHTML += `
+                <div class="glass-card p-6 border border-white/10">
+                    <h3 class="text-lg font-bold">${p.name}</h3>
+                    <p class="text-sky-400 font-mono mt-2 text-xl">Rp ${p.price.toLocaleString()}</p>
+                    <p class="text-xs text-slate-500 mt-1 uppercase">${p.category}</p>
+                    <button class="w-full mt-4 bg-sky-600 hover:bg-sky-500 py-2 rounded-xl transition font-bold">
+                        Tambah ke Keranjang
+                    </button>
+                </div>
+            `;
+        });
+    }
+    loadData();
+</script>
     </body>
 </html>
