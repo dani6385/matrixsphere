@@ -1,8 +1,7 @@
-import { db, storage } from "./firestore.js"; 
-import { collection, addDoc } from "https://www.gstatic.com/firebasejs/10.x/firestore.js";
-import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.x/firestore.js";
+import { db, storage } from "./firebase.js"; 
+import { collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
-// Fungsi utama untuk menyimpan produk
 export async function saveProduct(name, price, category, file) {
     try {
         // 1. Unggah Gambar ke Firebase Storage
