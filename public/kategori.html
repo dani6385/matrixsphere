@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kategori Produk - MatrixSphere</title>
+    
+    <link rel="icon" type="image/png" href="img/favicon.png">
+    <link rel="stylesheet" href="css/background.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        /* CSS Tambahan agar konten tidak tertutup header fixed */
+        .index-content {
+            padding-top: 120px; /* Sedikit lebih lebar untuk katalog */
+            min-height: 100vh;
+        }
+        body {
+            background-color: #0f172a; /* Slate-900 */
+        }
+    </style>
+</head>
+<body class="text-white">
+
+    <nav class="nav-bar-split">
+        <div class="nav-group-left">
+            <a href="index.html">
+                <img src="img/logo_shop.png" alt="MatrixSphere Logo" class="auth-logo-nav">
+            </a>
+        </div>
+
+        <div id="nav-menu" class="w-full block flex-grow lg:flex lg:items-center lg:w-auto hidden">
+            <div class="text-sm lg:flex-grow font-semibold">
+                <div class="relative group block mt-4 lg:inline-block lg:mt-0 mr-6">
+                    <button class="flex items-center text-slate-300 group-hover:text-sky-400 transition font-semibold outline-none">
+                        Menu
+                        <svg class="w-4 h-4 ml-1 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div class="absolute left-0 mt-2 w-48 rounded-xl bg-slate-900/95 backdrop-blur-xl border border-white/10 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                        <div class="py-2">
+                            <a href="index.html" class="block px-4 py-2 text-sm text-slate-300 hover:bg-sky-500/20 hover:text-sky-400 transition">Beranda</a>
+                            <a href="kategori.html" class="block px-4 py-2 text-sm text-sky-400 bg-sky-500/10 font-bold">Katalog Kategori</a>
+                            <a href="admin.html" class="block px-4 py-2 text-sm text-slate-300 hover:bg-sky-500/20 hover:text-sky-400 transition">Admin Panel</a>
+                        </div>
+                        <div id="categoryGrid" class="grid grid-cols-2 md:grid-cols-4 gap-6">
+    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="search-container">
+            <input type="text" id="mainSearch" class="search-input" placeholder="Cari kategori di MatrixSphere...">
+        </div>
+
+        <div class="nav-icons flex space-x-4">
+            <a href="cart.html"><img src="img/cart.png" alt="Cart" class="w-6 h-6 invert"></a>
+            <a href="notifications.html"><img src="img/bell.png" alt="Notif" class="w-6 h-6 invert"></a>
+            <a href="chat.html"><img src="img/chat.png" alt="Chat" class="w-6 h-6 invert"></a>
+        </div>
+    </nav>
+
+    <div class="index-content container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-sky-400">Katalog Kategori</h1>
+            <p class="text-slate-400 mt-2">Pilih kategori produk yang ingin Anda jelajahi</p>
+        </div>
+
+        <div class="relative group block mt-4 lg:inline-block lg:mt-0 mr-6">
+    <button class="flex items-center text-slate-300 group-hover:text-sky-400 transition font-semibold outline-none">
+        Menu
+        <svg class="w-4 h-4 ml-1 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+        </svg>
+    </button>
+    <div class="absolute left-0 mt-2 w-48 rounded-xl bg-slate-900/95 backdrop-blur-xl border border-white/10 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+        <div class="py-2">
+            <a href="index.html" class="block px-4 py-2 text-sm text-slate-300 hover:bg-sky-500/20 hover:text-sky-400 transition">Beranda</a>
+            <a href="kategori.html" class="block px-4 py-2 text-sm text-sky-400 bg-sky-500/10 font-bold">Katalog Kategori</a>
+            <a href="admin.html" class="block px-4 py-2 text-sm text-slate-300 hover:bg-sky-500/20 hover:text-sky-400 transition">Admin Panel</a>
+            <a href="gudang.html" class="block px-4 py-2 text-sm text-slate-300 hover:bg-sky-500/20 hover:text-sky-400 transition">Gudang</a>
+        </div>
+    </div>
+</div>
+
+<div class="index-content container mx-auto px-4">
+    <div class="text-center mb-12">
+        <h1 class="text-4xl font-bold text-sky-400">Katalog Kategori</h1>
+        <p class="text-slate-400 mt-2">Pilih kategori produk yang ingin Anda jelajahi</p>
+    </div>
+
+    <div id="categoryGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+        <div class="animate-pulse bg-white/5 h-40 rounded-2xl border border-white/10"></div>
+        <div class="animate-pulse bg-white/5 h-40 rounded-2xl border border-white/10"></div>
+    </div>
+</div>
+    </div>
+
+    <script type="module" src="js/script.js"></script>
+</body>
+</html>
