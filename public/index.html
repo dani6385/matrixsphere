@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webshop MatrixSphere</title>
+    <link rel="icon" type="image/png" href="img/favicon.png">
+    <link rel="stylesheet" href="css/background.css">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+
+    <!-- Navbar -->
+    <nav class="bg-blue-600 p-4 text-white shadow-lg">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold">MatrixSphere</h1>
+            <div id="cart-count" class="bg-red-500 px-2 py-1 rounded-full text-xs">Keranjang: 0</div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="bg-white py-10 shadow-sm mb-8">
+        <div class="container mx-auto text-center">
+            <h2 class="text-3xl font-bold text-gray-800">Katalog Produk Kami</h2>
+            <p class="text-gray-600">Temukan kebutuhan digital dan fashion anak terbaik.</p>
+        </div>
+    </header>
+
+    <!-- Product Grid -->
+    <main class="container mx-auto px-4">
+        <div id="product-container" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <!-- Produk akan muncul di sini melalui JavaScript -->
+        </div>
+    </main>
+
+    <script type="module" src="js/script.js"></script>
+</body>
+</html>
