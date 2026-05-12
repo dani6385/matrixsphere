@@ -1,52 +1,91 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Admin Dashboard - MatrixSphere</title>
-    <link rel="icon" type="image/png" href="img/favicon.png">
-    <link rel="stylesheet" href="css/background.css">
+    <link rel="icon" type="image/png" href="img/logo_shop.png">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-50 p-8">
 
-    <div class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
-        <h2 class="text-2xl font-bold mb-6 text-gray-800">Tambah Produk Baru</h2>
-        
-        <!-- Form Produk -->
-        <form id="admin-form" class="space-y-4">
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Nama Produk</label>
-                <input type="text" id="prod-name" class="w-full p-2 border rounded mt-1" placeholder="Contoh: Voucher Hotspot" required>
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Harga (Angka saja)</label>
-                <input type="number" id="prod-price" class="w-full p-2 border rounded mt-1" placeholder="5000" required>
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Kategori</label>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Kategori</label>
-                    <input type="text" id="prod-category" list="category-list" class="w-full p-2 border rounded mt-1" placeholder="Ketik atau pilih kategori..." required>
-                    <datalist id="category-list">
-                        <option value="Voucher Hotspot">
-                        <option value="Pulsa & Data">
-                        <option value="Pakaian Anak">
-                    </datalist>
+<body class="bg-slate-900 text-white font-sans">
+    <nav class="flex items-center justify-between p-4 shadow-lg bg-slate-900/50 backdrop-blur-md sticky top-0 z-[100]">
+        <div class="flex items-center px-4">
+            <a href="index.html"><img src="img/logo_shop.png" alt="Logo" class="h-10"></a>
+            <span class="ml-4 font-bold text-sky-400 uppercase tracking-widest">Admin Panel</span>
+        </div>
+    </nav>
+
+    <main class="pt-24 pb-12 container mx-auto px-4">
+        <div class="max-w-4xl mx-auto bg-slate-800/50 p-8 rounded-3xl border border-white/10 backdrop-blur-sm">
+            <h1 class="text-3xl font-bold mb-8 text-sky-400">Tambah Produk Baru</h1>
+
+            <form id="productForm" class="space-y-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+
+                    <div class="space-y-5">
+                        <div>
+                            <label class="block text-sm font-semibold mb-2 text-slate-300">Nama Produk</label>
+                            <input type="text" id="prodName" required placeholder="Contoh: Kopi Susu Aren"
+                                class="w-full bg-slate-900 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-sky-500 transition">
+                        </div>
+
+                        <div id="unitWrapper" class="space-y-2 p-4 bg-white/5 rounded-2xl border border-white/5">
+                            <label class="block text-sm font-semibold mb-2 text-slate-300">Ketersediaan</label>
+                            <select id="prodUnit"
+                                class="w-full bg-slate-800 border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-sky-500 transition">
+                                <option value="Eceran">Eceran (Satuan)</option>
+                                <option value="Renceng">Grosir (Renceng/Pak)</option>
+                                <option value="Karton">Skala Besar (Karton/Dus)</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold mb-2 text-slate-300">Harga (Rp)</label>
+                            <input type="number" id="prodPrice" required placeholder="15000"
+                                class="w-full bg-slate-900 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-sky-500 transition font-mono text-yellow-400 text-xl shadow-inner">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold mb-2 text-slate-300">Kategori</label>
+                            <input type="text" id="prodCategory" required placeholder="Contoh: minuman"
+                                class="w-full bg-slate-900 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-sky-500 transition">
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col">
+                        <label class="block text-sm font-semibold mb-2 text-slate-300">Gambar Produk</label>
+                        <div
+                            class="flex-grow border-2 border-dashed border-white/20 rounded-3xl p-4 text-center hover:border-sky-500/50 transition-all cursor-pointer bg-white/5 relative min-h-[300px] flex items-center justify-center overflow-hidden group">
+                            <input type="file" id="fileInput" class="hidden" accept="image/*">
+                            <img id="imagePreview" src=""
+                                class="hidden absolute inset-0 w-full h-full object-cover z-20">
+                            <div id="labelContent"
+                                class="relative z-10 w-full h-full flex flex-col items-center justify-center space-y-4">
+                                <div class="bg-slate-700/50 p-5 rounded-full group-hover:bg-sky-500/20 transition">
+                                    <svg class="w-10 h-10 text-slate-400 group-hover:text-sky-400" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 4v16m8-8H4" stroke-width="2" stroke-linecap="round"></path>
+                                    </svg>
+                                </div>
+                                <p class="text-white font-medium text-lg">Pilih Foto Produk</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Pilih Foto Produk</label>
-                <input type="file" id="prod-img-file" accept="image/*" class="w-full p-2 border rounded mt-1" required>
-            </div>
-            
-            <button type="submit" id="btn-save" class="w-full bg-green-600 text-white py-2 rounded font-bold hover:bg-green-700">
-                Simpan ke Database
-            </button>
-        </form>
-        <p id="status" class="mt-4 text-center font-medium"></p>
-    </div>
 
-    <script type="module" src="js/script.js"></script>
+                <div class="pt-6">
+                    <button type="submit"
+                        class="w-full bg-sky-600 hover:bg-sky-500 text-white font-black py-5 rounded-2xl shadow-xl transition-all active:scale-[0.98] uppercase tracking-widest text-lg">
+                        Simpan ke Database
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script type="module" src="js/admin.js"></script>
 </body>
+
 </html>
