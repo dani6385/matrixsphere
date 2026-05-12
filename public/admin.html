@@ -5,19 +5,44 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Admin Dashboard - MatrixSphere</title>
-    <link rel="icon" type="image/png" href="img/logo_shop.png">
+    <link rel="icon" type="image/png" href="img/favicon.png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/ui-light.css">
+    <link rel="stylesheet" href="css/heder.css">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-slate-900 text-white font-sans">
-    <nav class="flex items-center justify-between p-4 shadow-lg bg-slate-900/50 backdrop-blur-md sticky top-0 z-[100]">
-        <div class="flex items-center px-4">
-            <a href="index.html"><img src="img/logo_shop.png" alt="Logo" class="h-10"></a>
-            <span class="ml-4 font-bold text-sky-400 uppercase tracking-widest">Admin Panel</span>
-        </div>
-    </nav>
+<body class="bg-slate-900 text-white font-sans" style="height: auto; overflow-y: auto; display: block;">
+    <header class="main-header">
+        <div class="nav-container" style="justify-content: flex-start; gap: 20px; max-width: 100%; padding-left: 20px;">
+            <a href="index.html" class="nav-logo text-bold text-white" style="display: flex; align-items: center;">
+                <img src="img/logo_shop.png" alt="Logo"
+                    style="height: 85px; width: auto; max-height: none; align-items: normal;"></a>
 
-    <main class="pt-24 pb-12 container mx-auto px-4">
+            <div class="dropdown">
+                <button class="btn text-white text-bold pd-10">
+                    KATEGORI ▾
+                </button>
+                <div class="dropdown-content card bg-dark shadow-2">
+                    <a href="#" class="dropdown-item text-white border-bottom">Voucher Hotspot</a>
+                    <a href="#" class="dropdown-item text-white border-bottom">Top Up Games</a>
+                    <a href="#" class="dropdown-item text-white border-bottom">Pulsa & Data</a>
+                    <a href="#" class="dropdown-item text-white">Layanan PPOB</a>
+                </div>
+            </div>
+
+            <div class="search-bar">
+                <input type="text" id="searchInput" class="form-control" placeholder="Cari produk...">
+            </div>
+            <div style="display: flex; gap: 15px; margin-left: auto; padding-right: 20px;">
+                <div class="nav-actions">
+                    <a href="produk.html" class="btn bg-primary pd-l-15 pd-r-15 text-bold">PRODUK</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4" style="padding-top: 10%; padding-bottom: 50px;">
         <div class="max-w-4xl mx-auto bg-slate-800/50 p-8 rounded-3xl border border-white/10 backdrop-blur-sm">
             <h1 class="text-3xl font-bold mb-8 text-sky-400">Tambah Produk Baru</h1>
 
@@ -27,50 +52,41 @@
                     <div class="space-y-5">
                         <div>
                             <label class="block text-sm font-semibold mb-2 text-slate-300">Nama Produk</label>
-                            <input type="text" id="prodName" required placeholder="Contoh: Kopi Susu Aren"
+                            <input type="text" id="prodName" required placeholder="Kopi Susu Aren"
                                 class="w-full bg-slate-900 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-sky-500 transition">
                         </div>
 
-                        <div id="unitWrapper" class="space-y-2 p-4 bg-white/5 rounded-2xl border border-white/5">
-                            <label class="block text-sm font-semibold mb-2 text-slate-300">Ketersediaan</label>
-                            <select id="prodUnit"
-                                class="w-full bg-slate-800 border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-sky-500 transition">
-                                <option value="Eceran">Eceran (Satuan)</option>
-                                <option value="Renceng">Grosir (Renceng/Pak)</option>
-                                <option value="Karton">Skala Besar (Karton/Dus)</option>
-                            </select>
+                        <div>
+                            <label class="block text-sm font-semibold mb-2 text-slate-300">Stok</label>
+                            <input type="number" id="prodPrice" required placeholder="100"
+                                class="w-full bg-slate-900 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-sky-500 transition font-mono text-yellow-400 text-xl shadow-inner">
                         </div>
 
                         <div>
                             <label class="block text-sm font-semibold mb-2 text-slate-300">Harga (Rp)</label>
-                            <input type="number" id="prodPrice" required placeholder="15000"
+                            <input type="number" id="prodPrice" required placeholder="3000"
                                 class="w-full bg-slate-900 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-sky-500 transition font-mono text-yellow-400 text-xl shadow-inner">
                         </div>
 
                         <div>
                             <label class="block text-sm font-semibold mb-2 text-slate-300">Kategori</label>
-                            <input type="text" id="prodCategory" required placeholder="Contoh: minuman"
+                            <input type="text" id="prodCategory" required placeholder="Minuman"
                                 class="w-full bg-slate-900 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-sky-500 transition">
                         </div>
                     </div>
 
                     <div class="flex flex-col">
-                        <label class="block text-sm font-semibold mb-2 text-slate-300">Gambar Produk</label>
-                        <div
-                            class="flex-grow border-2 border-dashed border-white/20 rounded-3xl p-4 text-center hover:border-sky-500/50 transition-all cursor-pointer bg-white/5 relative min-h-[300px] flex items-center justify-center overflow-hidden group">
-                            <input type="file" id="fileInput" class="hidden" accept="image/*">
-                            <img id="imagePreview" src=""
-                                class="hidden absolute inset-0 w-full h-full object-cover z-20">
-                            <div id="labelContent"
-                                class="relative z-10 w-full h-full flex flex-col items-center justify-center space-y-4">
-                                <div class="bg-slate-700/50 p-5 rounded-full group-hover:bg-sky-500/20 transition">
-                                    <svg class="w-10 h-10 text-slate-400 group-hover:text-sky-400" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
-                                        <path d="M12 4v16m8-8H4" stroke-width="2" stroke-linecap="round"></path>
-                                    </svg>
-                                </div>
-                                <p class="text-white font-medium text-lg">Pilih Foto Produk</p>
-                            </div>
+                        <label class="text-white text-bold" style="display:block; margin-bottom: 8px;"></label>
+                        <div id="dropZone"
+                            style="border: 2px dashed #20a8d8; border-radius: 12px; height: 428px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(32, 168, 216, 0.05); cursor: pointer; position: relative;">
+                            <span class="text-matrix text-bold"
+                                style="font-size: 12px; letter-spacing: 2px; margin-bottom: 15px; opacity: 0.8;">FOTO
+                                PRODUK</span>
+                            <input type="file" id="fileInput" hidden accept="image/*">
+                            <span style="color: #20a8d8; font-size: 40px; line-height: 1;">+</span>
+                            <p class="text-white" style="font-size: 14px; margin-top: 10px;">Klik untuk pilih foto</p>
+                            <img id="preview"
+                                style="max-height: 100%; max-width: 100%; display: none; border-radius: 8px; position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
                         </div>
                     </div>
                 </div>
@@ -85,7 +101,30 @@
         </div>
     </main>
 
-    <script type="module" src="js/admin.js"></script>
+    <script>
+        // Logika sederhana untuk preview gambar
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const preview = document.getElementById('preview');
+        const plusIcon = dropZone.querySelector('span');
+        const textLabel = dropZone.querySelector('p');
+
+        dropZone.onclick = () => fileInput.click();
+
+        fileInput.onchange = function () {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    plusIcon.style.display = 'none';
+                    textLabel.style.display = 'none';
+                }
+                reader.readAsDataURL(file);
+            }
+        };
+    </script>
 </body>
 
 </html>
