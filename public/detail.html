@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Detail Produk - MatrixSphere</title>
+    <link rel="icon" type="image/png" href="img/favicon.png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/ui-light.css">
+    <link rel="stylesheet" href="css/heder.css">
+</head>
+
+<body style="background-color: #0f172a; color: white;">
+    <div class="background-image"></div>
+    <header class="main-header">
+        <div class="nav-container" style="justify-content: flex-start; gap: 20px; max-width: 100%; padding-left: 20px;">
+            <a href="index.html" class="nav-logo text-bold text-white" style="display: flex; align-items: center;">
+                <img src="img/logo_shop.png" alt="Logo" style="height: 85px; width: auto; max-height: none;">
+            </a>
+
+            <span class="font-bold text-sky-400 uppercase tracking-widest" style="font-size: 20px; margin-left: 10px;">
+                MatrixSphere
+            </span>
+
+            <div style="display: flex; gap: 15px; margin-left: auto; padding-right: 20px;">
+                <div class="nav-actions">
+                    <a href="produk.html" class="btn bg-primary pd-l-15 pd-r-15 text-bold">Kembali</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container" style="padding-top: 120px;">
+        <div class="glass-box pd-20">
+            <div class="row">
+                <div class="col-6" >
+                    <img id="detailImg" src="" style="width: 100%; border-radius: 15px; border: 2px solid #20a8d8;">
+                </div>
+                <div class="col-6" style="float: none; margin: 0 auto; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 450px; text-align: center;"
+                    style="padding-left: 30px; display: flex; flex-direction: column; justify-content: center; min-height: 400px;">
+                    <h1 id="detailTitle" class="text-matrix" style="font-size: 36px; margin-bottom: 10px;">Voucher WiFi
+                        10GB</h1>
+                    <div>
+                        <p id="detailCategory"
+                            style="background: #1e293b; display: inline-block; padding: 5px 15px; border-radius: 20px; font-size: 14px; color: #cbd5e1;">
+                        </p>
+                    </div>
+                    <hr style="opacity: 0.1; margin: 25px 0; border: 0; border-top: 1px solid #fff;">
+                    <h2 id="detailPrice" style="color: #4ade80; font-size: 28px; margin: 0;"></h2>
+                    <p id="detailDesc" style="line-height: 1.6; margin-top: 20px; opacity: 0.8; font-size: 16px;">
+                        Deskripsi produk akan muncul di sini secara otomatis.
+                    </p>
+                    <div style="margin-top: 40px; display: flex; gap: 15px;">
+                        <button class="btn bg-primary pd-15 text-bold"
+                            style="flex: 2; border-radius: 12px; letter-spacing: 1px;">
+                            EDIT DATA PRODUK
+                        </button>
+                        <button class="btn bg-danger pd-15 text-bold"
+                            style="flex: 1; border-radius: 12px; background-color: #ef4444;"
+                            onclick="konfirmasiHapus()">
+                            DELETE
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Logika untuk mengambil data dari URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = urlParams.get('id');
+
+        // Simulasi data (Nantinya ini diambil dari database/localStorage)
+        const databaseProduk = {
+            '101': {
+                nama: "Voucher WiFi 10GB",
+                harga: "Rp 15.000",
+                kategori: "Voucher",
+                img: "img/sample-produk.png",
+                desc: "Voucher internet kecepatan tinggi hingga 100Mbps. Berlaku selama 30 hari di seluruh area MatrixSphere."
+            },
+            '102': {
+                nama: "Top Up Diamond ML",
+                harga: "Rp 50.000",
+                kategori: "Games",
+                img: "img/sample-produk2.png",
+                desc: "Isi ulang Diamond Mobile Legends instan. Masukkan ID dan Server saat melakukan konfirmasi di kasir."
+            }
+        };
+
+        // Masukkan data ke halaman
+        const produk = databaseProduk[productId];
+
+        if (produk) {
+            document.getElementById('detailTitle').innerText = produk.nama;
+            document.getElementById('detailPrice').innerText = produk.harga;
+            document.getElementById('detailCategory').innerText = produk.kategori;
+            document.getElementById('detailImg').src = produk.img;
+            document.getElementById('detailDesc').innerText = produk.desc;
+            document.title = produk.nama + " - Detail";
+        } else {
+            document.getElementById('detailTitle').innerText = "Produk Tidak Ditemukan";
+        }
+        
+    </script>
+</body>
+
+</html>
