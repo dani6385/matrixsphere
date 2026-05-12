@@ -1,39 +1,203 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Webshop MatrixSphere</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MatrixSphere - Shop</title>
     <link rel="icon" type="image/png" href="img/favicon.png">
-    <link rel="stylesheet" href="css/background.css">
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link href="css/ui-light.css" rel="stylesheet">
+
+    <style>
+        /* Custom Styling untuk menyempurnakan ui-light.css */
+        body {
+            background-color: #0f172a;
+            /* Slate 900 */
+            color: #f3f4f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+        }
+
+        .main-header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 10px 0;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: auto;
+            padding: 0 20px;
+        }
+
+        .nav-logo img {
+            height: 40px;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+
+        .search-bar {
+            flex-grow: 1;
+            margin: 0 20px;
+            max-width: 500px;
+        }
+
+        .index-content {
+            padding-top: 100px;
+            /* Agar tidak tertutup header */
+            padding-bottom: 50px;
+        }
+
+        .category-pill {
+            transition: all 0.3s;
+            border: none;
+            padding: 8px 20px;
+            margin-right: 5px;
+            cursor: pointer;
+        }
+
+        .category-pill:hover {
+            opacity: 0.8;
+            transform: translateY(-2px);
+        }
+
+        /* Menyesuaikan warna teks khusus tema Matrix */
+        .text-matrix {
+            color: #20a8d8;
+        }
+
+        /* Styling Dropdown */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+            /* Memberikan sedikit padding bawah agar kursor tetap terdeteksi 
+       saat pindah dari tombol ke menu */
+            padding-bottom: 10px;
+            margin-bottom: -10px;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            min-width: 200px;
+            z-index: 1001;
+            /* Pastikan muncul tepat di bawah area padding */
+            top: 100%;
+            left: 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            /* Animasi halus agar tidak kaget saat muncul */
+            animation: fadeIn 0.2s ease-in-out;
+        }
+
+        .dropdown-content::before {
+            content: "";
+            position: absolute;
+            top: -15px;
+            /* Menjembatani celah */
+            left: 0;
+            width: 100%;
+            height: 15px;
+            display: block;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown-item {
+            display: block;
+            padding: 10px 15px;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background-color: rgba(32, 168, 216, 0.2);
+            /* Warna primary transparan */
+            color: #20a8d8;
+        }
+    </style>
 </head>
-<body class="bg-gray-100 font-sans">
 
-    <!-- Navbar -->
-    <nav class="bg-blue-600 p-4 text-white shadow-lg">
-        <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-2xl font-bold">MatrixSphere</h1>
-            <div id="cart-count" class="bg-red-500 px-2 py-1 rounded-full text-xs">Keranjang: 0</div>
-        </div>
-    </nav>
+<body>
+    <header class="main-header">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo text-bold text-white">
+                <img src="img/logo.png" alt="Logo">
+                MATRIXSPHERE
+            </a>
 
-    <!-- Hero Section -->
-    <header class="bg-white py-10 shadow-sm mb-8">
-        <div class="container mx-auto text-center">
-            <h2 class="text-3xl font-bold text-gray-800">Katalog Produk Kami</h2>
-            <p class="text-gray-600">Temukan kebutuhan digital dan fashion anak terbaik.</p>
+            <div class="dropdown">
+                <button class="btn text-white text-bold pd-10">
+                    KATEGORI ▾
+                </button>
+                <div class="dropdown-content card bg-dark shadow-2">
+                    <a href="#" class="dropdown-item text-white border-bottom">Voucher Hotspot</a>
+                    <a href="#" class="dropdown-item text-white border-bottom">Top Up Games</a>
+                    <a href="#" class="dropdown-item text-white border-bottom">Pulsa & Data</a>
+                    <a href="#" class="dropdown-item text-white">Layanan PPOB</a>
+                </div>
+            </div>
+
+            <div class="search-bar">
+                <input type="text" id="searchInput" class="form-control" placeholder="Cari produk...">
+            </div>
+
+            <div class="nav-actions">
+                <a href="auth.html" class="btn bg-primary pd-l-10 pd-r-10">MASUK</a>
+            </div>
         </div>
     </header>
 
-    <!-- Product Grid -->
-    <main class="container mx-auto px-4">
-        <div id="product-container" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <!-- Produk akan muncul di sini melalui JavaScript -->
+    <main class="index-content container">
+
+        <div class="text-center mr-b-10">
+            <h1 class="text-blue" style="font-size: 2.5rem;">Selamat Datang di MatrixSphere</h1>
+            <p class="text-secondary">Warung Digital & Layanan Hotspot Anda</p>
         </div>
+
+        <div class="card bg-dark pd-10 mr-b-10">
+            <h2 class="text-blue mr-b-5" style="font-size: 1.2rem;">
+                <span id="selectedCategoryTitle" style="border-left: 4px solid #20a8d8; padding-left: 10px;">Semua
+                    Kategori</span>
+            </h2>
+            <div id="categoryContainer" class="pd-t-5">
+            </div>
+        </div>
+
+        <div class="row" id="productGrid">
+            <div class="col-3">
+                <div class="card bg-white text-dark">
+                    <div class="card-body">
+                        <img src="img/sample-prod.png" style="width:100%; border-radius:3px;">
+                        <h3 class="mr-t-5">Voucher Hotspot</h3>
+                        <p class="text-primary text-bold">Rp 5.000</p>
+                        <button class="btn bg-success w-12 mr-t-5">Beli</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mr-t-10">
+            <div class="box-group" style="display: inline-block;">
+                <button class="btn bg-grey radius-l-5 pd-10">Sebelumnya</button>
+                <button class="btn bg-primary pd-10">1</button>
+                <button class="btn bg-grey radius-r-5 pd-10">Selanjutnya</button>
+            </div>
+        </div>
+
     </main>
 
     <script type="module" src="js/script.js"></script>
 </body>
+
 </html>
