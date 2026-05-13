@@ -7,9 +7,9 @@
     <title>Gudang Produk - MatrixSphere</title>
     <link rel="icon" type="image/png" href="img/favicon.png">
 
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/ui-light.css">
-    <link rel="stylesheet" href="css/heder.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/ui-light.css">
+    <link rel="stylesheet" href="../css/heder.css">
 </head>
 
 <body style="background-color: #0f172a; overflow-y: auto; height: auto; display: block;">
@@ -61,51 +61,63 @@
                         </tr>
                     </thead>
                     <tbody id="productTableBody">
-                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer;"
-                            onclick="window.location.href='detail.html?id=101'">
-                            <td style="padding: 10px;">
-                                <img src="img/sample-produk.png" alt="Produk"
-                                    style="width: 50px; height: 50px; border-radius: 5px; object-fit: cover;">
-                            </td>
-                            <td style="padding: 15px;">Voucher WiFi 10GB</td>
-                            <td style="padding: 15px;"><span class="pd-5"
-                                    style="background: #1e293b; border-radius: 5px; font-size: 12px;">Voucher</span>
-                            </td>
-                            <td style="padding: 15px;">Rp 15.000</td>
-                            <td style="padding: 15px;">120 Pcs</td>
-                            <td style="padding: 15px;"><span style="color: #4ade80;">● Tersedia</span></td>
-                            <td style="padding: 15px;">
-                                <button class="btn pd-5"
-                                    style="background: #f59e0b; color: white; border-radius: 5px; margin-right: 5px;">Edit</button>
-                                <button class="btn pd-5"
-                                    style="background: #ef4444; color: white; border-radius: 5px;">Hapus</button>
-                            </td>
-                        </tr>
-
-                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer;"
-                            onclick="window.location.href='detail.html?id=102'">
-                            <td style="padding: 10px;">
-                                <img src="img/sample-produk.png" alt="Produk"
-                                    style="width: 50px; height: 50px; border-radius: 5px; object-fit: cover;">
-                            </td>
-                            <td style="padding: 15px;">Top Up Diamond ML</td>
-                            <td style="padding: 15px;"><span class="pd-5"
-                                    style="background: #1e293b; border-radius: 5px; font-size: 12px;">Games</span></td>
-                            <td style="padding: 15px;">Rp 50.000</td>
-                            <td style="padding: 15px;">∞</td>
-                            <td style="padding: 15px;"><span style="color: #4ade80;">● Tersedia</span></td>
-                            <td style="padding: 15px;">
-                                <button class="btn pd-5"
-                                    style="background: #f59e0b; color: white; border-radius: 5px; margin-right: 5px;">Edit</button>
-                                <button class="btn pd-5"
-                                    style="background: #ef4444; color: white; border-radius: 5px;">Hapus</button>
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </main>
+    <script>
+        // 1. Data Barang Kamu (Bisa sampai ratusan di sini)
+        const semuaBarang = [
+            { id: 101, nama: "Voucher WiFi 10GB", kategori: "Voucher", harga: "15.000", stok: "120" },
+            { id: 102, nama: "Top Up Diamond ML", kategori: "Games", harga: "50.000", stok: "∞" },
+            { id: 103, nama: "Kopi Hitam Panas", kategori: "Minuman", harga: "3.000", stok: "10" },
+            { id: 104, nama: "Kopi Hitam Dingin", kategori: "Minuman", harga: "5.000", stok: "10" },
+            { id: 105, nama: "Baso Pedas Itu Nikmat", kategori: "Makanan", harga: "10.000", stok: "∞" },
+            { id: 106, nama: "Pulsa Telkomsel", kategori: "Pulsa", harga: "5.000", stok: "∞" },
+            { id: 107, nama: "Kuota 7GB Telkomsel", kategori: "Kuota", harga: "25.000", stok: "∞" },
+            { id: 108, nama: "Tarik Uang E-walet", kategori: "E-wallet", harga: "2.000", stok: "∞" },
+            { id: 109, nama: "Top Up E-walet", kategori: "E-walet", harga: "3.000", stok: "∞" },
+            { id: 110, nama: "Chitos", kategori: "snack", harga: "4.000", stok: "∞" },
+            { id: 111, nama: "Pempers M", kategori: "Pakaian", harga: "11.000", stok: "∞" },
+            { id: 112, nama: "Roko Dji Sam Soe", kategori: "penyakit", harga: "22.000", stok: "∞" },
+            { id: 113, nama: "Bala-Bala", kategori: "Gorengan", harga: "1.000", stok: "∞" },
+            { id: 114, nama: "Sepatu Adidas", kategori: "Olahraga", harga: "350.000", stok: "∞" },
+            { id: 115, nama: "Jam Tangan", kategori: "life Style", harga: "150.000", stok: "∞" },
+            { id: 116, nama: "Ponds White", kategori: "Kecantikan", harga: "13.000", stok: "∞" },
+            { id: 117, nama: "Celana Dalam L", kategori: "Fashion", harga: "20.000", stok: "∞" },
+            { id: 118, nama: "Palu 1LB", kategori: "Tukang", harga: "40.000", stok: "∞" },
+            { id: 119, nama: "Listrik PLN", kategori: "Tagihan", harga: "15.00", stok: "∞" },
+            { id: 120, nama: "Music Box", kategori: "elektronika", harga: "200.000", stok: "∞" },
+            // ... tambahkan sampai 40 atau lebih barang di sini
+        ];
+        // 2. Ambil nomor halaman dari URL (?page=2)
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentPage = parseInt(urlParams.get('page')) || 1;
+        const perPage = 20;
+        // 3. Hitung barang mana yang harus muncul
+        const start = (currentPage - 1) * perPage;
+        const end = start + perPage;
+        const barangHalamanIni = semuaBarang.slice(start, end);
+        // 4. Tampilkan ke Tabel const
+        tableBody = document.getElementById('productTableBody');
+        barangHalamanIni.forEach(item => {
+            tableBody.innerHTML += `
+        <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer;" 
+            onclick="window.location.href='detail.html?id=${item.id}'">
+            <td style="padding: 10px;"><img src="img/sample.png" style="width:50px; border-radius:5px;"></td>
+            <td style="padding: 15px;">${item.nama}</td>
+            <td style="padding: 15px;">${item.kategori}</td>
+            <td style="padding: 15px;">Rp ${item.harga}</td>
+            <td style="padding: 15px;">${item.stok}</td>
+            <td style="padding: 15px;"><span style="color: #4ade80;">● Tersedia</span></td>
+            <td style="padding: 15px;">
+                <button class="btn pd-5" style="background: #f59e0b; color: white; border-radius: 5px;">Edit</button>
+            </td>
+        </tr>
+    `;
+        });
+    </script>
 </body>
 
 </html>
