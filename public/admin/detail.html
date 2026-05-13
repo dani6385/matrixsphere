@@ -73,28 +73,67 @@
             </div>
         </main>
 
-        <script>
-    // 1. Ambil data yang tadi dititipkan oleh halaman produk
-    const dataGudang = JSON.parse(localStorage.getItem('gudangMatix')) || [];
+        <script type="module">
+            // 1. Ambil koneksi database dari file config
+            import { db } from '../js/detail.js';
+            // 2. Ambil fungsi "perintah" dari Firebase
+            import { ref, get, remove, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-    // 2. Ambil ID dari URL (?id=101)
-    const urlParams = new URLSearchParams(window.location.search);
-    const productId = urlParams.get('id');
+            // 3. Ambil ID produk dari alamat URL (Contoh: detail.html?id=101)
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('id');
 
-    // 3. Cari barang yang ID-nya cocok di dalam dataGudang
-    const produk = dataGudang.find(item => item.id == productId);
+            // 4. TUNJUK lokasi data di Firebase
+            const produkRef = ref(db, `gudangBarang/${productId}`);
 
-    // 4. Masukkan ke tampilan
-    if (produk) {
-        document.getElementById('detailTitle').innerText = produk.nama;
-        document.getElementById('detailPrice').innerText = "Rp " + produk.harga;
-        document.getElementById('detailCategory').innerText = produk.kategori;
-        document.getElementById('detailImg').src = "../img/sample-produk.png"; // Sesuaikan path
-        document.getElementById('detailDesc').innerText = produk.desc || "Tidak ada deskripsi.";
-    } else {
-        document.getElementById('detailTitle').innerText = "Produk Tidak Ditemukan";
-    }
-</script>
+            // --- FUNGSI TAMPILKAN DATA ---
+            async function tampilkanDetail() {
+                // Ambil data dari Firebase
+                const snapshot = await get(produkRef);
+
+                if (snapshot.exists()) {
+                    const produk = snapshot.val();
+                    // Masukkan data ke elemen HTML
+                    document.getElementById('detailTitle').innerText = produk.nama;
+                    document.getElementById('detailPrice').innerText = "Rp " + produk.harga;
+                    document.getElementById('detailCategory').innerText = produk.kategori;
+                    document.getElementById('detailImg').src = produk.img || "../img/logo_shop.png";
+                    document.getElementById('detailDesc').innerText = produk.desc || "Deskripsi belum tersedia.";
+                } else {
+                    alert("Produk tidak ditemukan di Cloud!");
+                }
+            }
+
+            // Jalankan fungsi tampilkan data saat halaman dibuka
+            tampilkanDetail();
+
+            // --- FUNGSI TOMBOL DELETE ---
+            window.konfirmasiHapus = async () => {
+                if (confirm("Apakah anda yakin ingin menghapus produk ini selamanya?")) {
+                    await remove(produkRef); // Hapus data di Firebase
+                    alert("Terhapus!");
+                    window.location.href = 'produk.html'; // Balik ke gudang
+                }
+            };
+
+            // --- FUNGSI TOMBOL EDIT ---
+            window.editData = () => {
+                // Munculkan kotak pertanyaan untuk input data baru
+                const hargaBaru = prompt("Ubah Harga:", document.getElementById('detailPrice').innerText);
+                const stokBaru = prompt("Ubah Stok:");
+
+                if (hargaBaru && stokBaru) {
+                    // Update data di Firebase
+                    update(produkRef, {
+                        harga: hargaBaru,
+                        stok: stokBaru
+                    }).then(() => {
+                        alert("Berhasil diupdate!");
+                        location.reload(); // Refresh halaman agar data baru muncul
+                    });
+                }
+            };
+        </script>
     </body>
 
 </html>
