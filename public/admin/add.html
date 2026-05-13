@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin Dashboard - MatrixSphere</title>
+    <link rel="icon" type="image/png" href="../img/favicon.png">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/ui-light.css">
+    <link rel="stylesheet" href="../css/heder.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-900 text-white font-sans" style="height: auto; overflow-y: auto; display: block;">
+    <header class="main-header">
+        <div class="nav-container">
+            <div style="display: flex; align-items: center;">
+                <a href="index.html" class="nav-logo align-items: center;">
+                    <img src="../img/logo_shop.png" alt="Logo">
+                </a>
+
+                <span class="brand-text">MatrixSphere</span>
+            </div>
+
+            <div class="nav-actions">
+
+                <a href="../admin/produk.html" class="btn bg-primary text-bold btn-tambah"
+                    style="padding: 10px 15px; border-radius: 8px; font-size: 13px; white-space: nowrap;">
+                    PRODUK
+                </a>
+
+            </div>
+        </div>
+    </header>
+    <main class="container mx-auto px-4" style="padding-top: 120px; padding-bottom: 50px;" >
+        <div class="max-w-4xl mx-auto bg-slate-800/50 p-8 rounded-3xl border border-white/10 backdrop-blur-sm">
+            <h1 class="text-3xl font-bold mb-8 text-sky-400">Tambah Produk Baru</h1>
+
+            <form id="productForm" class="space-y-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+
+                    <div class="space-y-5">
+                        <div>
+                            <label class="block text-sm font-semibold mb-2 text-slate-300">Nama Produk</label>
+                            <input type="text" id="prodName" required placeholder="Kopi Susu Aren"
+                                class="w-full bg-slate-900 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-sky-500 transition">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold mb-2 text-slate-300">Stock</label>
+                            <input type="number" id="prodStock" required placeholder="100"
+                                class="w-full bg-slate-900 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-sky-500 transition font-mono text-yellow-400 text-xl shadow-inner">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold mb-2 text-slate-300">Harga (Rp)</label>
+                            <input type="number" id="prodPrice" required placeholder="3000"
+                                class="w-full bg-slate-900 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-sky-500 transition font-mono text-yellow-400 text-xl shadow-inner">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold mb-2 text-slate-300">Kategori</label>
+                            <input type="text" id="prodCategory" required placeholder="Minuman"
+                                class="w-full bg-slate-900 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-sky-500 transition">
+                        </div>
+                        <input type="hidden" id="prodId">
+                    </div>
+
+                    <div class="flex flex-col">
+                        <label class="text-white text-bold" style="display:block; margin-bottom: 8px;"></label>
+                        <div id="dropZone"
+                            style="border: 2px dashed #20a8d8; border-radius: 12px; height: 428px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(32, 168, 216, 0.05); cursor: pointer; position: relative;">
+                            <span class="text-matrix text-bold"
+                                style="font-size: 12px; letter-spacing: 2px; margin-bottom: 15px; opacity: 0.8;">FOTO
+                                PRODUK</span>
+                            <input type="file" id="fileInput" hidden accept="image/*">
+                            <span style="color: #20a8d8; font-size: 40px; line-height: 1;">+</span>
+                            <p class="text-white" style="font-size: 14px; margin-top: 10px;">Klik untuk pilih foto</p>
+                            <img id="preview"
+                                style="max-height: 100%; max-width: 100%; display: none; border-radius: 8px; position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-6">
+                    <button type="submit"
+                        class="w-full bg-sky-600 hover:bg-sky-500 text-white font-black py-5 rounded-2xl shadow-xl transition-all active:scale-[0.98] uppercase tracking-widest text-lg">
+                        Simpan ke Database
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+    <script type="module" src="../js/add.js"></script>
+</body>
+
+</html>

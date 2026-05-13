@@ -59,7 +59,7 @@
                         </p>
                         <div style="margin-top: 40px; display: flex; gap: 15px;">
                             <button class="btn bg-primary pd-15 text-bold"
-                                style="flex: 2; border-radius: 12px; letter-spacing: 1px;">
+                                style="flex: 2; border-radius: 12px; letter-spacing: 1px;" onclick="editData()">
                                 EDIT DATA PRODUK
                             </button>
                             <button class="btn bg-danger pd-15 text-bold"
@@ -115,22 +115,13 @@
                     window.location.href = 'produk.html'; // Balik ke gudang
                 }
             };
-
-            // --- FUNGSI TOMBOL EDIT ---
             window.editData = () => {
-                // Munculkan kotak pertanyaan untuk input data baru
-                const hargaBaru = prompt("Ubah Harga:", document.getElementById('detailPrice').innerText);
-                const stokBaru = prompt("Ubah Stok:");
-
-                if (hargaBaru && stokBaru) {
-                    // Update data di Firebase
-                    update(produkRef, {
-                        harga: hargaBaru,
-                        stok: stokBaru
-                    }).then(() => {
-                        alert("Berhasil diupdate!");
-                        location.reload(); // Refresh halaman agar data baru muncul
-                    });
+                if (productId) {
+                    // Gunakan backtick (`) agar ${productId} terbaca sebagai angka/teks asli
+                    // Pastikan path-nya benar. Jika satu folder, cukup 'add.html'
+                    window.location.href = `add.html?id=${productId}`;
+                } else {
+                    alert("ID Produk tidak ditemukan!");
                 }
             };
         </script>
