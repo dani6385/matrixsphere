@@ -74,43 +74,27 @@
         </main>
 
         <script>
-            // Logika untuk mengambil data dari URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const productId = urlParams.get('id');
+    // 1. Ambil data yang tadi dititipkan oleh halaman produk
+    const dataGudang = JSON.parse(localStorage.getItem('gudangMatix')) || [];
 
-            // Simulasi data (Nantinya ini diambil dari database/localStorage)
-            const databaseProduk = {
-                '101': {
-                    nama: "Voucher WiFi 10GB",
-                    harga: "Rp 15.000",
-                    kategori: "Voucher",
-                    img: "img/sample-produk.png",
-                    desc: "Voucher internet kecepatan tinggi hingga 100Mbps. Berlaku selama 30 hari di seluruh area MatrixSphere."
-                },
-                '102': {
-                    nama: "Top Up Diamond ML",
-                    harga: "Rp 50.000",
-                    kategori: "Games",
-                    img: "img/sample-produk2.png",
-                    desc: "Isi ulang Diamond Mobile Legends instan. Masukkan ID dan Server saat melakukan konfirmasi di kasir."
-                }
-            };
+    // 2. Ambil ID dari URL (?id=101)
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = urlParams.get('id');
 
-            // Masukkan data ke halaman
-            const produk = databaseProduk[productId];
+    // 3. Cari barang yang ID-nya cocok di dalam dataGudang
+    const produk = dataGudang.find(item => item.id == productId);
 
-            if (produk) {
-                document.getElementById('detailTitle').innerText = produk.nama;
-                document.getElementById('detailPrice').innerText = produk.harga;
-                document.getElementById('detailCategory').innerText = produk.kategori;
-                document.getElementById('detailImg').src = produk.img;
-                document.getElementById('detailDesc').innerText = produk.desc;
-                document.title = produk.nama + " - Detail";
-            } else {
-                document.getElementById('detailTitle').innerText = "Produk Tidak Ditemukan";
-            }
-
-        </script>
+    // 4. Masukkan ke tampilan
+    if (produk) {
+        document.getElementById('detailTitle').innerText = produk.nama;
+        document.getElementById('detailPrice').innerText = "Rp " + produk.harga;
+        document.getElementById('detailCategory').innerText = produk.kategori;
+        document.getElementById('detailImg').src = "../img/sample-produk.png"; // Sesuaikan path
+        document.getElementById('detailDesc').innerText = produk.desc || "Tidak ada deskripsi.";
+    } else {
+        document.getElementById('detailTitle').innerText = "Produk Tidak Ditemukan";
+    }
+</script>
     </body>
 
 </html>

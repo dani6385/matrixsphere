@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/ui-light.css">
     <link rel="stylesheet" href="../css/heder.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 
 <body style="background-color: #0f172a; overflow-y: auto; height: auto; display: block;">
@@ -21,21 +22,32 @@
                     <a href="index.html" class="nav-logo align-items: center;">
                         <img src="../img/logo_shop.png" alt="Logo">
                     </a>
-
                     <span class="brand-text">MatrixSphere</span>
                 </div>
-
                 <div class="nav-actions">
-
                     <a href="tambah.html" class="btn bg-primary text-bold btn-tambah"
                         style="padding: 10px 15px; border-radius: 8px; font-size: 13px; white-space: nowrap;">
                         TAMBAH BARANG
                     </a>
-
                 </div>
             </div>
         </header>
+        <div class="col-6 text-right" style="display: flex; gap: 10px; justify-content: flex-end; align-items: center;">
+            <input type="file" id="importExcel" style="display: none;" accept=".xlsx, .xls">
 
+            <button onclick="document.getElementById('importExcel').click()" class="btn"
+                style="background: #10b981; color: white; padding: 8px 15px; border-radius: 5px; font-size: 12px; font-weight: bold;">
+                IMPORT EXCEL
+            </button>
+
+            <button onclick="exportKeExcel()" class="btn"
+                style="background: #3b82f6; color: white; padding: 8px 15px; border-radius: 5px; font-size: 12px; font-weight: bold;">
+                EXPORT EXCEL
+            </button>
+
+            <input type="text" placeholder="Cari di gudang..." class="form-control-md"
+                style="max-width: 200px; display: inline-block; background: rgba(255,255,255,0.1); color: white; border: 1px solid #20a8d8;">
+        </div>
         <main class="container" style="padding-top: 130px; padding-bottom: 50px;">
             <div class="glass-box pd-20">
                 <div class="row"
@@ -44,12 +56,12 @@
                         <h2 class="text-matrix" style="margin: 0;">GUDANG KETERSEDIAAN BARANG</h2>
                         <p class="text-white" style="opacity: 0.7;">Pantau stok dan harga produk aktif Anda.</p>
                     </div>
+
                     <div class="col-6 text-right">
                         <input type="text" placeholder="Cari di gudang..." class="form-control-md"
                             style="max-width: 250px; display: inline-block; background: rgba(255,255,255,0.1); color: white; border: 1px solid #20a8d8;">
                     </div>
                 </div>
-
                 <div style="overflow-x: auto;">
                     <table style="width: 100%; border-collapse: collapse; color: white; text-align: left;">
                         <thead>
@@ -66,6 +78,10 @@
                         <tbody id="productTableBody">
                         </tbody>
                     </table>
+                    <div style="margin-top: 20px; text-align: center;">
+                        <a href="produk.html?page=1" class="btn">1</a>
+                        <a href="produk.html?page=2" class="btn">2</a>
+                    </div>
                 </div>
             </div>
         </main>
@@ -93,33 +109,43 @@
                 { id: 119, nama: "Listrik PLN", kategori: "Tagihan", harga: "15.00", stok: "∞" },
                 { id: 120, nama: "Music Box", kategori: "elektronika", harga: "200.000", stok: "∞" },
                 // ... tambahkan sampai 40 atau lebih barang di sini
+
             ];
-            // 2. Ambil nomor halaman dari URL (?page=2)
             const urlParams = new URLSearchParams(window.location.search);
             const currentPage = parseInt(urlParams.get('page')) || 1;
             const perPage = 20;
-            // 3. Hitung barang mana yang harus muncul
+
             const start = (currentPage - 1) * perPage;
             const end = start + perPage;
             const barangHalamanIni = semuaBarang.slice(start, end);
+
+            // 3. Tampilkan ke Tabel (Perbaikan: tambahkan 'const' pada tableBody)
+            const tableBody = document.getElementById('productTableBody');
             // 4. Tampilkan ke Tabel const
-            tableBody = document.getElementById('productTableBody');
+            tableBody.innerHTML = "";
+
             barangHalamanIni.forEach(item => {
                 tableBody.innerHTML += `
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer;" 
-            onclick="window.location.href='detail.html?id=${item.id}'">
-            <td style="padding: 10px;"><img src="img/sample.png" style="width:50px; border-radius:5px;"></td>
-            <td style="padding: 15px;">${item.nama}</td>
-            <td style="padding: 15px;">${item.kategori}</td>
-            <td style="padding: 15px;">Rp ${item.harga}</td>
-            <td style="padding: 15px;">${item.stok}</td>
-            <td style="padding: 15px;"><span style="color: #4ade80;">● Tersedia</span></td>
-            <td style="padding: 15px;">
-                <button class="btn pd-5" style="background: #f59e0b; color: white; border-radius: 5px;">Edit</button>
-            </td>
-        </tr>
-    `;
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer;" 
+                onclick="window.location.href='detail.html?id=${item.id}'">
+                <td style="padding: 10px;"><img src="../img/logo_shop.png" style="width:50px; height:50px; border-radius:5px; object-fit:cover;"></td>
+                <td style="padding: 15px;">${item.nama}</td>
+                <td style="padding: 15px;"><span style="background: #1e293b; padding: 5px 10px; border-radius: 5px; font-size: 12px;">${item.kategori}</span></td>
+                <td style="padding: 15px;">Rp ${item.harga}</td>
+                <td style="padding: 15px;">${item.stok}</td>
+                <td style="padding: 15px;"><span style="color: #4ade80;">● Tersedia</span></td>
+                <td style="padding: 15px;">
+                    <button class="btn pd-5" style="background: #f59e0b; color: white; border-radius: 5px;">Edit</button>
+                </td>
+            </tr>
+        `;
             });
+            function exportKeExcel() {
+                const worksheet = XLSX.utils.json_to_sheet(semuaBarang);
+                const workbook = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(workbook, worksheet, "Produk");
+                XLSX.writeFile(workbook, "Data_Gudang_MatrixSphere.xlsx");
+            }
         </script>
     </body>
 
