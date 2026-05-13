@@ -37,7 +37,7 @@ export async function importExcelKeFirebase(jsonData) {
             kategori: row.Kategori,
             harga: row.Harga,
             stok: row.Stok,
-            img: row.Fath_Gambar || "../img/logo_shop.png"
+            img: row.Fath_Gambar || "../img/logo.png"
         };
     });
 
