@@ -102,3 +102,22 @@ body {
 .dropdown:hover .dropdown-content {
     display: block;
 }
+@media screen and (max-width: 768px) {
+    .brand-text {
+        display: none !important; /* Sembunyikan tulisan MatrixSphere */
+    }
+    .nav-logo img {
+        height: 60px !important; /* Perkecil logo agar tidak memenuhi layar */
+    }
+
+    .nav-container {
+        padding: 0 10px;
+        gap: 10px;
+    }
+
+    /* Opsional: Membuat tombol tambah barang lebih kecil di HP */
+    .btn-tambah {
+        padding: 8px 12px !important;
+        font-size: 12px !important;
+    }
+}
