@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Detail Produk - MatrixSphere</title>
+    <link rel="icon" type="image/png" href="../img/favicon.png">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/ui-light.css">
+    <link rel="stylesheet" href="../css/heder.css">
+</head>
+
+<body style="background-color: #0f172a; color: white;">
+
+    <body class="bg-slate-900 text-white font-sans" style="height: auto; overflow-y: auto; display: block;">
+        <header class="main-header">
+            <div class="nav-container">
+                <div style="display: flex; align-items: center;">
+                    <a href="index.html" class="nav-logo align-items: center;">
+                        <img src="../img/logo_shop.png" alt="Logo">
+                    </a>
+
+                    <span class="brand-text">MatrixSphere</span>
+                </div>
+
+                <div class="nav-actions">
+
+                    <a href="../admin/produk.html" class="btn bg-primary text-bold btn-tambah"
+                        style="padding: 10px 15px; border-radius: 8px; font-size: 13px; white-space: nowrap;">
+                        PRODUK
+                    </a>
+
+                </div>
+            </div>
+        </header>
+
+        <main class="container" style="padding-top: 120px; padding-bottom: 50px;">
+            <div class="glass-box pd-20">
+                <div class="row">
+                    <div class="col-6">
+                        <img id="detailImg" src="" style="width: 100%; border-radius: 15px; border: 2px solid #20a8d8;">
+                    </div>
+                    <div class="col-6"
+                        style="float: none; margin: 0 auto; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 450px; text-align: center;"
+                        style="padding-left: 30px; display: flex; flex-direction: column; justify-content: center; min-height: 400px;">
+                        <h1 id="detailTitle" class="text-matrix" style="font-size: 36px; margin-bottom: 10px;">Voucher
+                            WiFi
+                            10GB</h1>
+                        <div>
+                            <p id="detailCategory"
+                                style="background: #1e293b; display: inline-block; padding: 5px 15px; border-radius: 20px; font-size: 14px; color: #cbd5e1;">
+                            </p>
+                        </div>
+                        <hr style="opacity: 0.1; margin: 25px 0; border: 0; border-top: 1px solid #fff;">
+                        <h2 id="detailPrice" style="color: #4ade80; font-size: 28px; margin: 0;"></h2>
+                        <p id="detailDesc" style="line-height: 1.6; margin-top: 20px; opacity: 0.8; font-size: 16px;">
+                            Deskripsi produk akan muncul di sini secara otomatis.
+                        </p>
+                        <div style="margin-top: 40px; display: flex; gap: 15px;">
+                            <button class="btn bg-primary pd-15 text-bold"
+                                style="flex: 2; border-radius: 12px; letter-spacing: 1px;">
+                                EDIT DATA PRODUK
+                            </button>
+                            <button class="btn bg-danger pd-15 text-bold"
+                                style="flex: 1; border-radius: 12px; background-color: #ef4444;"
+                                onclick="konfirmasiHapus()">
+                                DELETE
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <script>
+    // 1. Ambil data yang tadi dititipkan oleh halaman produk
+    const dataGudang = JSON.parse(localStorage.getItem('gudangMatix')) || [];
+
+    // 2. Ambil ID dari URL (?id=101)
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = urlParams.get('id');
+
+    // 3. Cari barang yang ID-nya cocok di dalam dataGudang
+    const produk = dataGudang.find(item => item.id == productId);
+
+    // 4. Masukkan ke tampilan
+    if (produk) {
+        document.getElementById('detailTitle').innerText = produk.nama;
+        document.getElementById('detailPrice').innerText = "Rp " + produk.harga;
+        document.getElementById('detailCategory').innerText = produk.kategori;
+        document.getElementById('detailImg').src = "../img/sample-produk.png"; // Sesuaikan path
+        document.getElementById('detailDesc').innerText = produk.desc || "Tidak ada deskripsi.";
+    } else {
+        document.getElementById('detailTitle').innerText = "Produk Tidak Ditemukan";
+    }
+</script>
+    </body>
+
+</html>
