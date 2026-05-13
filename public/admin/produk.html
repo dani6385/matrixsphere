@@ -32,22 +32,7 @@
                 </div>
             </div>
         </header>
-        <div class="col-6 text-right" style="display: flex; gap: 10px; justify-content: flex-end; align-items: center;">
-            <input type="file" id="importExcel" style="display: none;" accept=".xlsx, .xls">
 
-            <button onclick="document.getElementById('importExcel').click()" class="btn"
-                style="background: #10b981; color: white; padding: 8px 15px; border-radius: 5px; font-size: 12px; font-weight: bold;">
-                IMPORT EXCEL
-            </button>
-
-            <button onclick="exportKeExcel()" class="btn"
-                style="background: #3b82f6; color: white; padding: 8px 15px; border-radius: 5px; font-size: 12px; font-weight: bold;">
-                EXPORT EXCEL
-            </button>
-
-            <input type="text" placeholder="Cari di gudang..." class="form-control-md"
-                style="max-width: 200px; display: inline-block; background: rgba(255,255,255,0.1); color: white; border: 1px solid #20a8d8;">
-        </div>
         <main class="container" style="padding-top: 130px; padding-bottom: 50px;">
             <div class="glass-box pd-20">
                 <div class="row"
@@ -60,6 +45,19 @@
                     <div class="col-6 text-right">
                         <input type="text" placeholder="Cari di gudang..." class="form-control-md"
                             style="max-width: 250px; display: inline-block; background: rgba(255,255,255,0.1); color: white; border: 1px solid #20a8d8;">
+                    </div>
+                    <div class="col-6 text-right"
+                        style="display: flex; gap: 10px; justify-content: flex-end; align-items: center;">
+                        <input type="file" id="importExcel" style="display: none;" accept=".xlsx, .xls">
+
+                        <button onclick="document.getElementById('importExcel').click()" class="btn"
+                            style="background: #10b981; color: white; padding: 8px 15px; border-radius: 5px; font-size: 12px; font-weight: bold;">
+                            IMPORT EXCEL
+                        </button>
+                        <button onclick="exportKeExcel()" class="btn"
+                            style="background: #3b82f6; color: white; padding: 8px 15px; border-radius: 5px; font-size: 12px; font-weight: bold;">
+                            EXPORT EXCEL
+                        </button>
                     </div>
                 </div>
                 <div style="overflow-x: auto;">
@@ -85,68 +83,81 @@
                 </div>
             </div>
         </main>
-        <script>
-            // 1. Data Barang Kamu (Bisa sampai ratusan di sini)
-            const semuaBarang = [
-                { id: 101, nama: "Voucher WiFi 10GB", kategori: "Voucher", harga: "15.000", stok: "120" },
-                { id: 102, nama: "Top Up Diamond ML", kategori: "Games", harga: "50.000", stok: "∞" },
-                { id: 103, nama: "Kopi Hitam Panas", kategori: "Minuman", harga: "3.000", stok: "10" },
-                { id: 104, nama: "Kopi Hitam Dingin", kategori: "Minuman", harga: "5.000", stok: "10" },
-                { id: 105, nama: "Baso Pedas Itu Nikmat", kategori: "Makanan", harga: "10.000", stok: "∞" },
-                { id: 106, nama: "Pulsa Telkomsel", kategori: "Pulsa", harga: "5.000", stok: "∞" },
-                { id: 107, nama: "Kuota 7GB Telkomsel", kategori: "Kuota", harga: "25.000", stok: "∞" },
-                { id: 108, nama: "Tarik Uang E-walet", kategori: "E-wallet", harga: "2.000", stok: "∞" },
-                { id: 109, nama: "Top Up E-walet", kategori: "E-walet", harga: "3.000", stok: "∞" },
-                { id: 110, nama: "Chitos", kategori: "snack", harga: "4.000", stok: "∞" },
-                { id: 111, nama: "Pempers M", kategori: "Pakaian", harga: "11.000", stok: "∞" },
-                { id: 112, nama: "Roko Dji Sam Soe", kategori: "penyakit", harga: "22.000", stok: "∞" },
-                { id: 113, nama: "Bala-Bala", kategori: "Gorengan", harga: "1.000", stok: "∞" },
-                { id: 114, nama: "Sepatu Adidas", kategori: "Olahraga", harga: "350.000", stok: "∞" },
-                { id: 115, nama: "Jam Tangan", kategori: "life Style", harga: "150.000", stok: "∞" },
-                { id: 116, nama: "Ponds White", kategori: "Kecantikan", harga: "13.000", stok: "∞" },
-                { id: 117, nama: "Celana Dalam L", kategori: "Fashion", harga: "20.000", stok: "∞" },
-                { id: 118, nama: "Palu 1LB", kategori: "Tukang", harga: "40.000", stok: "∞" },
-                { id: 119, nama: "Listrik PLN", kategori: "Tagihan", harga: "15.00", stok: "∞" },
-                { id: 120, nama: "Music Box", kategori: "elektronika", harga: "200.000", stok: "∞" },
-                // ... tambahkan sampai 40 atau lebih barang di sini
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
-            ];
-            const urlParams = new URLSearchParams(window.location.search);
-            const currentPage = parseInt(urlParams.get('page')) || 1;
-            const perPage = 20;
+        <script type="module">
+            // Mengambil fungsi dari manager yang sudah kita pisah
+            import { monitorGudang, importExcelKeFirebase, getFirebaseData } from '../js/inventory-manager.js';
 
-            const start = (currentPage - 1) * perPage;
-            const end = start + perPage;
-            const barangHalamanIni = semuaBarang.slice(start, end);
-
-            // 3. Tampilkan ke Tabel (Perbaikan: tambahkan 'const' pada tableBody)
             const tableBody = document.getElementById('productTableBody');
-            // 4. Tampilkan ke Tabel const
-            tableBody.innerHTML = "";
 
-            barangHalamanIni.forEach(item => {
-                tableBody.innerHTML += `
-            <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer;" 
-                onclick="window.location.href='detail.html?id=${item.id}'">
-                <td style="padding: 10px;"><img src="../img/logo_shop.png" style="width:50px; height:50px; border-radius:5px; object-fit:cover;"></td>
-                <td style="padding: 15px;">${item.nama}</td>
-                <td style="padding: 15px;"><span style="background: #1e293b; padding: 5px 10px; border-radius: 5px; font-size: 12px;">${item.kategori}</span></td>
-                <td style="padding: 15px;">Rp ${item.harga}</td>
-                <td style="padding: 15px;">${item.stok}</td>
-                <td style="padding: 15px;"><span style="color: #4ade80;">● Tersedia</span></td>
-                <td style="padding: 15px;">
-                    <button class="btn pd-5" style="background: #f59e0b; color: white; border-radius: 5px;">Edit</button>
-                </td>
-            </tr>
-        `;
+            // --- A. MENAMPILKAN DATA DARI FIREBASE (REALTIME) ---
+            monitorGudang((data) => {
+                if (!tableBody) return;
+                tableBody.innerHTML = ""; // Bersihkan tabel
+
+                // Jika data di Firebase kosong, tampilkan pesan
+                if (data.length === 0) {
+                    tableBody.innerHTML = "<tr><td colspan='7' style='text-align:center; padding:20px;'>Database Kosong. Silahkan Import Excel.</td></tr>";
+                    return;
+                }
+
+                data.forEach(item => {
+                    tableBody.innerHTML += `
+                <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer;" 
+                    onclick="window.location.href='detail.html?id=${item.id}'">
+                    <td style="padding: 10px; text-align: center;">
+                        <img src="${item.img || '../img/logo_shop.png'}" style="width:50px; height:50px; border-radius:5px; object-fit:cover;">
+                    </td>
+                    <td style="padding: 15px;">${item.nama}</td>
+                    <td style="padding: 15px;"><span style="background: #1e293b; padding: 5px 10px; border-radius: 5px; font-size: 12px;">${item.kategori}</span></td>
+                    <td style="padding: 15px;">Rp ${item.harga}</td>
+                    <td style="padding: 15px;">${item.stok}</td>
+                    <td style="padding: 15px;"><span style="color: #4ade80;">● Tersedia</span></td>
+                    <td style="padding: 15px;">
+                        <button class="btn pd-5" style="background: #f59e0b; color: white; border-radius: 5px;">Edit</button>
+                    </td>
+                </tr>`;
+                });
             });
-            function exportKeExcel() {
-                const worksheet = XLSX.utils.json_to_sheet(semuaBarang);
+
+            // --- B. FUNGSI EXPORT (Global agar bisa dipanggil tombol) ---
+            window.exportKeExcel = async () => {
+                const data = await getFirebaseData();
+                if (data.length === 0) return alert("Tidak ada data untuk di-export");
+
+                const worksheet = XLSX.utils.json_to_sheet(data);
                 const workbook = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(workbook, worksheet, "Produk");
+                XLSX.utils.book_append_sheet(workbook, worksheet, "Gudang_Firebase");
                 XLSX.writeFile(workbook, "Data_Gudang_MatrixSphere.xlsx");
+            };
+
+            // --- C. FUNGSI IMPORT (MENGIRIM KE FIREBASE) ---
+            const importInput = document.getElementById('importExcel');
+            if (importInput) {
+                importInput.addEventListener('change', function (e) {
+                    const file = e.target.files[0];
+                    const reader = new FileReader();
+
+                    reader.onload = async (event) => {
+                        const dataArray = new Uint8Array(event.target.result);
+                        const workbook = XLSX.read(dataArray, { type: 'array' });
+                        const json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
+
+                        // Kirim data ke Firebase melalui Manager
+                        const res = await importExcelKeFirebase(json);
+                        if (res.success) {
+                            alert("Berhasil Sinkronisasi ke Cloud Firebase!");
+                        } else {
+                            alert("Gagal: " + res.error);
+                        }
+                    };
+                    reader.readAsArrayBuffer(file);
+                });
             }
         </script>
+        </script>
+        <script src="../js/xlsx.full.min.js"></script>
     </body>
 
 </html>
