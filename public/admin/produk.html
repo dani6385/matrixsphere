@@ -14,97 +14,98 @@
 
 <body style="background-color: #0f172a; overflow-y: auto; height: auto; display: block;">
 
-    <header class="main-header">
-        <div class="nav-container" style="padding-top: 18px; padding-bottom: 50px;">
-            <div style="display: flex; align-items: center;">
-            <a href="index.html" class="nav-logo align-items: center;">
-                <img src="../img/logo_shop.png" alt="Logo">
-            </a>
+    <body class="bg-slate-900 text-white font-sans" style="height: auto; overflow-y: auto; display: block;">
+        <header class="main-header">
+            <div class="nav-container">
+                <div style="display: flex; align-items: center;">
+                    <a href="index.html" class="nav-logo align-items: center;">
+                        <img src="../img/logo_shop.png" alt="Logo">
+                    </a>
 
-            <span class="brand-text">MatrixSphere</span>
-            </div>
+                    <span class="brand-text">MatrixSphere</span>
+                </div>
 
-            <div class="nav-actions">
-                
+                <div class="nav-actions">
+
                     <a href="tambah.html" class="btn bg-primary text-bold btn-tambah"
                         style="padding: 10px 15px; border-radius: 8px; font-size: 13px; white-space: nowrap;">
-               TAMBAH BARANG
-               </a>
-                
-            </div>
-        </div>
-    </header>
+                        TAMBAH BARANG
+                    </a>
 
-    <main class="container" style="padding-top: 130px; padding-bottom: 50px;">
-        <div class="glass-box pd-20">
-            <div class="row"
-                style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
-                <div class="col-6">
-                    <h2 class="text-matrix" style="margin: 0;">GUDANG KETERSEDIAAN BARANG</h2>
-                    <p class="text-white" style="opacity: 0.7;">Pantau stok dan harga produk aktif Anda.</p>
-                </div>
-                <div class="col-6 text-right">
-                    <input type="text" placeholder="Cari di gudang..." class="form-control-md"
-                        style="max-width: 250px; display: inline-block; background: rgba(255,255,255,0.1); color: white; border: 1px solid #20a8d8;">
                 </div>
             </div>
+        </header>
 
-            <div style="overflow-x: auto;">
-                <table style="width: 100%; border-collapse: collapse; color: white; text-align: left;">
-                    <thead>
-                        <tr style="border-bottom: 2px solid #20a8d8; background: rgba(32, 168, 216, 0.1);">
-                            <th style="padding: 15px;">Gambar</th>
-                            <th style="padding: 15px;">Nama Produk</th>
-                            <th style="padding: 15px;">Kategori</th>
-                            <th style="padding: 15px;">Harga</th>
-                            <th style="padding: 15px;">Stok</th>
-                            <th style="padding: 15px;">Status</th>
-                            <th style="padding: 15px;">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="productTableBody">
-                    </tbody>
-                </table>
+        <main class="container" style="padding-top: 130px; padding-bottom: 50px;">
+            <div class="glass-box pd-20">
+                <div class="row"
+                    style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+                    <div class="col-6">
+                        <h2 class="text-matrix" style="margin: 0;">GUDANG KETERSEDIAAN BARANG</h2>
+                        <p class="text-white" style="opacity: 0.7;">Pantau stok dan harga produk aktif Anda.</p>
+                    </div>
+                    <div class="col-6 text-right">
+                        <input type="text" placeholder="Cari di gudang..." class="form-control-md"
+                            style="max-width: 250px; display: inline-block; background: rgba(255,255,255,0.1); color: white; border: 1px solid #20a8d8;">
+                    </div>
+                </div>
+
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; color: white; text-align: left;">
+                        <thead>
+                            <tr style="border-bottom: 2px solid #20a8d8; background: rgba(32, 168, 216, 0.1);">
+                                <th style="padding: 15px;">Gambar</th>
+                                <th style="padding: 15px;">Nama Produk</th>
+                                <th style="padding: 15px;">Kategori</th>
+                                <th style="padding: 15px;">Harga</th>
+                                <th style="padding: 15px;">Stok</th>
+                                <th style="padding: 15px;">Status</th>
+                                <th style="padding: 15px;">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productTableBody">
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
-    </main>
-    <script>
-        // 1. Data Barang Kamu (Bisa sampai ratusan di sini)
-        const semuaBarang = [
-            { id: 101, nama: "Voucher WiFi 10GB", kategori: "Voucher", harga: "15.000", stok: "120" },
-            { id: 102, nama: "Top Up Diamond ML", kategori: "Games", harga: "50.000", stok: "∞" },
-            { id: 103, nama: "Kopi Hitam Panas", kategori: "Minuman", harga: "3.000", stok: "10" },
-            { id: 104, nama: "Kopi Hitam Dingin", kategori: "Minuman", harga: "5.000", stok: "10" },
-            { id: 105, nama: "Baso Pedas Itu Nikmat", kategori: "Makanan", harga: "10.000", stok: "∞" },
-            { id: 106, nama: "Pulsa Telkomsel", kategori: "Pulsa", harga: "5.000", stok: "∞" },
-            { id: 107, nama: "Kuota 7GB Telkomsel", kategori: "Kuota", harga: "25.000", stok: "∞" },
-            { id: 108, nama: "Tarik Uang E-walet", kategori: "E-wallet", harga: "2.000", stok: "∞" },
-            { id: 109, nama: "Top Up E-walet", kategori: "E-walet", harga: "3.000", stok: "∞" },
-            { id: 110, nama: "Chitos", kategori: "snack", harga: "4.000", stok: "∞" },
-            { id: 111, nama: "Pempers M", kategori: "Pakaian", harga: "11.000", stok: "∞" },
-            { id: 112, nama: "Roko Dji Sam Soe", kategori: "penyakit", harga: "22.000", stok: "∞" },
-            { id: 113, nama: "Bala-Bala", kategori: "Gorengan", harga: "1.000", stok: "∞" },
-            { id: 114, nama: "Sepatu Adidas", kategori: "Olahraga", harga: "350.000", stok: "∞" },
-            { id: 115, nama: "Jam Tangan", kategori: "life Style", harga: "150.000", stok: "∞" },
-            { id: 116, nama: "Ponds White", kategori: "Kecantikan", harga: "13.000", stok: "∞" },
-            { id: 117, nama: "Celana Dalam L", kategori: "Fashion", harga: "20.000", stok: "∞" },
-            { id: 118, nama: "Palu 1LB", kategori: "Tukang", harga: "40.000", stok: "∞" },
-            { id: 119, nama: "Listrik PLN", kategori: "Tagihan", harga: "15.00", stok: "∞" },
-            { id: 120, nama: "Music Box", kategori: "elektronika", harga: "200.000", stok: "∞" },
-            // ... tambahkan sampai 40 atau lebih barang di sini
-        ];
-        // 2. Ambil nomor halaman dari URL (?page=2)
-        const urlParams = new URLSearchParams(window.location.search);
-        const currentPage = parseInt(urlParams.get('page')) || 1;
-        const perPage = 20;
-        // 3. Hitung barang mana yang harus muncul
-        const start = (currentPage - 1) * perPage;
-        const end = start + perPage;
-        const barangHalamanIni = semuaBarang.slice(start, end);
-        // 4. Tampilkan ke Tabel const
-        tableBody = document.getElementById('productTableBody');
-        barangHalamanIni.forEach(item => {
-            tableBody.innerHTML += `
+        </main>
+        <script>
+            // 1. Data Barang Kamu (Bisa sampai ratusan di sini)
+            const semuaBarang = [
+                { id: 101, nama: "Voucher WiFi 10GB", kategori: "Voucher", harga: "15.000", stok: "120" },
+                { id: 102, nama: "Top Up Diamond ML", kategori: "Games", harga: "50.000", stok: "∞" },
+                { id: 103, nama: "Kopi Hitam Panas", kategori: "Minuman", harga: "3.000", stok: "10" },
+                { id: 104, nama: "Kopi Hitam Dingin", kategori: "Minuman", harga: "5.000", stok: "10" },
+                { id: 105, nama: "Baso Pedas Itu Nikmat", kategori: "Makanan", harga: "10.000", stok: "∞" },
+                { id: 106, nama: "Pulsa Telkomsel", kategori: "Pulsa", harga: "5.000", stok: "∞" },
+                { id: 107, nama: "Kuota 7GB Telkomsel", kategori: "Kuota", harga: "25.000", stok: "∞" },
+                { id: 108, nama: "Tarik Uang E-walet", kategori: "E-wallet", harga: "2.000", stok: "∞" },
+                { id: 109, nama: "Top Up E-walet", kategori: "E-walet", harga: "3.000", stok: "∞" },
+                { id: 110, nama: "Chitos", kategori: "snack", harga: "4.000", stok: "∞" },
+                { id: 111, nama: "Pempers M", kategori: "Pakaian", harga: "11.000", stok: "∞" },
+                { id: 112, nama: "Roko Dji Sam Soe", kategori: "penyakit", harga: "22.000", stok: "∞" },
+                { id: 113, nama: "Bala-Bala", kategori: "Gorengan", harga: "1.000", stok: "∞" },
+                { id: 114, nama: "Sepatu Adidas", kategori: "Olahraga", harga: "350.000", stok: "∞" },
+                { id: 115, nama: "Jam Tangan", kategori: "life Style", harga: "150.000", stok: "∞" },
+                { id: 116, nama: "Ponds White", kategori: "Kecantikan", harga: "13.000", stok: "∞" },
+                { id: 117, nama: "Celana Dalam L", kategori: "Fashion", harga: "20.000", stok: "∞" },
+                { id: 118, nama: "Palu 1LB", kategori: "Tukang", harga: "40.000", stok: "∞" },
+                { id: 119, nama: "Listrik PLN", kategori: "Tagihan", harga: "15.00", stok: "∞" },
+                { id: 120, nama: "Music Box", kategori: "elektronika", harga: "200.000", stok: "∞" },
+                // ... tambahkan sampai 40 atau lebih barang di sini
+            ];
+            // 2. Ambil nomor halaman dari URL (?page=2)
+            const urlParams = new URLSearchParams(window.location.search);
+            const currentPage = parseInt(urlParams.get('page')) || 1;
+            const perPage = 20;
+            // 3. Hitung barang mana yang harus muncul
+            const start = (currentPage - 1) * perPage;
+            const end = start + perPage;
+            const barangHalamanIni = semuaBarang.slice(start, end);
+            // 4. Tampilkan ke Tabel const
+            tableBody = document.getElementById('productTableBody');
+            barangHalamanIni.forEach(item => {
+                tableBody.innerHTML += `
         <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer;" 
             onclick="window.location.href='detail.html?id=${item.id}'">
             <td style="padding: 10px;"><img src="img/sample.png" style="width:50px; border-radius:5px;"></td>
@@ -118,8 +119,8 @@
             </td>
         </tr>
     `;
-        });
-    </script>
-</body>
+            });
+        </script>
+    </body>
 
 </html>
