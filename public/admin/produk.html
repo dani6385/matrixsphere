@@ -90,7 +90,13 @@
             import { monitorGudang, importExcelKeFirebase, getFirebaseData } from '../js/inventory-manager.js';
 
             const tableBody = document.getElementById('productTableBody');
-
+            window.keHalamanEdit = (id) => {
+                if (id) {
+                    window.location.href = `add.html?id=${id}`;
+                } else {
+                    alert("ID Produk tidak ditemukan!");
+                }
+            };
             // --- A. MENAMPILKAN DATA DARI FIREBASE (REALTIME) ---
             monitorGudang((data) => {
                 if (!tableBody) return;
@@ -106,16 +112,22 @@
                     tableBody.innerHTML += `
                 <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer;" 
                     onclick="window.location.href='detail.html?id=${item.id}'">
-                    <td style="padding: 10px; text-align: center;">
-                        <img src="${item.img || '../img/logo_shop.png'}" style="width:50px; height:50px; border-radius:5px; object-fit:cover;">
+                    <td style="padding: 10px; text-align: center;" onclick="window.location.href='detail.html?id=${item.id}'">
+                         <img src="${item.img || '../img/logo.png'}" style="width:50px; height:50px; border-radius:5px; object-fit:cover;">
                     </td>
-                    <td style="padding: 15px;">${item.nama}</td>
-                    <td style="padding: 15px;"><span style="background: #1e293b; padding: 5px 10px; border-radius: 5px; font-size: 12px;">${item.kategori}</span></td>
+                    <td style="padding: 15px;" onclick="window.location.href='detail.html?id=${item.id}'">${item.nama}</td>
+                    <td style="padding: 15px;" onclick="window.location.href='detail.html?id=${item.id}'">
+                        <span style="background: #1e293b; padding: 5px 10px; border-radius: 5px; font-size: 12px;">${item.kategori}</span>
+                    </td>
                     <td style="padding: 15px;">Rp ${item.harga}</td>
                     <td style="padding: 15px;">${item.stok}</td>
                     <td style="padding: 15px;"><span style="color: #4ade80;">● Tersedia</span></td>
                     <td style="padding: 15px;">
-                        <button class="btn pd-5" style="background: #f59e0b; color: white; border-radius: 5px;">Edit</button>
+                        <button onclick="event.stopPropagation(); keHalamanEdit('${item.id}')" 
+                class="btn pd-5" 
+                style="background: #f59e0b; color: white; border-radius: 5px; cursor: pointer; padding: 5px 15px;">
+            Edit
+        </button>
                     </td>
                 </tr>`;
                 });
@@ -155,7 +167,18 @@
                     reader.readAsArrayBuffer(file);
                 });
             }
-        </script>
+            // Contoh saat kamu looping data dari Firebase
+            const btnEdit = `<button onclick="keHalamanEdit('${produk.id}')" class="btn-edit">Edit</button>`;
+
+            // Tambahkan fungsi ini agar bisa dipanggil oleh tombol
+            window.keHalamanEdit = (id) => {
+                if (id) {
+                    // Mengarahkan ke add.html sambil membawa ID di URL
+                    window.location.href = `add.html?id=${id}`;
+                } else {
+                    alert("ID Produk tidak ditemukan!");
+                }
+            };
         </script>
         <script src="../js/xlsx.full.min.js"></script>
     </body>
