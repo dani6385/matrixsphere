@@ -1,6 +1,6 @@
 import { db } from './detail.js';
 import { ref, get, update, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-
+import { uploadToImgBB } from './imgbb.js';
 // 1. Inisialisasi elemen-elemen dari HTML kamu
 const dropZone = document.getElementById('dropZone');
 const fileInput = document.getElementById('fileInput');
@@ -21,20 +21,12 @@ dropZone.addEventListener('click', () => {
 fileInput.addEventListener('change', function() {
     const file = this.files[0];
     if (file) {
-        // Validasi ukuran file (opsional, misal max 1MB agar Firebase tidak berat)
-        if (file.size > 200000) {
-            alert("Ukuran foto terlalu besar bro, maksimal 200KB ya!");
-            this.value = "";
-            return;
-        }
-
         const reader = new FileReader();
-        reader.onload = function(e) {
-            // Tampilkan gambar di elemen img id="preview"
+        reader.onload = (e) => {
             preview.src = e.target.result;
             preview.style.display = 'block';
         }
-        reader.readAsDataURL(file); // Mengubah gambar jadi teks Base64
+        reader.readAsDataURL(file);
     }
 });
 
@@ -68,25 +60,38 @@ window.onload = muatData;
 productForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const idFinal = document.getElementById('prodId').value || editId || "MS-" + Date.now();
-    
-    const dataBaru = {
-        id: idFinal,
-        nama: document.getElementById('prodName').value,
-        stok: document.getElementById('prodStock').value,
-        harga: document.getElementById('prodPrice').value,
-        kategori: document.getElementById('prodCategory').value,
-        img: preview.src // Mengambil data gambar dari preview (Base64)
-    };
+    const file = fileInput.files[0];
+    let imageUrl = preview.src; // Default pakai gambar lama (jika edit)
 
     try {
+        // JIKA ADA FILE BARU, UPLOAD KE IMGBB DULU
+        if (file) {
+            console.log("Sedang upload ke ImgBB...");
+            const uploadedUrl = await uploadToImgBB(file);
+            if (uploadedUrl) {
+                imageUrl = uploadedUrl; // Ganti Base64 jadi Link URL ImgBB
+            }
+        }
+
+        const idFinal = document.getElementById('prodId').value || editId || "MS-" + Date.now();
+        
+        const dataBaru = {
+            id: idFinal,
+            nama: document.getElementById('prodName').value,
+            stok: document.getElementById('prodStock').value,
+            harga: document.getElementById('prodPrice').value,
+            kategori: document.getElementById('prodCategory').value,
+            img: imageUrl // Sekarang isinya sudah Link URL (https://i.ibb.co/...)
+        };
+
         const targetRef = ref(db, `gudangBarang/${idFinal}`);
         if (editId) {
             await update(targetRef, dataBaru);
         } else {
             await set(targetRef, dataBaru);
         }
-        alert("Berhasil simpan ke cloud!");
+
+        alert("Berhasil simpan ke ImgBB & Cloud!");
         window.location.href = 'produk.html';
     } catch (error) {
         alert("Gagal simpan: " + error.message);
