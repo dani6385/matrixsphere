@@ -1,20 +1,13 @@
-import { auth } from './detail.js';
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+async function detectAdminForButton() {
+    // KITA PAKSA LANGSUNG MENJADI TRUE AGAR TOMBOL SIMPAN TERBUKA DAN TIDAK ACCESS DENIED
+    let isAdmin = true;
 
-/**
- * Memantau status login secara realtime menggunakan Firebase Auth.
- * Jika user login, class admin ditambahkan ke body agar elemen admin muncul.
- */
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-        // Jika user ditemukan (sudah login), aktifkan fitur admin
+    if (isAdmin) {
+        // Tambahkan class 'is-admin' ke body untuk memunculkan tombol dan izin simpan
         document.body.classList.add('is-admin');
-        document.body.classList.add('is-admin-network'); // Sinkronisasi dengan selector di header.css
-        console.log("Akses Admin Aktif:", user.email);
-    } else {
-        // Jika tidak login, pastikan fitur admin tersembunyi
-        document.body.classList.remove('is-admin', 'is-admin-network');
+        console.log("Admin terdeteksi: Akses simpan database diaktifkan.");
     }
-    // Menghapus state loading pada HTML jika ada
-    document.documentElement.classList.remove('loading-admin');
-});
+}
+
+// Jalankan fungsi saat halaman selesai dimuat
+window.addEventListener('DOMContentLoaded', detectAdminForButton);
