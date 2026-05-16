@@ -502,3 +502,18 @@ body {
     }
 }
 /* --- PERBAIKAN FORM ADMIN (Custom dari Tailwind ke Native) --- */
+
+.category-scroll-wrapper {
+    display: flex;
+    overflow-x: auto;
+    gap: 12px;
+    padding: 10px 0;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch; /* Scroll halus di iOS */
+    scrollbar-width: none; /* Sembunyikan scrollbar di Firefox */
+    -ms-overflow-style: none; /* Sembunyikan scrollbar di IE/Edge */
+}
+
+.category-scroll-wrapper::-webkit-scrollbar {
+    display: none; /* Sembunyikan scrollbar di Chrome/Safari */
+}
