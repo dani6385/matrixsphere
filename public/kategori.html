@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kategori Produk - MatrixSphere</title>
+    <link rel="icon" type="image/png" href="img/favicon.png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/ui-light.css">
+    <link rel="stylesheet" href="css/header.css">
+</head>
+
+<body class="bg-slate-900 text-white font-sans">
+    <header class="main-header">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo text-bold text-white">
+                <img src="img/logo.png" alt="Logo" class="h-10"></a>
+            <span class="ml-4 font-bold text-sky-400 uppercase tracking-widest">MatrixSphere</span>
+            
+            <div class="search-bar">
+                <input type="text" id="searchInput" class="form-control" placeholder="Cari produk...">
+            </div>
+
+            <div class="nav-actions">
+                <a href="index.html" class="btn bg-secondary pd-l-10 pd-r-10">KEMBALI</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="index-content container">
+        <div class="mr-b-10">
+            <h2 class="text-blue" style="font-size: 1.5rem;">
+                <span id="categoryDisplayTitle" style="border-left: 4px solid #20a8d8; padding-left: 10px;">Kategori</span>
+            </h2>
+            <p id="categoryStats" class="text-secondary mr-t-5">Memuat produk...</p>
+        </div>
+
+        <div class="row" id="productGrid">
+            <!-- Produk akan dimunculkan di sini -->
+        </div>
+    </main>
+
+    <script type="module">
+        import { monitorGudang } from './js/inventory-manager.js';
+
+        const productGrid = document.getElementById('productGrid');
+        const categoryDisplayTitle = document.getElementById('categoryDisplayTitle');
+        const categoryStats = document.getElementById('categoryStats');
+        const searchInput = document.getElementById('searchInput');
+
+        // 1. Ambil Nama Kategori dari URL (?c=NamaKategori)
+        const urlParams = new URLSearchParams(window.location.search);
+        const targetCategory = urlParams.get('c');
+
+        if (!targetCategory) {
+            window.location.href = 'index.html';
+        }
+
+        // 2. Tampilkan Nama Kategori di Judul
+        categoryDisplayTitle.innerText = targetCategory;
+
+        // 3. Ambil Data dari Firebase
+        monitorGudang((products) => {
+            // Filter berdasarkan kategori yang dipilih
+            const filtered = targetCategory === 'Semua' 
+                ? products 
+                : products.filter(p => p.kategori === targetCategory);
+
+            categoryStats.innerText = `Ditemukan ${filtered.length} produk dalam kategori ini.`;
+            renderProducts(filtered);
+        });
+
+        function renderProducts(items) {
+            if (items.length === 0) {
+                productGrid.innerHTML = '<div class="col-12 text-center mr-t-20">Belum ada produk di kategori ini.</div>';
+                return;
+            }
+
+            productGrid.innerHTML = items.map(item => `
+                <div class="col-3 mr-b-10">
+                    <div class="card bg-white text-dark" style="height:100%; display:flex; flex-direction:column;">
+                        <div class="card-body text-center" style="flex:1;">
+                            <img src="${item.img || 'img/logo.png'}" style="width:100%; height:180px; object-fit:cover; border-radius:5px;" onerror="this.onerror=null;this.src='img/logo.png';">
+                            <h3 class="mr-t-10" style="font-size: 1.1rem;">${item.nama}</h3>
+                            <p class="text-primary text-bold">Rp ${Number(item.harga).toLocaleString('id-ID')}</p>
+                            <button class="btn bg-success w-12 mr-t-10" onclick="window.location.href='view.html?id=${item.id}'">DETAIL</button>
+                        </div>
+                    </div>
+                </div>`).join('');
+        }
+    </script>
+</body>
+</html>

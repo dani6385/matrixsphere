@@ -72,32 +72,21 @@
         const searchInput = document.getElementById('searchInput');
 
         let allProducts = [];
-        let currentIndex = 0;
-        let rotationInterval;
 
         monitorGudang((products) => {
             allProducts = products;
-            
-            // Satukan kategori: Hapus spasi dan abaikan perbedaan besar/kecil huruf
-            const categoriesSet = new Set();
-            products.forEach(p => {
-                const cat = (p.kategori || 'Lainnya').trim();
-                // Cek apakah kategori yang sama (case-insensitive) sudah ada
-                const existing = [...categoriesSet].find(c => c.toLowerCase() === cat.toLowerCase());
-                if (!existing) categoriesSet.add(cat);
-            });
-            const categories = ['Semua', ...categoriesSet];
+            const categories = ['Semua', ...new Set(products.map(p => p.kategori))];
             
             // Render kategori pill yang bisa digeser
-            categoryContainer.innerHTML = categories.map((cat, idx) => `
-                <button class="category-pill ${idx === 0 ? 'bg-dark' : 'bg-primary'} text-white radius-5" onclick="filterByCategory('${cat}')">
+            categoryContainer.innerHTML = categories.map(cat => `
+                <button class="category-pill bg-primary text-white radius-5" onclick="window.location.href='kategori.html?c=${encodeURIComponent(cat)}'">
                     ${cat}
                 </button>
             `).join('');
 
             // Render kategori ke dalam dropdown
             dropdownCategories.innerHTML = categories.map(cat => `
-                <a href="#" class="dropdown-item text-white border-bottom" onclick="filterByCategory('${cat}')">${cat}</a>
+                <a href="kategori.html?c=${encodeURIComponent(cat)}" class="dropdown-item text-white border-bottom">${cat}</a>
             `).join('');
 
             renderProducts(products);
@@ -107,20 +96,18 @@
             selectedCategoryTitle.innerText = category;
             const filtered = category === 'Semua' 
                 ? allProducts 
-                : allProducts.filter(p => (p.kategori || 'Lainnya').trim().toLowerCase() === category.toLowerCase());
+                : allProducts.filter(p => p.kategori === category);
             renderProducts(filtered);
-
-            // Visual Feedback: Tandai tombol yang aktif & Sinkronkan index rotasi
-            const pills = categoryContainer.querySelectorAll('.category-pill');
-            pills.forEach((pill, idx) => {
-                if (pill.innerText.trim() === category) {
-                    pill.classList.replace('bg-primary', 'bg-dark');
-                    currentIndex = idx; 
-                } else {
-                    pill.classList.replace('bg-dark', 'bg-primary');
-                }
-            });
         };
+
+        // Fungsi agar saat menekan tombol Enter, pengunjung diarahkan ke halaman pencarian.html
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault(); // Mencegah browser melakukan aksi default/salah arah
+                const term = e.target.value.trim();
+                if (term) window.location.href = `pencarian.html?q=${encodeURIComponent(term)}`;
+            }
+        });
 
         searchInput.addEventListener('input', (e) => {
             const term = e.target.value.toLowerCase();
@@ -136,42 +123,35 @@
                 <div class="col-3 mr-b-10">
                     <div class="card bg-white text-dark" style="height:100%; display:flex; flex-direction:column;">
                         <div class="card-body text-center" style="flex:1;">
-                            <img src="${item.img || 'img/logo.png'}" style="width:100%; height:180px; object-fit:cover; border-radius:5px;" onerror="this.src='img/logo.png'">
+                            <img src="${item.img || 'img/logo.png'}" style="width:100%; height:180px; object-fit:cover; border-radius:5px;" onerror="this.onerror=null;this.src='img/logo.png';">
                             <h3 class="mr-t-10" style="font-size: 1.1rem;">${item.nama}</h3>
                             <p class="text-primary text-bold">Rp ${Number(item.harga).toLocaleString('id-ID')}</p>
-                            <button class="btn bg-success w-12 mr-t-10" onclick="window.location.href='view-detail.html?id=${item.id}'">DETAIL</button>
+                            <button class="btn bg-success w-12 mr-t-10" onclick="window.location.href='view.html?id=${item.id}'">DETAIL</button>
                         </div>
                     </div>
                 </div>
             `).join('');
         }
 
-        // --- LOGIKA ROTASI KATEGORI OTOMATIS (AUTO-CLICK) ---
-        function startAutoRotation() {
-            stopAutoRotation();
-            rotationInterval = setInterval(() => {
-                const pills = categoryContainer.querySelectorAll('.category-pill');
-                if (pills.length === 0) return;
-
-                // Pindah ke kategori berikutnya
-                currentIndex = (currentIndex + 1) % pills.length;
-                const nextCategory = pills[currentIndex].innerText.trim();
-                
-                filterByCategory(nextCategory);
-                
-                // Scroll tombol agar selalu berada di tengah area pandang
-                pills[currentIndex].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-            }, 5000); // Berganti kategori setiap 5 detik
+        // --- LOGIKA AUTO SCROLL KATEGORI ---
+        let scrollInterval;
+        function startAutoScroll() {
+            scrollInterval = setInterval(() => {
+                if (categoryContainer && categoryContainer.scrollWidth > categoryContainer.clientWidth) {
+                    categoryContainer.scrollLeft += 1;
+                    // Kembali ke awal jika sudah mencapai batas akhir scroll untuk efek looping
+                    if (categoryContainer.scrollLeft >= (categoryContainer.scrollWidth - categoryContainer.clientWidth)) {
+                        categoryContainer.scrollLeft = 0;
+                    }
+                }
+            }, 40); // Menyesuaikan kecepatan scroll (semakin kecil angka, semakin cepat)
         }
 
-        function stopAutoRotation() {
-            if (rotationInterval) clearInterval(rotationInterval);
-        }
+        // Berhenti otomatis saat mouse hover agar user mudah memilih kategori
+        categoryContainer.addEventListener('mouseenter', () => clearInterval(scrollInterval));
+        categoryContainer.addEventListener('mouseleave', startAutoScroll);
 
-        categoryContainer.addEventListener('mouseenter', stopAutoRotation);
-        categoryContainer.addEventListener('mouseleave', startAutoRotation);
-
-        startAutoRotation();
+        startAutoScroll();
     </script>
 </body>
 

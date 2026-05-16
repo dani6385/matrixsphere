@@ -44,7 +44,7 @@ async function muatData() {
             document.getElementById('prodCategory').value = data.kategori || "";
             document.getElementById('prodId').value = data.id || editId;
             
-            if (data.img) {
+            if (data.img && data.img !== "img/logo.png") {
                 preview.src = data.img; 
                 preview.style.display = 'block';
             }
@@ -52,7 +52,8 @@ async function muatData() {
     }
 }
 
-window.onload = muatData;
+// PERBAIKAN: Gunakan addEventListener agar tidak tertimpa script lain
+document.addEventListener('DOMContentLoaded', muatData);
 
 
 // --- FITUR SIMPAN DATA ---
@@ -61,7 +62,10 @@ productForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const file = fileInput.files[0];
-    let imageUrl = preview.src; // Default pakai gambar lama (jika edit)
+    // Ambil source gambar, pastikan bukan URL halaman saat ini
+    let imageUrl = (preview.src && !preview.src.includes(window.location.pathname)) 
+                   ? preview.src 
+                   : "img/logo.png";
 
     try {
         // JIKA ADA FILE BARU, UPLOAD KE IMGBB DULU
@@ -81,7 +85,7 @@ productForm.addEventListener('submit', async (e) => {
             stok: document.getElementById('prodStock').value,
             harga: document.getElementById('prodPrice').value,
             kategori: document.getElementById('prodCategory').value,
-            img: imageUrl // Sekarang isinya sudah Link URL (https://i.ibb.co/...)
+            img: imageUrl
         };
 
         const targetRef = ref(db, `gudangBarang/${idFinal}`);
