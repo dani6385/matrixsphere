@@ -28,21 +28,28 @@ export function monitorGudang(callback) {
 }
 
 // --- 2. FUNGSI IMPORT EXCEL KE FIREBASE ---
+// --- 2. FUNGSI IMPORT EXCEL KE FIREBASE ---
 export async function importExcelKeFirebase(jsonData) {
     const dataBaru = {};
+    
     jsonData.forEach(row => {
-        dataBaru[row.ID] = {
-            id: row.ID,
-            nama: row.Nama_Produk,
-            kategori: row.Kategori,
-            harga: row.Harga,
-            stok: row.Stok,
-            img: row.Fath_Gambar || "../img/logo.png"
+        // AMBIL ID (Pastikan di Excel kolomnya bernama "ID")
+        const idProduk = row.ID || row.id || "MS-" + Date.now();
+
+        dataBaru[idProduk] = {
+            id: idProduk,
+            nama: row.Nama_Produk || row.nama, // Sesuaikan dengan kolom Excel
+            kategori: row.Kategori || row.kategori,
+            harga: row.Harga || row.harga,
+            stok: row.Stok || row.stok,
+            img: row.img || row.Path_Gambar || row.Fath_Gambar || "", // Gunakan string kosong jika tidak ada gambar
+            detail: row.Detail || row.detail || "Tidak ada deskripsi."
         };
     });
 
     try {
-        await set(dbRef, dataBaru);
+        // Pakai update (agar data lama tidak terhapus semua) atau set (tindas semua)
+        await set(dbRef, dataBaru); 
         return { success: true };
     } catch (error) {
         return { success: false, error };
