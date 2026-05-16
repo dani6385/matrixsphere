@@ -14,10 +14,10 @@
         <header class="main-header">
             <div class="nav-container">
                 <div style="display: flex; align-items: center;">
-                    <a href="index.html" class="nav-logo align-items: center;">
+                    <a href="index.html" class="nav-logo">
                         <img src="../img/logo.png" alt="Logo">
                     </a>
-                    <span class="brand-text">MatrixSphere</span>
+                    <span class="brand-text text-matrix" style="font-weight: bold; font-size: 1.2rem;">MatrixSphere</span>
                 </div>
                 <div class="nav-actions">
                     <a href="add.html" class="btn bg-primary text-bold btn-tambah"
@@ -30,31 +30,32 @@
 
         <main class="container" style="padding-top: 130px; padding-bottom: 50px;">
             <div class="glass-box pd-20">
-                <div class="row"
-                    style="margin-bottom: 20px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 15px 0;">
-                    <div class="col-6">
+                <!-- Container utama yang membungkus Judul & Pencarian -->
+                <div class="inventory-top-header">
+                    <div class="header-info">
                         <h2 class="text-matrix" style="margin: 0;">KETERSEDIAAN</h2>
-                        <p class="text-white" style="opacity: 0.7;">Pantau stok dan harga produk aktif Anda.</p>
+                        <p class="text-white" style="opacity: 0.7; margin-top: 5px;">Pantau stok dan harga produk aktif Anda.</p>
                     </div>
 
-                    <div class="col-6 text-right">
+                    <div class="header-search">
                         <input type="text" placeholder="Cari di gudang..." class="form-control-md"
-                            style="width: 100%; max-width: 250px; display: inline-block; background: rgba(255,255,255,0.1); color: white; border: 1px solid #20a8d8;">
-                    </div>
-                    <div class="col-12 btn-group-stack"
-                        style="justify-content: flex-end; align-items: center;">
-                        <input type="file" id="importExcel" style="display: none;" accept=".xlsx, .xls">
-
-                        <button onclick="document.getElementById('importExcel').click()" class="btn"
-                            style="background: #10b981; color: white; padding: 8px 15px; border-radius: 5px; font-size: 12px; font-weight: bold;">
-                            IMPORT EXCEL
-                        </button>
-                        <button onclick="exportKeExcel()" class="btn"
-                            style="background: #3b82f6; color: white; padding: 8px 15px; border-radius: 5px; font-size: 12px; font-weight: bold;">
-                            EXPORT EXCEL
-                        </button>
+                            style="background: rgba(255,255,255,0.1); color: white; border: 1px solid #20a8d8;">
                     </div>
                 </div>
+
+                <!-- Container tombol Import/Export -->
+                <div class="btn-group-stack" style="justify-content: flex-end; align-items: center; margin-top: 15px;">
+                    <input type="file" id="importExcel" style="display: none;" accept=".xlsx, .xls">
+                    <button onclick="document.getElementById('importExcel').click()" class="btn"
+                        style="background: #10b981; color: white; padding: 10px 15px; border-radius: 5px; font-size: 12px; font-weight: bold;">
+                        IMPORT EXCEL
+                    </button>
+                    <button onclick="exportKeExcel()" class="btn"
+                        style="background: #3b82f6; color: white; padding: 10px 15px; border-radius: 5px; font-size: 12px; font-weight: bold;">
+                        EXPORT EXCEL
+                    </button>
+                </div>
+
                 <div style="overflow-x: auto;">
                     <table style="width: 100%; border-collapse: collapse; color: white; text-align: left;">
                         <thead>
@@ -65,6 +66,7 @@
                                 <th style="padding: 15px;">Harga</th>
                                 <th style="padding: 15px;">Stok</th>
                                 <th style="padding: 15px;">Status</th>
+                                <th style="padding: 15px;" class="hide-column">Deskripsi</th>
                                 <th style="padding: 15px;">Aksi</th>
                             </tr>
                         </thead>
@@ -100,7 +102,7 @@
 
                 // Jika data di Firebase kosong, tampilkan pesan
                 if (data.length === 0) {
-                    tableBody.innerHTML = "<tr><td colspan='7' style='text-align:center; padding:20px;'>Database Kosong. Silahkan Import Excel.</td></tr>";
+                    tableBody.innerHTML = "<tr><td colspan='8' style='text-align:center; padding:20px;'>Database Kosong. Silahkan Import Excel.</td></tr>";
                     return;
                 }
 
@@ -113,11 +115,17 @@
                 const paginatedData = data.slice(startIndex, endIndex);
 
                 paginatedData.forEach(item => {
+                    // Proxy gambar menggunakan weserv.nl jika URL adalah link eksternal (http/https)
+                    const originalImg = item.img || '../img/logo.png';
+                    const urlGambarAman = originalImg.startsWith('http') 
+                        ? `https://images.weserv.nl/?url=${originalImg.replace('https://', '')}` 
+                        : originalImg;
+
                     tableBody.innerHTML += `
                 <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer;" 
                     onclick="window.location.href='detail.html?id=${item.id}'">
                     <td style="padding: 10px; text-align: center;" onclick="window.location.href='detail.html?id=${item.id}'">
-                         <img src="${item.img || '../img/logo.png'}" style="width:50px; height:50px; border-radius:5px; object-fit:cover;" onerror="this.onerror=null;this.src='../img/logo.png';">
+                         <img src="${urlGambarAman}" style="width:50px; height:50px; border-radius:5px; object-fit:cover;" onerror="this.onerror=null;this.src='../img/logo.png';">
                     </td>
                     <td style="padding: 15px;" onclick="window.location.href='detail.html?id=${item.id}'">${item.nama}</td>
                     <td style="padding: 15px;" onclick="window.location.href='detail.html?id=${item.id}'">
@@ -126,6 +134,9 @@
                     <td style="padding: 15px;">Rp ${Number(item.harga).toLocaleString('id-ID')}</td>
                     <td style="padding: 15px;">${item.stok}</td>
                     <td style="padding: 15px;"><span style="color: #4ade80;">● Tersedia</span></td>
+                    <td style="padding: 15px;" class="hide-column">
+                        ${item.deskripsi || item.detail || "-"}
+                    </td>
                     <td style="padding: 15px;">
                         <button onclick="event.stopPropagation(); keHalamanEdit('${item.id}')" 
                 class="btn pd-5" 
