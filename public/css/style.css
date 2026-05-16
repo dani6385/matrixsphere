@@ -1,3 +1,6 @@
+@import url("ui-light.css");
+@import url("header.css");
+
 /* Variabel Global */
 :root {
     --primary-gradient: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
@@ -5,6 +8,10 @@
     --text-main: #0f172a;
     --text-muted: #64748b;
     --border-color: #e2e8f0;
+    --img-background: url('../img/background.jpg');
+    --img-favicon: url('../img/favicon.png');
+    --img-logo: url('../img/logo.png');
+    --img-logo-shop: url('../img/logo_shop.png');
 }
 
 /* Reset & Base */
@@ -24,7 +31,7 @@ body {
 /* Latar Belakang Dekoratif */
 .background-image {
     /* Menggunakan URL lokal sesuai permintaan user */
-    background: url('../img/background.jpg') no-repeat center center;
+    background: var(--img-background) no-repeat center center;
     background-size: cover;
     filter: brightness(0.3) blur(2px);
     z-index: -1;
@@ -296,7 +303,7 @@ body {
 }
 
 .background {
-    background-image: url('..public/img/bg.jpg');
+    background-image: var(--img-background);
     background-size: cover;
     background-attachment: fixed;
     background-position: center;
@@ -516,4 +523,17 @@ body {
 
 .category-scroll-wrapper::-webkit-scrollbar {
     display: none; /* Sembunyikan scrollbar di Chrome/Safari */
+}
+
+/* Perbaikan layout tombol Import/Export agar responsif */
+.btn-group-stack {
+    display: flex;
+    gap: 10px;
+}
+
+@media (max-width: 768px) {
+    .btn-group-stack {
+        flex-direction: column !important;
+        width: 100%;
+    }
 }
