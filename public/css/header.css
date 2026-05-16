@@ -90,20 +90,36 @@ body {
 }
 
 .dropdown-content {
-    display: none;
+    display: block; /* Selalu block agar transition bisa berjalan */
+    opacity: 0;
+    visibility: hidden;
     position: absolute;
     top: 100%;
-    /* Tepat di bawah tombol */
     left: 0;
     min-width: 200px;
     z-index: 1001;
     background: rgba(15, 23, 42, 0.95);
-    /* Mengikuti tema gelap */
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 8px;
     padding: 10px 0;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    max-height: 300px; /* Batas tinggi dropdown */
+    overflow-y: auto;  /* Aktifkan gulir jika konten lebih dari 300px */
+    
+    /* Efek halus saat muncul dan menghilang */
+    transition: all 0.3s ease-in-out;
+    transform: translateY(10px); 
+}
+
+/* Mempercantik tampilan scrollbar di dropdown */
+.dropdown-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.dropdown-content::-webkit-scrollbar-thumb {
+    background: rgba(32, 168, 216, 0.5);
+    border-radius: 10px;
 }
 
 /* "Jembatan" transparan agar dropdown tidak tertutup saat kursor pindah ke bawah */
@@ -113,13 +129,14 @@ body {
     top: -10px;
     left: 0;
     width: 100%;
-    height: 100px;
-    /* Area deteksi hover */
+    height: 20px; /* Perkecil area jembatan agar pas menutup celah */
     z-index: -1;
 }
 
 .dropdown:hover .dropdown-content {
-    display: block;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0); /* Kembali ke posisi asli saat hover */
 }
 @media screen and (max-width: 768px) {
     .brand-text {
