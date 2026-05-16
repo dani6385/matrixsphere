@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MatrixSphere - Shop</title>
+    <link rel="icon" type="image/png" href="img/favicon.png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/ui-light.css">
+    <link rel="stylesheet" href="css/header.css">
+</head>
+
+<body class="bg-slate-900 text-white font-sans">
+    <header class="main-header">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo text-bold text-white">
+                <img src="img/logo.png" alt="Logo" class="h-10"></a>
+            <span class="ml-4 font-bold text-sky-400 uppercase tracking-widest">MatrixSphere</span>
+            <div class="dropdown" id="categoryDropdown">
+                <button class="btn text-white text-bold pd-10">
+                    KATEGORI ▾
+                </button>
+                <div class="dropdown-content card bg-dark shadow-2" id="dropdownCategories"></div>
+            </div>
+
+            <div class="search-bar">
+                <input type="text" id="searchInput" class="form-control" placeholder="Cari produk...">
+            </div>
+
+            <div class="nav-actions">
+                <a href="auth.html" class="btn bg-primary pd-l-10 pd-r-10">MASUK</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="index-content container">
+
+        <div class="text-center mr-b-10">
+            <h1 class="text-blue" style="font-size: 2.5rem;">Selamat Datang di MatrixSphere</h1>
+            <p class="text-secondary">Warung Digital & Layanan Hotspot Anda</p>
+        </div>
+
+        <div class="card bg-dark pd-10 mr-b-10">
+            <h2 class="text-blue mr-b-5" style="font-size: 1.2rem;">
+                <span id="selectedCategoryTitle" style="border-left: 4px solid #20a8d8; padding-left: 10px;">Semua
+                    Kategori</span>
+            </h2>
+            <div id="categoryContainer" class="category-scroll-wrapper pd-t-5">
+            </div>
+        </div>
+
+        <div class="row" id="productGrid"></div>
+
+        <div class="text-center mr-t-10">
+            <div class="box-group" style="display: inline-block;">
+                <button class="btn bg-grey radius-l-5 pd-10">Sebelumnya</button>
+                <button class="btn bg-primary pd-10">1</button>
+                <button class="btn bg-grey radius-r-5 pd-10">Selanjutnya</button>
+            </div>
+        </div>
+
+    </main>
+
+    <script type="module">
+        import { monitorGudang } from './js/inventory-manager.js';
+
+        const categoryContainer = document.getElementById('categoryContainer');
+        const dropdownCategories = document.getElementById('dropdownCategories');
+        const productGrid = document.getElementById('productGrid');
+        const selectedCategoryTitle = document.getElementById('selectedCategoryTitle');
+        const searchInput = document.getElementById('searchInput');
+
+        let allProducts = [];
+        let currentIndex = 0;
+        let rotationInterval;
+
+        monitorGudang((products) => {
+            allProducts = products;
+            
+            // Satukan kategori: Hapus spasi dan abaikan perbedaan besar/kecil huruf
+            const categoriesSet = new Set();
+            products.forEach(p => {
+                const cat = (p.kategori || 'Lainnya').trim();
+                // Cek apakah kategori yang sama (case-insensitive) sudah ada
+                const existing = [...categoriesSet].find(c => c.toLowerCase() === cat.toLowerCase());
+                if (!existing) categoriesSet.add(cat);
+            });
+            const categories = ['Semua', ...categoriesSet];
+            
+            // Render kategori pill yang bisa digeser
+            categoryContainer.innerHTML = categories.map((cat, idx) => `
+                <button class="category-pill ${idx === 0 ? 'bg-dark' : 'bg-primary'} text-white radius-5" onclick="filterByCategory('${cat}')">
+                    ${cat}
+                </button>
+            `).join('');
+
+            // Render kategori ke dalam dropdown
+            dropdownCategories.innerHTML = categories.map(cat => `
+                <a href="#" class="dropdown-item text-white border-bottom" onclick="filterByCategory('${cat}')">${cat}</a>
+            `).join('');
+
+            renderProducts(products);
+        });
+
+        window.filterByCategory = (category) => {
+            selectedCategoryTitle.innerText = category;
+            const filtered = category === 'Semua' 
+                ? allProducts 
+                : allProducts.filter(p => (p.kategori || 'Lainnya').trim().toLowerCase() === category.toLowerCase());
+            renderProducts(filtered);
+
+            // Visual Feedback: Tandai tombol yang aktif & Sinkronkan index rotasi
+            const pills = categoryContainer.querySelectorAll('.category-pill');
+            pills.forEach((pill, idx) => {
+                if (pill.innerText.trim() === category) {
+                    pill.classList.replace('bg-primary', 'bg-dark');
+                    currentIndex = idx; 
+                } else {
+                    pill.classList.replace('bg-dark', 'bg-primary');
+                }
+            });
+        };
+
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const filtered = allProducts.filter(p => 
+                p.nama.toLowerCase().includes(term) || 
+                p.kategori.toLowerCase().includes(term)
+            );
+            renderProducts(filtered);
+        });
+
+        function renderProducts(items) {
+            productGrid.innerHTML = items.map(item => `
+                <div class="col-3 mr-b-10">
+                    <div class="card bg-white text-dark" style="height:100%; display:flex; flex-direction:column;">
+                        <div class="card-body text-center" style="flex:1;">
+                            <img src="${item.img || 'img/logo.png'}" style="width:100%; height:180px; object-fit:cover; border-radius:5px;" onerror="this.src='img/logo.png'">
+                            <h3 class="mr-t-10" style="font-size: 1.1rem;">${item.nama}</h3>
+                            <p class="text-primary text-bold">Rp ${Number(item.harga).toLocaleString('id-ID')}</p>
+                            <button class="btn bg-success w-12 mr-t-10" onclick="window.location.href='view-detail.html?id=${item.id}'">DETAIL</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // --- LOGIKA ROTASI KATEGORI OTOMATIS (AUTO-CLICK) ---
+        function startAutoRotation() {
+            stopAutoRotation();
+            rotationInterval = setInterval(() => {
+                const pills = categoryContainer.querySelectorAll('.category-pill');
+                if (pills.length === 0) return;
+
+                // Pindah ke kategori berikutnya
+                currentIndex = (currentIndex + 1) % pills.length;
+                const nextCategory = pills[currentIndex].innerText.trim();
+                
+                filterByCategory(nextCategory);
+                
+                // Scroll tombol agar selalu berada di tengah area pandang
+                pills[currentIndex].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+            }, 5000); // Berganti kategori setiap 5 detik
+        }
+
+        function stopAutoRotation() {
+            if (rotationInterval) clearInterval(rotationInterval);
+        }
+
+        categoryContainer.addEventListener('mouseenter', stopAutoRotation);
+        categoryContainer.addEventListener('mouseleave', startAutoRotation);
+
+        startAutoRotation();
+    </script>
+</body>
+
+</html>
