@@ -5,22 +5,19 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Gudang Produk - MatrixSphere</title>
+    <script src="../js/auth-guard.js"></script>
     <link rel="icon" type="image/png" href="../img/favicon.png">
-
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/ui-light.css">
-    <link rel="stylesheet" href="../css/heder.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <link rel="stylesheet" href="../css/header.css">
 </head>
 
-<body style="background-color: #0f172a; overflow-y: auto; height: auto; display: block;">
-
-    <body class="bg-slate-900 text-white font-sans" style="height: auto; overflow-y: auto; display: block;">
+<body class="bg-slate-900 text-white font-sans" style="height: auto; overflow-y: auto; display: block;">
         <header class="main-header">
             <div class="nav-container">
                 <div style="display: flex; align-items: center;">
                     <a href="index.html" class="nav-logo align-items: center;">
-                        <img src="../img/logo_shop.png" alt="Logo">
+                        <img src="../img/logo.png" alt="Logo">
                     </a>
                     <span class="brand-text">MatrixSphere</span>
                 </div>
@@ -38,7 +35,7 @@
                 <div class="row"
                     style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
                     <div class="col-6">
-                        <h2 class="text-matrix" style="margin: 0;">GUDANG KETERSEDIAAN BARANG</h2>
+                        <h2 class="text-matrix" style="margin: 0;">KETERSEDIAAN</h2>
                         <p class="text-white" style="opacity: 0.7;">Pantau stok dan harga produk aktif Anda.</p>
                     </div>
 
@@ -76,27 +73,28 @@
                         <tbody id="productTableBody">
                         </tbody>
                     </table>
-                    <div style="margin-top: 20px; text-align: center;">
-                        <a href="produk.html?page=1" class="btn">1</a>
-                        <a href="produk.html?page=2" class="btn">2</a>
-                    </div>
+                    <div id="paginationContainer" style="margin-top: 20px; text-align: center;"></div>
                 </div>
             </div>
         </main>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
         <script type="module">
             // Mengambil fungsi dari manager yang sudah kita pisah
             import { monitorGudang, importExcelKeFirebase, getFirebaseData } from '../js/inventory-manager.js';
 
             const tableBody = document.getElementById('productTableBody');
+            const paginationContainer = document.getElementById('paginationContainer');
+            
+            // Ambil halaman saat ini dari URL
+            const urlParams = new URLSearchParams(window.location.search);
+            let currentPage = parseInt(urlParams.get('page')) || 1;
+            const itemsPerPage = 20;
+
             window.keHalamanEdit = (id) => {
-                if (id) {
-                    window.location.href = `add.html?id=${id}`;
-                } else {
-                    alert("ID Produk tidak ditemukan!");
-                }
+                if (id) window.location.href = `add.html?id=${id}`;
+                else alert("ID Produk tidak ditemukan!");
             };
+
             // --- A. MENAMPILKAN DATA DARI FIREBASE (REALTIME) ---
             monitorGudang((data) => {
                 if (!tableBody) return;
@@ -108,12 +106,20 @@
                     return;
                 }
 
-                data.forEach(item => {
+                // Logika Paginasi
+                const totalPages = Math.ceil(data.length / itemsPerPage);
+                if (currentPage > totalPages) currentPage = totalPages;
+                
+                const startIndex = (currentPage - 1) * itemsPerPage;
+                const endIndex = startIndex + itemsPerPage;
+                const paginatedData = data.slice(startIndex, endIndex);
+
+                paginatedData.forEach(item => {
                     tableBody.innerHTML += `
                 <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer;" 
                     onclick="window.location.href='detail.html?id=${item.id}'">
                     <td style="padding: 10px; text-align: center;" onclick="window.location.href='detail.html?id=${item.id}'">
-                         <img src="${item.img || '../img/logo.png'}" style="width:50px; height:50px; border-radius:5px; object-fit:cover;">
+                         <img src="${item.img || '../img/logo.png'}" style="width:50px; height:50px; border-radius:5px; object-fit:cover;" onerror="this.src='../img/logo.png'">
                     </td>
                     <td style="padding: 15px;" onclick="window.location.href='detail.html?id=${item.id}'">${item.nama}</td>
                     <td style="padding: 15px;" onclick="window.location.href='detail.html?id=${item.id}'">
@@ -131,7 +137,24 @@
                     </td>
                 </tr>`;
                 });
+
+                renderPaginationLinks(totalPages);
             });
+
+            function renderPaginationLinks(total) {
+                if (!paginationContainer) return;
+                paginationContainer.innerHTML = "";
+                
+                for (let i = 1; i <= total; i++) {
+                    const isActive = i === currentPage;
+                    paginationContainer.innerHTML += `
+                        <a href="produk.html?page=${i}" class="btn" 
+                           style="background: ${isActive ? '#20a8d8' : 'rgba(255,255,255,0.1)'}; 
+                                  margin: 0 5px; padding: 5px 15px; min-width: 40px; display: inline-block;">
+                           ${i}
+                        </a>`;
+                }
+            }
 
             // --- B. FUNGSI EXPORT (Global agar bisa dipanggil tombol) ---
             window.exportKeExcel = async () => {

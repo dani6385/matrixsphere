@@ -5,20 +5,19 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Detail Produk - MatrixSphere</title>
+    <script src="../js/auth-guard.js"></script>
     <link rel="icon" type="image/png" href="../img/favicon.png">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/ui-light.css">
-    <link rel="stylesheet" href="../css/heder.css">
+    <link rel="stylesheet" href="../css/header.css">
 </head>
 
-<body style="background-color: #0f172a; color: white;">
-
-    <body class="bg-slate-900 text-white font-sans" style="height: auto; overflow-y: auto; display: block;">
+<body class="bg-slate-900 text-white font-sans" style="height: auto; overflow-y: auto; display: block;">
         <header class="main-header">
             <div class="nav-container">
                 <div style="display: flex; align-items: center;">
                     <a href="index.html" class="nav-logo align-items: center;">
-                        <img src="../img/logo_shop.png" alt="Logo">
+                        <img src="../img/logo.png" alt="Logo">
                     </a>
 
                     <span class="brand-text">MatrixSphere</span>
@@ -97,7 +96,7 @@
                     document.getElementById('detailTitle').innerText = produk.nama;
                     document.getElementById('detailPrice').innerText = "Rp " + produk.harga;
                     document.getElementById('detailCategory').innerText = produk.kategori;
-                    document.getElementById('detailImg').src = produk.img || "../img/logo_shop.png";
+                    document.getElementById('detailImg').src = produk.img || "../img/logo.png";
                     document.getElementById('detailDesc').innerText = produk.desc || "Deskripsi belum tersedia.";
                 } else {
                     alert("Produk tidak ditemukan di Cloud!");
