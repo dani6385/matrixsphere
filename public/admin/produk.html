@@ -8,8 +8,6 @@
     <script src="../js/auth-guard.js"></script>
     <link rel="icon" type="image/png" href="../img/favicon.png">
     <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/ui-light.css">
-    <link rel="stylesheet" href="../css/header.css">
 </head>
 
 <body class="bg-slate-900 text-white font-sans" style="height: auto; overflow-y: auto; display: block;">
@@ -33,7 +31,7 @@
         <main class="container" style="padding-top: 130px; padding-bottom: 50px;">
             <div class="glass-box pd-20">
                 <div class="row"
-                    style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+                    style="margin-bottom: 20px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 15px 0;">
                     <div class="col-6">
                         <h2 class="text-matrix" style="margin: 0;">KETERSEDIAAN</h2>
                         <p class="text-white" style="opacity: 0.7;">Pantau stok dan harga produk aktif Anda.</p>
@@ -41,10 +39,10 @@
 
                     <div class="col-6 text-right">
                         <input type="text" placeholder="Cari di gudang..." class="form-control-md"
-                            style="max-width: 250px; display: inline-block; background: rgba(255,255,255,0.1); color: white; border: 1px solid #20a8d8;">
+                            style="width: 100%; max-width: 250px; display: inline-block; background: rgba(255,255,255,0.1); color: white; border: 1px solid #20a8d8;">
                     </div>
-                    <div class="col-6 text-right"
-                        style="display: flex; gap: 10px; justify-content: flex-end; align-items: center;">
+                    <div class="col-12 btn-group-stack"
+                        style="justify-content: flex-end; align-items: center;">
                         <input type="file" id="importExcel" style="display: none;" accept=".xlsx, .xls">
 
                         <button onclick="document.getElementById('importExcel').click()" class="btn"
@@ -119,13 +117,13 @@
                 <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer;" 
                     onclick="window.location.href='detail.html?id=${item.id}'">
                     <td style="padding: 10px; text-align: center;" onclick="window.location.href='detail.html?id=${item.id}'">
-                         <img src="${item.img || '../img/logo.png'}" style="width:50px; height:50px; border-radius:5px; object-fit:cover;" onerror="this.src='../img/logo.png'">
+                         <img src="${item.img || '../img/logo.png'}" style="width:50px; height:50px; border-radius:5px; object-fit:cover;" onerror="this.onerror=null;this.src='../img/logo.png';">
                     </td>
                     <td style="padding: 15px;" onclick="window.location.href='detail.html?id=${item.id}'">${item.nama}</td>
                     <td style="padding: 15px;" onclick="window.location.href='detail.html?id=${item.id}'">
                         <span style="background: #1e293b; padding: 5px 10px; border-radius: 5px; font-size: 12px;">${item.kategori}</span>
                     </td>
-                    <td style="padding: 15px;">Rp ${item.harga}</td>
+                    <td style="padding: 15px;">Rp ${Number(item.harga).toLocaleString('id-ID')}</td>
                     <td style="padding: 15px;">${item.stok}</td>
                     <td style="padding: 15px;"><span style="color: #4ade80;">● Tersedia</span></td>
                     <td style="padding: 15px;">
@@ -190,18 +188,6 @@
                     reader.readAsArrayBuffer(file);
                 });
             }
-            // Contoh saat kamu looping data dari Firebase
-            const btnEdit = `<button onclick="keHalamanEdit('${produk.id}')" class="btn-edit">Edit</button>`;
-
-            // Tambahkan fungsi ini agar bisa dipanggil oleh tombol
-            window.keHalamanEdit = (id) => {
-                if (id) {
-                    // Mengarahkan ke add.html sambil membawa ID di URL
-                    window.location.href = `add.html?id=${id}`;
-                } else {
-                    alert("ID Produk tidak ditemukan!");
-                }
-            };
         </script>
         <script src="../js/xlsx.full.min.js"></script>
     </body>

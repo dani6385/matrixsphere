@@ -8,8 +8,6 @@
     <script src="../js/auth-guard.js"></script>
     <link rel="icon" type="image/png" href="../img/favicon.png">
     <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/ui-light.css">
-    <link rel="stylesheet" href="../css/header.css">
 </head>
 
 <body class="bg-slate-900 text-white font-sans" style="height: auto; overflow-y: auto; display: block;">
@@ -36,13 +34,11 @@
 
         <main class="container" style="padding-top: 120px; padding-bottom: 50px;">
             <div class="glass-box pd-20">
-                <div class="row">
-                    <div class="col-6">
-                        <img id="detailImg" src="" style="width: 100%; border-radius: 15px; border: 2px solid #20a8d8;">
+                <div class="row" style="display: flex; align-items: center;">
+                <div class="col-6" style="display: flex; justify-content: center; align-items: center; min-height: 450px;">
+                    <img id="detailImg" src="../img/logo.png" style="max-width: 100%; max-height: 450px; border-radius: 15px; border: 2px solid #20a8d8; object-fit: contain;">
                     </div>
-                    <div class="col-6"
-                        style="float: none; margin: 0 auto; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 450px; text-align: center;"
-                        style="padding-left: 30px; display: flex; flex-direction: column; justify-content: center; min-height: 400px;">
+                <div class="col-6" style="display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 450px; text-align: center; padding: 0 20px;">
                         <h1 id="detailTitle" class="text-matrix" style="font-size: 36px; margin-bottom: 10px;">Voucher
                             WiFi
                             10GB</h1>
@@ -94,10 +90,15 @@
                     const produk = snapshot.val();
                     // Masukkan data ke elemen HTML
                     document.getElementById('detailTitle').innerText = produk.nama;
-                    document.getElementById('detailPrice').innerText = "Rp " + produk.harga;
+                    document.getElementById('detailPrice').innerText = "Rp " + Number(produk.harga).toLocaleString('id-ID');
                     document.getElementById('detailCategory').innerText = produk.kategori;
                     document.getElementById('detailImg').src = produk.img || "../img/logo.png";
-                    document.getElementById('detailDesc').innerText = produk.desc || "Deskripsi belum tersedia.";
+                    // Tambahkan penanganan jika link gambar di database rusak
+                    document.getElementById('detailImg').onerror = function() {
+                        this.onerror = null;
+                        this.src = '../img/logo.png';
+                    };
+                    document.getElementById('detailDesc').innerText = produk.detail || produk.desc || "Deskripsi belum tersedia.";
                 } else {
                     alert("Produk tidak ditemukan di Cloud!");
                 }
