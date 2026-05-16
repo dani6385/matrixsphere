@@ -42,10 +42,15 @@ async function muatData() {
             document.getElementById('prodStock').value = data.stok || "";
             document.getElementById('prodPrice').value = data.harga || "";
             document.getElementById('prodCategory').value = data.kategori || "";
+            document.getElementById('prodDesc').value = data.deskripsi || data.detail || "";
             document.getElementById('prodId').value = data.id || editId;
             
             if (data.img && data.img !== "img/logo.png") {
-                preview.src = data.img; 
+                // Gunakan proxy weserv untuk preview agar lebih stabil
+                const urlGambarAman = data.img.startsWith('http') 
+                    ? `https://images.weserv.nl/?url=${data.img.replace('https://', '')}` 
+                    : data.img;
+                preview.src = urlGambarAman; 
                 preview.style.display = 'block';
             }
         }
@@ -67,6 +72,11 @@ productForm.addEventListener('submit', async (e) => {
                    ? preview.src 
                    : "img/logo.png";
 
+    // PENTING: Bersihkan URL dari proxy weserv sebelum disimpan ke database
+    if (imageUrl.includes('images.weserv.nl')) {
+        imageUrl = 'https://' + imageUrl.split('url=')[1];
+    }
+
     try {
         // JIKA ADA FILE BARU, UPLOAD KE IMGBB DULU
         if (file) {
@@ -85,6 +95,7 @@ productForm.addEventListener('submit', async (e) => {
             stok: document.getElementById('prodStock').value,
             harga: document.getElementById('prodPrice').value,
             kategori: document.getElementById('prodCategory').value,
+            deskripsi: document.getElementById('prodDesc').value,
             img: imageUrl
         };
 

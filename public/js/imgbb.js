@@ -1,5 +1,6 @@
-// Gantilah dengan API Key ImgBB kamu yang valid
-const IMGBB_API_KEY = "03b625a99a13440c4387cc4c1ea2aff8"; 
+// 1. MASUKKAN API KEY GRATIS ANDA DI SINI
+// Dapatkan Key Anda di: https://api.imgbb.com/ (Klik "Get Free API Key")
+const IMGBB_API_KEY = "f601727fed32cf7a175833d01d8a10ff"; 
 
 /**
  * Fungsi untuk upload file ke ImgBB
@@ -21,7 +22,8 @@ export async function uploadToImgBB(file) {
         const result = await response.json();
 
         if (result.success) {
-            return result.data.url; // Link gambar dari server ImgBB
+            // Mengambil Direct Link (URL Langsung ke Gambar)
+            return result.data.url; 
         } else {
             console.error("ImgBB Error:", result);
             throw new Error("Gagal upload ke ImgBB");
