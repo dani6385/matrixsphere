@@ -1,28 +1,20 @@
-async function detectAdminForButton() {
-    const gateways = ['http://192.168.30.1', 'http://192.168.20.1'];
-    let isAdmin = false;
+import { auth } from './detail.js';
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-    for (const url of gateways) {
-        try {
-            const controller = new AbortController();
-            setTimeout(() => controller.abort(), 1000);
-
-            // Cek apakah perangkat terhubung ke gateway admin
-            await fetch(url, { mode: 'no-cors', signal: controller.signal });
-            
-            isAdmin = true;
-            break; 
-        } catch (e) {
-            // Lanjut jika gagal
-        }
-    }
-
-    if (isAdmin) {
-        // Tambahkan class 'is-admin' ke body untuk memunculkan tombol
+/**
+ * Memantau status login secara realtime menggunakan Firebase Auth.
+ * Jika user login, class admin ditambahkan ke body agar elemen admin muncul.
+ */
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        // Jika user ditemukan (sudah login), aktifkan fitur admin
         document.body.classList.add('is-admin');
-        console.log("Admin terdeteksi: Tombol akses diaktifkan.");
+        document.body.classList.add('is-admin-network'); // Sinkronisasi dengan selector di header.css
+        console.log("Akses Admin Aktif:", user.email);
+    } else {
+        // Jika tidak login, pastikan fitur admin tersembunyi
+        document.body.classList.remove('is-admin', 'is-admin-network');
     }
-}
-
-// Jalankan fungsi saat halaman selesai dimuat
-window.addEventListener('DOMContentLoaded', detectAdminForButton);
+    // Menghapus state loading pada HTML jika ada
+    document.documentElement.classList.remove('loading-admin');
+});
