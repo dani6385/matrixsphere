@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil Saya | MatrixSphere</title>
+    <link rel="icon" type="image/png" href="img/favicon.png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/ui-light.css">
+    <link rel="stylesheet" href="css/header.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .profile-glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-white font-sans min-h-screen flex flex-col">
+    <!-- Container Navbar Modular -->
+    <div id="navbar-container" class="w-full"></div>
+
+    <main class="flex-grow flex items-center justify-center px-5 pt-32 pb-12 w-full">
+        <!-- Loading Overlay -->
+        <div id="loadingOverlay" class="fixed inset-0 bg-slate-900 z-50 flex items-center justify-center">
+            <div class="text-sky-400 animate-pulse text-lg font-bold uppercase tracking-widest">Memuat Profil...</div>
+        </div>
+
+        <div class="profile-glass w-full max-w-md p-8 rounded-3xl text-center">
+            <div class="mb-6">
+                <div class="w-24 h-24 bg-sky-500/10 border-2 border-sky-400/30 rounded-full mx-auto flex items-center justify-center text-4xl text-sky-400 mb-4 shadow-lg shadow-sky-500/10">
+                    👤
+                </div>
+                <h1 id="welcomeText" class="text-2xl font-extrabold text-white mb-1">Selamat Datang</h1>
+                <p id="accountStatus" class="text-sky-400 text-sm font-bold tracking-widest uppercase">Pelanggan</p>
+            </div>
+
+            <div class="space-y-4 text-left bg-white/5 p-6 rounded-2xl border border-white/10 mb-8">
+                <div>
+                    <label class="text-slate-400 text-[10px] uppercase font-bold tracking-widest">Nama Lengkap</label>
+                    <p id="userName" class="text-lg font-semibold truncate">-</p>
+                </div>
+                <hr class="border-white/5">
+                <div>
+                    <label class="text-slate-400 text-[10px] uppercase font-bold tracking-widest">Email Terdaftar</label>
+                    <p id="userEmail" class="text-lg font-semibold truncate">-</p>
+                </div>
+            </div>
+
+            <button id="btnLogout" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-red-600/20 uppercase tracking-widest text-sm active:scale-95">
+                Keluar Akun
+            </button>
+        </div>
+    </main>
+
+    <footer class="py-10 text-center text-slate-500 text-[10px] uppercase tracking-widest">
+        &copy; 2024 MatrixSphere Digital Store. All rights reserved.
+    </footer>
+
+    <script type="module">
+        // Mengambil instance auth yang sudah diinisialisasi di navbar-loader
+        import { auth } from './js/navbar-loader.js';
+        import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const welcomeText = document.getElementById('welcomeText');
+        const userName = document.getElementById('userName');
+        const userEmail = document.getElementById('userEmail');
+        const btnLogout = document.getElementById('btnLogout');
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                const name = user.displayName || "User";
+                welcomeText.innerText = `Selamat Datang, ${name}`;
+                userName.innerText = name;
+                userEmail.innerText = user.email;
+                
+                loadingOverlay.style.display = 'none';
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        btnLogout.onclick = async () => {
+            if (confirm("Apakah Anda yakin ingin keluar dari akun MatrixSphere?")) {
+                try {
+                    await signOut(auth);
+                    window.location.href = 'index.html';
+                } catch (error) {
+                    alert("Gagal keluar akun: " + error.message);
+                }
+            }
+        };
+    </script>
+    <script type="module" src="js/navbar-loader.js"></script>
+</body>
+</html>

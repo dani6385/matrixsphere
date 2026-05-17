@@ -5,32 +5,18 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Detail Produk - MatrixSphere</title>
-    <script src="../js/auth-guard.js"></script>
     <link rel="icon" type="image/png" href="../img/favicon.png">
     <link rel="stylesheet" href="../css/style.css">
+    <script type="module" src="../js/navbar-loader.js"></script>
 </head>
 
 <body class="bg-slate-900 text-white font-sans" style="height: auto; overflow-y: auto; display: block;">
-        <header class="main-header">
-            <div class="nav-container">
-                <div style="display: flex; align-items: center;">
-                    <a href="index.html" class="nav-logo align-items: center;">
-                        <img src="../img/logo.png" alt="Logo">
-                    </a>
+    <div id="loading-screen" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#0f172a; color:white; display:flex; align-items:center; justify-content:center; font-size:24px; z-index:9999;">
+        Memeriksa Hak Akses Admin...
+    </div>
 
-                    <span class="brand-text">MatrixSphere</span>
-                </div>
-
-                <div class="nav-actions">
-
-                    <a href="../admin/produk.html" class="btn bg-primary text-bold btn-tambah"
-                        style="padding: 10px 15px; border-radius: 8px; font-size: 13px; white-space: nowrap;">
-                        PRODUK
-                    </a>
-
-                </div>
-            </div>
-        </header>
+    <div id="main-admin-content" style="display: none;">
+        <div id="navbar-container"></div>
 
         <main class="container" style="padding-top: 120px; padding-bottom: 50px;">
             <div class="glass-box pd-20">
@@ -70,7 +56,28 @@
 
         <script type="module">
             // 1. Ambil koneksi database dari file config
+            import { auth } from '../js/navbar-loader.js';
+            import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
             import { db } from '../js/detail.js';
+
+            const ADMIN_EMAIL = "dani6385@gmail.com";
+            const loadingScreen = document.getElementById('loading-screen');
+            const mainContent = document.getElementById('main-admin-content');
+
+            onAuthStateChanged(auth, (user) => {
+                if (user && user.email === ADMIN_EMAIL) {
+                    loadingScreen.style.display = 'none';
+                    mainContent.style.display = 'block';
+                } else {
+                    if (!user) {
+                        window.location.href = '../login.html';
+                    } else {
+                        alert("Akses Ditolak!");
+                        window.location.href = '../index.html';
+                    }
+                }
+            });
+
             // 2. Ambil fungsi "perintah" dari Firebase
             import { ref, get, remove, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 

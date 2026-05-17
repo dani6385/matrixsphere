@@ -23,6 +23,32 @@
             </div>
 
             <div class="nav-actions">
+                <a id="notifIcon" href="notifikasi.html" class="btn-notif text-white hidden" style="text-decoration: none;">🔔</a>
+                <a id="chatIcon" href="chat.html" class="btn-notif text-white hidden" style="text-decoration: none;">💬 </a>
+                <a id="cartIcon" href="cart.html" class="btn-notif text-white hidden" style="text-decoration: none;">🛒</a>
+                
+                <!-- Dropdown Profil -->
+                <div style="position: relative;" id="profileSection">
+                    <button id="authBtn" class="btn bg-primary pd-l-10 pd-r-10" style="display: flex; align-items: center; height: 40px;">MASUK</button>
+                    <div id="profileDropdown" class="profile-dropdown">
+                        <div class="flex flex-col items-center pb-3 border-b border-white/10">
+                            <img id="userPhoto" src="img/logo.png" class="profile-avatar mb-2" alt="Avatar">
+                            <h4 id="userNameDisplay" class="text-sm font-bold text-white truncate w-full text-center">Memuat...</h4>
+                            <p id="userEmail" class="text-[10px] text-slate-400 truncate w-full text-center">email@user.com</p>
+                        </div>
+                        <div class="flex flex-col gap-1 mt-2">
+                            <a href="profile.html" class="flex items-center gap-3 px-3 py-2 hover:bg-white/5 rounded-lg no-underline text-white text-sm">
+                                <span class="text-sky-400">🛍️</span> ShopSphere Saya
+                            </a>
+                            <a href="orders.html" class="flex items-center gap-3 px-3 py-2 hover:bg-white/5 rounded-lg no-underline text-white text-sm">
+                                <span class="text-sky-400">📄</span> Nota Digital
+                            </a>
+                            <button id="logoutBtn" class="flex items-center gap-3 px-3 py-2 hover:bg-red-500/10 text-red-400 rounded-lg text-sm w-full text-left">
+                            <span>🚪</span> Keluar Akun
+                        </button>
+                        </div>
+                    </div>
+                </div>
                 <a href="index.html" class="btn bg-secondary pd-l-10 pd-r-10">KEMBALI</a>
             </div>
         </div>
@@ -42,12 +68,74 @@
     </main>
 
     <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { monitorGudang } from './js/inventory-manager.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyApICU6wUb1dkvHhVDBhsDk9bwVMWAVKeo",
+            authDomain: "matrixsphere-shop.firebaseapp.com",
+            databaseURL: "https://matrixsphere-shop-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "matrixsphere-shop",
+            storageBucket: "matrixsphere-shop.firebasestorage.app",
+            messagingSenderId: "639761938336",
+            appId: "1:639761938336:web:347c97b498ddb1efd156c5"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        const notifIcon = document.getElementById('notifIcon');
+        const chatIcon = document.getElementById('chatIcon');
+        const cartIcon = document.getElementById('cartIcon');
+        const authBtn = document.getElementById('authBtn');
+        const profileDropdown = document.getElementById('profileDropdown');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const userPhoto = document.getElementById('userPhoto');
+        const userEmail = document.getElementById('userEmail');
+        const userNameDisplay = document.getElementById('userNameDisplay');
+
+        authBtn.addEventListener('click', (e) => {
+            if (!auth.currentUser) { window.location.href = 'login.html'; }
+        });
+
+        logoutBtn.onclick = async () => {
+            if (confirm("Keluar dari akun?")) {
+                await signOut(auth); window.location.reload();
+            }
+        };
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                notifIcon.classList.remove('hidden');
+                chatIcon.classList.remove('hidden');
+                cartIcon.classList.remove('hidden');
+                authBtn.innerText = (user.displayName || 'USER') + ' ▾';
+                userEmail.innerText = user.email;
+                userNameDisplay.innerText = user.displayName || 'Pengguna ShopSphere';
+                userPhoto.src = user.photoURL || 'img/logo.png';
+            } else {
+                notifIcon.classList.add('hidden');
+                chatIcon.classList.add('hidden');
+                cartIcon.classList.add('hidden');
+                authBtn.innerText = 'MASUK';
+                authBtn.style.display = 'block'; // Pastikan tombol MASUK terlihat
+            }
+        });
 
         const productGrid = document.getElementById('productGrid');
         const searchInput = document.getElementById('searchInput');
         const searchResultTitle = document.getElementById('searchResultTitle');
         const searchStats = document.getElementById('searchStats');
+
+        window.updateCartBadge = () => {
+            const cartCountEl = document.getElementById('cart-count');
+            if (!cartCountEl) return;
+            const keranjang = JSON.parse(localStorage.getItem('keranjang')) || [];
+            const totalItems = keranjang.reduce((sum, item) => sum + item.quantity, 0);
+            cartCountEl.innerText = totalItems;
+            cartCountEl.style.display = totalItems > 0 ? 'flex' : 'none';
+        };
 
         let allProducts = [];
 
@@ -62,6 +150,7 @@
         monitorGudang((products) => {
             allProducts = products;
             performSearch(searchInput.value);
+            updateCartBadge();
         });
 
         // Menangani penekanan tombol Enter di halaman pencarian untuk melakukan pencarian baru
@@ -106,17 +195,26 @@
                 return;
             }
 
-            productGrid.innerHTML = items.map(item => `
+            productGrid.innerHTML = items.map(item => {
+                const originalImg = item.img || 'img/logo.png';
+                const urlGambarAman = originalImg.startsWith('http') 
+                    ? `https://images.weserv.nl/?url=${originalImg.replace(/^https?:\/\//, '')}` 
+                    : originalImg;
+                return `
                 <div class="col-3 mr-b-10">
                     <div class="card bg-white text-dark" style="height:100%; display:flex; flex-direction:column;">
                         <div class="card-body text-center" style="flex:1;">
-                            <img src="${item.img || 'img/logo.png'}" style="width:100%; height:180px; object-fit:cover; border-radius:5px;" onerror="this.onerror=null;this.src='img/logo.png';">
+                            <img src="${urlGambarAman}" style="width:100%; height:180px; object-fit:cover; border-radius:5px; cursor:pointer;" onclick="window.location.href='view.html?id=${item.id}'" onerror="this.onerror=null;this.src='img/logo.png';">
                             <h3 class="mr-t-10" style="font-size: 1.1rem;">${item.nama}</h3>
                             <p class="text-primary text-bold">Rp ${Number(item.harga).toLocaleString('id-ID')}</p>
-                            <button class="btn bg-success w-12 mr-t-10" onclick="window.location.href='view.html?id=${item.id}'">DETAIL</button>
+                            <div style="display: flex; gap: 5px; margin-top: 10px;">
+                                <a href="view.html?id=${item.id}" class="btn bg-success" style="flex: 1; text-align: center; text-decoration: none;">DETAIL</a>
+                                <a href="cart.html?id=${item.id}" class="btn bg-primary" style="flex: 1; text-align: center; text-decoration: none;">KERANJANG</a>
+                            </div>
                         </div>
                     </div>
-                </div>`).join('');
+                </div>`;
+            }).join('');
         }
     </script>
 </body>

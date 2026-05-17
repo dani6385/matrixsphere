@@ -37,6 +37,26 @@ body {
     padding: 10px 0;
 }
 
+.nav-left-group {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Jarak antara logo/brand dan dropdown kategori */
+}
+
+/* Pastikan container modular tidak mencekik dropdown absolute */
+#navbar-container {
+    width: 100%;
+    overflow: visible !important;
+}
+
+/* Memastikan semua ikon dan tombol profil sejajar horizontal */
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    position: relative; /* Anchor untuk dropdown absolute */
+}
+
 .nav-container {
     display: flex;
     justify-content: space-between;
@@ -52,6 +72,25 @@ body {
     margin-right: 10px;
 }
 
+.nav-logo .logo-round { /* Target the logo image specifically */
+    height: 45px;
+    width: 45px; /* Make it perfectly round */
+    border-radius: 50%;
+    object-fit: cover; /* Ensure image fills the circle */
+    border: 2px solid #20a8d8; /* Thin cyan border */
+    box-shadow: 0 0 8px rgba(32, 168, 216, 0.5); /* Subtle cyan glow */
+    transition: all 0.3s ease;
+}
+
+.nav-logo .logo-round:hover {
+    box-shadow: 0 0 15px rgba(32, 168, 216, 0.8); /* Stronger glow on hover */
+}
+
+/* Ensure brand text is always visible if md:inline is removed or for consistency */
+.nav-logo .brand-text {
+    color: #20a8d8; /* Cyan color */
+}
+
 .search-bar {
     flex-grow: 1;
     margin: 0 20px;
@@ -59,7 +98,7 @@ body {
 }
 
 .index-content {
-    padding-top: 100px;
+    padding-top: 120px; /* Ditambah agar judul MatrixSphere tidak tertindih header */
     /* Agar tidak tertutup header */
     padding-bottom: 50px;
 }
@@ -156,4 +195,80 @@ body {
         padding: 8px 12px !important;
         font-size: 12px !important;
     }
+}
+
+/* --- BADGE KERANJANG --- */
+.cart-wrapper {
+    position: relative;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+#cart-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: #ef4444; /* Warna merah (Tailwind red-500) */
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 999px;
+    display: none; /* Sembunyikan jika kosong */
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    border: 2px solid #0f172a; /* Agar kontras dengan header */
+}
+
+/* --- DROPDOWN PROFIL --- */
+.profile-dropdown {
+    position: absolute;
+    right: 0;
+    top: 100%; /* Muncul tepat di bawah button */
+    margin-top: 12px; /* Memberi sedikit jarak agar tidak menempel */
+    width: 240px;
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    z-index: 1001; /* Di atas elemen konten lain */
+    padding: 15px;
+    display: none; /* Sembunyikan secara default */
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Memastikan elemen menu di dalam dropdown berbaris menurun (Column) */
+.dropdown-box {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+/* Aktifkan dropdown saat container (profileSection) di-hover */
+#profileSection:hover .profile-dropdown {
+    display: flex !important;
+}
+
+/* Jembatan transparan untuk menutup celah 12px margin-top agar tidak flicker */
+.profile-dropdown::before {
+    content: "";
+    position: absolute;
+    top: -15px;
+    left: 0;
+    width: 100%;
+    height: 15px;
+    background: transparent;
+}
+
+.profile-avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #20a8d8;
 }

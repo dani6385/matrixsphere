@@ -5,33 +5,17 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Admin Dashboard - MatrixSphere</title>
-    <script src="../js/auth-guard.js"></script>
     <link rel="icon" type="image/png" href="../img/favicon.png">
     <link rel="stylesheet" href="../css/style.css">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="bg-slate-900 text-white font-sans" style="height: auto; overflow-y: auto; display: block;">
-    <header class="main-header">
-        <div class="nav-container">
-            <div style="display: flex; align-items: center;">
-                <a href="index.html" class="nav-logo align-items: center;">
-                    <img src="../img/logo.png" alt="Logo">
-                </a>
+    <div id="loading-screen" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#0f172a; color:white; display:flex; align-items:center; justify-content:center; font-size:24px; z-index:9999;">
+        Memeriksa Hak Akses Admin...
+    </div>
 
-                <span class="brand-text">MatrixSphere</span>
-            </div>
-
-            <div class="nav-actions">
-
-                <a href="../admin/produk.html" class="btn bg-primary text-bold btn-tambah"
-                    style="padding: 10px 15px; border-radius: 8px; font-size: 13px; white-space: nowrap;">
-                    PRODUK
-                </a>
-
-            </div>
-        </div>
-    </header>
+    <div id="main-admin-content" style="display: none;">
     <main class="container mx-auto px-4" style="padding-top: 120px; padding-bottom: 50px;" >
         <div class="max-w-4xl mx-auto bg-slate-800/50 p-8 rounded-3xl border border-white/10 backdrop-blur-sm">
             <h1 class="text-3xl font-bold mb-8 text-sky-400">Tambah Produk Baru</h1>
@@ -97,7 +81,113 @@
             </form>
         </div>
     </main>
-    <script type="module" src="../js/add.js"></script>
-</body>
 
+    <script type="module">
+        import { auth, db } from '../js/detail.js';
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { ref, get, update, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { uploadToImgBB } from '../js/imgbb.js';
+
+        const ADMIN_EMAIL = "dani6385@gmail.com";
+        const loadingScreen = document.getElementById('loading-screen');
+        const mainContent = document.getElementById('main-admin-content');
+
+        // Proteksi Halaman & Inisialisasi Data
+        onAuthStateChanged(auth, async (user) => {
+            if (user && user.email === ADMIN_EMAIL) {
+                // 1. Sembunyikan loading dan tampilkan konten
+                loadingScreen.style.display = 'none';
+                mainContent.style.display = 'block';
+
+                // 2. Inisialisasi elemen form (Pastikan user sudah admin agar elemen tidak null)
+                const productForm = document.getElementById('productForm');
+                const fileInput = document.getElementById('fileInput');
+                const preview = document.getElementById('preview');
+                const dropZone = document.getElementById('dropZone');
+
+                // 3. Cek Parameter URL untuk mode EDIT
+                const urlParams = new URLSearchParams(window.location.search);
+                const editId = urlParams.get('id');
+
+                // Mode Edit: Muat data dari Firebase
+                if (editId) {
+                    const snapshot = await get(ref(db, `gudangBarang/${editId}`));
+                    if (snapshot.exists()) {
+                        const data = snapshot.val();
+                        document.getElementById('prodName').value = data.nama || "";
+                        document.getElementById('prodStock').value = data.stok || "";
+                        document.getElementById('prodPrice').value = data.harga || "";
+                        document.getElementById('prodCategory').value = data.kategori || "";
+                        document.getElementById('prodDesc').value = data.deskripsi || data.detail || "";
+                        document.getElementById('prodId').value = data.id || editId;
+                        
+                        if (data.img && data.img !== "../img/logo.png") {
+                            const urlGambarAman = data.img.startsWith('http') 
+                                ? `https://images.weserv.nl/?url=${data.img.replace('https://', '')}` 
+                                : data.img;
+                            preview.src = urlGambarAman;
+                            preview.style.display = 'block';
+                        }
+                    }
+                }
+
+                // --- EVENT LISTENERS ---
+                
+                // Klik area foto
+                dropZone.onclick = () => fileInput.click();
+
+                // Preview foto lokal
+                fileInput.onchange = function() {
+                    const file = this.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            preview.src = e.target.result;
+                            preview.style.display = 'block';
+                        }
+                        reader.readAsDataURL(file);
+                    }
+                };
+
+                // Simpan Data
+                productForm.onsubmit = async (e) => {
+                    e.preventDefault();
+                    const file = fileInput.files[0];
+                    let imageUrl = (preview.src && !preview.src.includes(window.location.pathname)) 
+                                   ? preview.src : "../img/logo.png";
+
+                    if (imageUrl.includes('images.weserv.nl')) {
+                        imageUrl = 'https://' + imageUrl.split('url=')[1];
+                    }
+
+                    try {
+                        if (file) {
+                            const uploadedUrl = await uploadToImgBB(file);
+                            if (uploadedUrl) imageUrl = uploadedUrl;
+                        }
+
+                        const idFinal = document.getElementById('prodId').value || editId || "MS-" + Date.now();
+                        const dataBaru = {
+                            id: idFinal,
+                            nama: document.getElementById('prodName').value,
+                            stok: document.getElementById('prodStock').value,
+                            harga: document.getElementById('prodPrice').value,
+                            kategori: document.getElementById('prodCategory').value,
+                            deskripsi: document.getElementById('prodDesc').value,
+                            img: imageUrl
+                        };
+
+                        await set(ref(db, `gudangBarang/${idFinal}`), dataBaru);
+                        alert("Berhasil simpan ke Database!");
+                        window.location.href = 'produk.html';
+                    } catch (err) {
+                        alert("Gagal simpan: " + err.message);
+                    }
+                };
+            } else {
+                window.location.href = user ? '../index.html' : '../login.html';
+            }
+        });
+    </script>
+</body>
 </html>

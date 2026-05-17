@@ -11,49 +11,40 @@
 </head>
 
 <body class="bg-slate-900 text-white font-sans" style="height: auto; overflow-y: auto; display: block;">
-        <header class="main-header">
-            <div class="nav-container">
-                <div style="display: flex; align-items: center;">
-                    <a href="index.html" class="nav-logo">
-                        <img src="../img/logo.png" alt="Logo">
-                    </a>
-                    <span class="brand-text text-matrix" style="font-weight: bold; font-size: 1.2rem;">MatrixSphere</span>
-                </div>
-                <div class="nav-actions">
-                    <a href="add.html" class="btn bg-primary text-bold btn-tambah"
-                        style="padding: 10px 15px; border-radius: 8px; font-size: 13px; white-space: nowrap;">
-                        TAMBAH BARANG
-                    </a>
-                </div>
-            </div>
-        </header>
+        <!-- Container Navbar Modular -->
+        <div id="navbar-container"></div>
 
         <main class="container" style="padding-top: 130px; padding-bottom: 50px;">
             <div class="glass-box pd-20">
                 <!-- Container utama yang membungkus Judul & Pencarian -->
-                <div class="inventory-top-header">
-                    <div class="header-info">
-                        <h2 class="text-matrix" style="margin: 0;">KETERSEDIAAN</h2>
-                        <p class="text-white" style="opacity: 0.7; margin-top: 5px;">Pantau stok dan harga produk aktif Anda.</p>
+                <div class="inventory-top-header" style="flex-direction: column; align-items: flex-start; gap: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                        <h2 class="text-matrix" style="margin: 0; font-size: 2.5rem; font-weight: 800; line-height: 1.2;">KETERSEDIAAN</h2>
+                        <div class="header-search">
+                            <input type="text" placeholder="Cari di gudang..." class="form-control-md"
+                                style="background: rgba(255,255,255,0.1); color: white; border: 1px solid #20a8d8; width: 250px;">
+                        </div>
                     </div>
 
-                    <div class="header-search">
-                        <input type="text" placeholder="Cari di gudang..." class="form-control-md"
-                            style="background: rgba(255,255,255,0.1); color: white; border: 1px solid #20a8d8;">
+                    <div class="header-info" style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 5px;">
+                        <p class="text-white" style="opacity: 0.7; margin: 0;">Pantau stok dan harga produk aktif Anda.</p>
+                        
+                        <div class="btn-group-stack" style="display: flex; gap: 10px; align-items: center;">
+                            <a href="add.html" class="btn"
+                                style="background: #20a8d8; color: white; padding: 10px 15px; border-radius: 5px; font-size: 12px; font-weight: bold; text-decoration: none; display: inline-block;">
+                                TAMBAH BARANG
+                            </a>
+                            <input type="file" id="importExcel" style="display: none;" accept=".xlsx, .xls">
+                            <button onclick="document.getElementById('importExcel').click()" class="btn"
+                                style="background: #10b981; color: white; padding: 10px 15px; border-radius: 5px; font-size: 12px; font-weight: bold;">
+                                IMPORT EXCEL
+                            </button>
+                            <button onclick="exportKeExcel()" class="btn"
+                                style="background: #3b82f6; color: white; padding: 10px 15px; border-radius: 5px; font-size: 12px; font-weight: bold;">
+                                EXPORT EXCEL
+                            </button>
+                        </div>
                     </div>
-                </div>
-
-                <!-- Container tombol Import/Export -->
-                <div class="btn-group-stack" style="justify-content: flex-end; align-items: center; margin-top: 15px;">
-                    <input type="file" id="importExcel" style="display: none;" accept=".xlsx, .xls">
-                    <button onclick="document.getElementById('importExcel').click()" class="btn"
-                        style="background: #10b981; color: white; padding: 10px 15px; border-radius: 5px; font-size: 12px; font-weight: bold;">
-                        IMPORT EXCEL
-                    </button>
-                    <button onclick="exportKeExcel()" class="btn"
-                        style="background: #3b82f6; color: white; padding: 10px 15px; border-radius: 5px; font-size: 12px; font-weight: bold;">
-                        EXPORT EXCEL
-                    </button>
                 </div>
 
                 <div style="overflow-x: auto;">
@@ -201,6 +192,7 @@
             }
         </script>
         <script src="../js/xlsx.full.min.js"></script>
+        <script src="../js/navbar-loader.js" type="module"></script>
     </body>
 
 </html>

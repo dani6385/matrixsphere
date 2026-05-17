@@ -14,6 +14,10 @@
     --img-logo-shop: url('../img/logo_shop.png');
 }
 
+.hidden {
+    display: none !important;
+}
+
 /* Reset & Base */
 body {
     margin: 0;

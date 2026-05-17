@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Akun | MatrixSphere</title>
+    <link rel="icon" type="image/png" href="img/favicon.png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/ui-light.css">
+    <link rel="stylesheet" href="css/header.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .register-glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        .input-field {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: all 0.3s;
+        }
+        .input-field:focus {
+            border-color: #3b82f6;
+            background: rgba(255, 255, 255, 0.08);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-white font-sans min-h-screen flex flex-col">
+    <header class="main-header">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo text-bold text-white flex items-center">
+                <img src="img/logo.png" alt="Logo" class="h-10">
+                <span class="ml-4 font-bold text-sky-400 uppercase tracking-widest hidden md:inline">MatrixSphere</span>
+            </a>
+            <div class="nav-actions">
+                <a href="index.html" class="btn bg-secondary pd-l-10 pd-r-10 text-xs font-bold uppercase">Katalog</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow flex items-center justify-center px-5 pt-24 pb-12">
+        <div class="register-glass w-full max-w-md p-8 rounded-3xl">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-extrabold text-sky-400 mb-2">Buat Akun</h1>
+                <p class="text-slate-400 text-sm">Bergabunglah dengan komunitas MatrixSphere</p>
+            </div>
+
+            <form id="registerForm" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2 ml-1">Nama Lengkap</label>
+                    <input type="text" id="fullName" required 
+                        class="input-field w-full px-5 py-3 rounded-xl text-sm" 
+                        placeholder="Contoh: Budi Santoso">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2 ml-1">Email</label>
+                    <input type="email" id="email" required 
+                        class="input-field w-full px-5 py-3 rounded-xl text-sm" 
+                        placeholder="nama@email.com">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2 ml-1">Kata Sandi</label>
+                    <input type="password" id="password" required 
+                        class="input-field w-full px-5 py-3 rounded-xl text-sm" 
+                        placeholder="Minimal 6 karakter">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2 ml-1">Konfirmasi Kata Sandi</label>
+                    <input type="password" id="confirmPassword" required 
+                        class="input-field w-full px-5 py-3 rounded-xl text-sm" 
+                        placeholder="Ulangi kata sandi">
+                </div>
+
+                <button type="submit" id="btnRegister" 
+                    class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-sky-600/20 uppercase tracking-widest text-sm mt-4">
+                    Daftar Sekarang
+                </button>
+            </form>
+
+            <div class="mt-8 text-center">
+                <p class="text-slate-400 text-sm">
+                    Sudah punya akun? 
+                    <a href="login.html" class="text-sky-400 font-bold hover:underline ml-1">Masuk di sini</a>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="py-10 text-center text-slate-500 text-xs">
+        &copy; 2024 MatrixSphere Digital Store. All rights reserved.
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyApICU6wUb1dkvHhVDBhsDk9bwVMWAVKeo",
+            authDomain: "matrixsphere-shop.firebaseapp.com",
+            databaseURL: "https://matrixsphere-shop-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "matrixsphere-shop",
+            storageBucket: "matrixsphere-shop.firebasestorage.app",
+            messagingSenderId: "639761938336",
+            appId: "1:639761938336:web:347c97b498ddb1efd156c5"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        const registerForm = document.getElementById('registerForm');
+        const btnRegister = document.getElementById('btnRegister');
+
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('fullName').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (password !== confirmPassword) {
+                alert("Kata sandi dan konfirmasi kata sandi tidak cocok!");
+                return;
+            }
+
+            btnRegister.innerText = "MENDAFTARKAN...";
+            btnRegister.disabled = true;
+            btnRegister.style.opacity = "0.7";
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                
+                // Update nama profil
+                await updateProfile(userCredential.user, {
+                    displayName: name
+                });
+
+                window.location.href = 'index.html';
+            } catch (error) {
+                console.error("Register Error:", error.code);
+                alert("Gagal mendaftar: " + error.message);
+                btnRegister.innerText = "DAFTAR SEKARANG";
+                btnRegister.disabled = false;
+                btnRegister.style.opacity = "1";
+            }
+        });
+    </script>
+</body>
+</html>

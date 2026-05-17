@@ -9,67 +9,42 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/ui-light.css">
     <link rel="stylesheet" href="css/header.css">
+    <script type="module" src="js/navbar-loader.js"></script>
 </head>
 
 <body class="bg-slate-900 text-white font-sans">
-    <header class="main-header">
-        <div class="nav-container">
-            <a href="index.html" class="nav-logo text-bold text-white">
-                <img src="img/logo.png" alt="Logo" class="h-10"></a>
-            <span class="ml-4 font-bold text-sky-400 uppercase tracking-widest">MatrixSphere</span>
-            <div class="dropdown" id="categoryDropdown">
-                <button class="btn text-white text-bold pd-10">
-                    KATEGORI ▾
-                </button>
-                <div class="dropdown-content card bg-dark shadow-2" id="dropdownCategories"></div>
-            </div>
-
-            <div class="search-bar">
-                <input type="text" id="searchInput" class="form-control" placeholder="Cari produk...">
-            </div>
-
-            <div class="nav-actions">
-                <a href="auth.html" class="btn bg-primary pd-l-10 pd-r-10">MASUK</a>
-            </div>
-        </div>
-    </header>
+    <div id="navbar-container"></div>
 
     <main class="index-content container">
-
-        <div class="text-center mr-b-10">
-            <h1 class="text-blue" style="font-size: 2.5rem;">Selamat Datang di MatrixSphere</h1>
-            <p class="text-secondary">Warung Digital & Layanan Hotspot Anda</p>
+        <div class="text-center mb-10">
+            <h1 class="text-sky-400 font-extrabold tracking-tighter" style="font-size: 3rem;">Selamat Datang di MatrixSphere</h1>
+            <p class="text-slate-400 text-lg">Warung Digital & Layanan Hotspot Anda</p>
         </div>
 
-        <div class="card bg-dark pd-10 mr-b-10">
-            <h2 class="text-blue mr-b-5" style="font-size: 1.2rem;">
-                <span id="selectedCategoryTitle" style="border-left: 4px solid #20a8d8; padding-left: 10px;">Semua
-                    Kategori</span>
+        <!-- Baris Tombol Kategori (Pills) -->
+        <div class="card bg-slate-800/50 backdrop-blur-md pd-15 mb-10 border border-white/5 rounded-2xl">
+            <h2 class="text-sky-400 mb-4 flex items-center" style="font-size: 1.2rem;">
+                <span id="selectedCategoryTitle" style="border-left: 4px solid #20a8d8; padding-left: 12px;">Pilih Kategori</span>
             </h2>
-            <div id="categoryContainer" class="category-scroll-wrapper pd-t-5">
+            <div id="categoryContainer" class="category-scroll-wrapper py-2">
+                <!-- Kategori Pills akan dimuat di sini -->
             </div>
         </div>
 
-        <div class="row" id="productGrid"></div>
-
-        <div class="text-center mr-t-10">
-            <div class="box-group" style="display: inline-block;">
-                <button class="btn bg-grey radius-l-5 pd-10">Sebelumnya</button>
-                <button class="btn bg-primary pd-10">1</button>
-                <button class="btn bg-grey radius-r-5 pd-10">Selanjutnya</button>
-            </div>
+        <!-- Grid Produk -->
+        <div class="row" id="productGrid">
+            <div class="col-12 text-center py-20 opacity-50 italic">Memuat produk ShopSphere...</div>
         </div>
-
     </main>
 
     <script type="module">
+        // Gunakan auth dari loader agar tidak inisialisasi ulang
+        import { auth } from './js/navbar-loader.js';
         import { monitorGudang } from './js/inventory-manager.js';
 
         const categoryContainer = document.getElementById('categoryContainer');
-        const dropdownCategories = document.getElementById('dropdownCategories');
         const productGrid = document.getElementById('productGrid');
         const selectedCategoryTitle = document.getElementById('selectedCategoryTitle');
-        const searchInput = document.getElementById('searchInput');
 
         let allProducts = [];
 
@@ -84,11 +59,6 @@
                 </button>
             `).join('');
 
-            // Render kategori ke dalam dropdown
-            dropdownCategories.innerHTML = categories.map(cat => `
-                <a href="kategori.html?c=${encodeURIComponent(cat)}" class="dropdown-item text-white border-bottom">${cat}</a>
-            `).join('');
-
             renderProducts(products);
         });
 
@@ -100,38 +70,66 @@
             renderProducts(filtered);
         };
 
-        // Fungsi agar saat menekan tombol Enter, pengunjung diarahkan ke halaman pencarian.html
-        searchInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault(); // Mencegah browser melakukan aksi default/salah arah
-                const term = e.target.value.trim();
-                if (term) window.location.href = `pencarian.html?q=${encodeURIComponent(term)}`;
-            }
-        });
+        // Catatan: Logika pencarian navbar kini ditangani oleh navbar-loader.js
 
-        searchInput.addEventListener('input', (e) => {
-            const term = e.target.value.toLowerCase();
-            const filtered = allProducts.filter(p => 
-                p.nama.toLowerCase().includes(term) || 
-                p.kategori.toLowerCase().includes(term)
-            );
-            renderProducts(filtered);
-        });
+        // FUNGSI UPDATE BADGE KERANJANG
+        window.updateCartBadge = () => {
+            const cartCountEl = document.getElementById('cart-count');
+            if (!cartCountEl) return;
+            const keranjang = JSON.parse(localStorage.getItem('keranjang')) || [];
+            const totalItems = keranjang.reduce((sum, item) => sum + item.quantity, 0);
+            
+            cartCountEl.innerText = totalItems;
+            cartCountEl.style.display = totalItems > 0 ? 'flex' : 'none';
+        };
 
         function renderProducts(items) {
-            productGrid.innerHTML = items.map(item => `
+            productGrid.innerHTML = items.map(item => {
+                const originalImg = item.img || 'img/logo.png';
+                const urlGambarAman = originalImg.startsWith('http') 
+                    ? `https://images.weserv.nl/?url=${originalImg.replace(/^https?:\/\//, '')}` 
+                    : originalImg;
+                return `
                 <div class="col-3 mr-b-10">
                     <div class="card bg-white text-dark" style="height:100%; display:flex; flex-direction:column;">
                         <div class="card-body text-center" style="flex:1;">
-                            <img src="${item.img || 'img/logo.png'}" style="width:100%; height:180px; object-fit:cover; border-radius:5px;" onerror="this.onerror=null;this.src='img/logo.png';">
+                            <img src="${urlGambarAman}" style="width:100%; height:180px; object-fit:cover; border-radius:5px; cursor:pointer;" onclick="window.location.href='view.html?id=${item.id}'" onerror="this.onerror=null;this.src='img/logo.png';">
                             <h3 class="mr-t-10" style="font-size: 1.1rem;">${item.nama}</h3>
                             <p class="text-primary text-bold">Rp ${Number(item.harga).toLocaleString('id-ID')}</p>
-                            <button class="btn bg-success w-12 mr-t-10" onclick="window.location.href='view.html?id=${item.id}'">DETAIL</button>
+                            <div style="display: flex; gap: 5px; margin-top: 10px;">
+                                <a href="view.html?id=${item.id}" class="btn bg-success" style="flex: 1; text-align: center; text-decoration: none; line-height: 1.5;">DETAIL</a>
+                                <button onclick="addToCart('${item.id}')" class="btn bg-primary" style="flex: 1; text-align: center;">KERANJANG</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            `).join('');
+                </div>`;
+            }).join('');
         }
+
+        // FUNGSI TAMBAH KE KERANJANG (LOCALSTORAGE)
+        window.addToCart = (id) => {
+            const item = allProducts.find(p => p.id === id);
+            if (!item) return;
+
+            let keranjang = JSON.parse(localStorage.getItem('keranjang')) || [];
+            let index = keranjang.findIndex(p => p.id === id);
+
+            if (index > -1) {
+                keranjang[index].quantity += 1;
+            } else {
+                keranjang.push({
+                    id: item.id,
+                    nama: item.nama,
+                    harga: item.harga,
+                    img: item.img || 'img/logo.png',
+                    quantity: 1
+                });
+            }
+
+            localStorage.setItem('keranjang', JSON.stringify(keranjang));
+            window.updateCartBadge();
+            window.location.href = 'cart.html';
+        };
 
         // --- LOGIKA AUTO SCROLL KATEGORI ---
         let scrollInterval;
@@ -152,6 +150,9 @@
         categoryContainer.addEventListener('mouseleave', startAutoScroll);
 
         startAutoScroll();
+
+        // Jalankan saat pertama kali dimuat
+        updateCartBadge();
     </script>
 </body>
 

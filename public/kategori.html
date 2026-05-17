@@ -23,6 +23,21 @@
             </div>
 
             <div class="nav-actions">
+                <a id="notifIcon" href="notifikasi.html" class="btn-notif text-white hidden" style="text-decoration: none;">🔔</a>
+                <a id="chatIcon" href="chat.html" class="btn-notif text-white hidden" style="text-decoration: none;">💬 </a>
+                <a id="cartIcon" href="cart.html" class="btn-notif text-white hidden" style="text-decoration: none;">🛒</a>
+                
+                <div style="position: relative;" id="profileSection">
+                    <button id="authBtn" class="btn bg-primary pd-l-10 pd-r-10">MASUK</button>
+                    <div id="profileDropdown" class="profile-dropdown">
+                        <div class="flex flex-col items-center pb-3 border-b border-white/10">
+                            <img id="userPhoto" src="img/logo.png" class="profile-avatar mb-2" alt="Avatar">
+                            <p id="userEmail" class="text-xs text-slate-400 truncate w-full text-center">email@user.com</p>
+                        </div>
+                        <a href="profile.html" class="flex items-center gap-3 px-3 py-2 hover:bg-white/5 rounded-lg no-underline text-white text-sm">👤 Profil</a>
+                        <button id="logoutBtn" class="flex items-center gap-3 px-3 py-2 hover:bg-red-500/10 text-red-400 rounded-lg text-sm w-full text-left">🚪 Keluar</button>
+                    </div>
+                </div>
                 <a href="index.html" class="btn bg-secondary pd-l-10 pd-r-10">KEMBALI</a>
             </div>
         </div>
@@ -42,12 +57,55 @@
     </main>
 
     <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { monitorGudang } from './js/inventory-manager.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyApICU6wUb1dkvHhVDBhsDk9bwVMWAVKeo",
+            authDomain: "matrixsphere-shop.firebaseapp.com",
+            databaseURL: "https://matrixsphere-shop-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "matrixsphere-shop",
+            storageBucket: "matrixsphere-shop.firebasestorage.app",
+            messagingSenderId: "639761938336",
+            appId: "1:639761938336:web:347c97b498ddb1efd156c5"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        const notifIcon = document.getElementById('notifIcon');
+        const chatIcon = document.getElementById('chatIcon');
+        const cartIcon = document.getElementById('cartIcon');
+        const authBtn = document.getElementById('authBtn');
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                notifIcon.classList.remove('hidden');
+                chatIcon.classList.remove('hidden');
+                cartIcon.classList.remove('hidden');
+                authBtn.innerText = user.displayName || 'PROFIL';
+            } else {
+                notifIcon.classList.add('hidden');
+                chatIcon.classList.add('hidden');
+                cartIcon.classList.add('hidden');
+                authBtn.innerText = 'MASUK';
+            }
+        });
 
         const productGrid = document.getElementById('productGrid');
         const categoryDisplayTitle = document.getElementById('categoryDisplayTitle');
         const categoryStats = document.getElementById('categoryStats');
         const searchInput = document.getElementById('searchInput');
+
+        window.updateCartBadge = () => {
+            const cartCountEl = document.getElementById('cart-count');
+            if (!cartCountEl) return;
+            const keranjang = JSON.parse(localStorage.getItem('keranjang')) || [];
+            const totalItems = keranjang.reduce((sum, item) => sum + item.quantity, 0);
+            cartCountEl.innerText = totalItems;
+            cartCountEl.style.display = totalItems > 0 ? 'flex' : 'none';
+        };
 
         // 1. Ambil Nama Kategori dari URL (?c=NamaKategori)
         const urlParams = new URLSearchParams(window.location.search);
@@ -69,6 +127,7 @@
 
             categoryStats.innerText = `Ditemukan ${filtered.length} produk dalam kategori ini.`;
             renderProducts(filtered);
+            updateCartBadge();
         });
 
         function renderProducts(items) {
@@ -77,17 +136,26 @@
                 return;
             }
 
-            productGrid.innerHTML = items.map(item => `
+            productGrid.innerHTML = items.map(item => {
+                const originalImg = item.img || 'img/logo.png';
+                const urlGambarAman = originalImg.startsWith('http') 
+                    ? `https://images.weserv.nl/?url=${originalImg.replace(/^https?:\/\//, '')}` 
+                    : originalImg;
+                return `
                 <div class="col-3 mr-b-10">
                     <div class="card bg-white text-dark" style="height:100%; display:flex; flex-direction:column;">
                         <div class="card-body text-center" style="flex:1;">
-                            <img src="${item.img || 'img/logo.png'}" style="width:100%; height:180px; object-fit:cover; border-radius:5px;" onerror="this.onerror=null;this.src='img/logo.png';">
+                            <img src="${urlGambarAman}" style="width:100%; height:180px; object-fit:cover; border-radius:5px; cursor:pointer;" onclick="window.location.href='view.html?id=${item.id}'" onerror="this.onerror=null;this.src='img/logo.png';">
                             <h3 class="mr-t-10" style="font-size: 1.1rem;">${item.nama}</h3>
                             <p class="text-primary text-bold">Rp ${Number(item.harga).toLocaleString('id-ID')}</p>
-                            <button class="btn bg-success w-12 mr-t-10" onclick="window.location.href='view.html?id=${item.id}'">DETAIL</button>
+                            <div style="display: flex; gap: 5px; margin-top: 10px;">
+                                <a href="view.html?id=${item.id}" class="btn bg-success" style="flex: 1; text-align: center; text-decoration: none;">DETAIL</a>
+                                <a href="cart.html?id=${item.id}" class="btn bg-primary" style="flex: 1; text-align: center; text-decoration: none;">KERANJANG</a>
+                            </div>
                         </div>
                     </div>
-                </div>`).join('');
+                </div>`;
+            }).join('');
         }
     </script>
 </body>

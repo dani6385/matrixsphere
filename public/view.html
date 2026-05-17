@@ -4,21 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detail Produk | MatrixSphere</title>
-    <link rel="icon" type="image/png" href="img/favicon.png">
+    <link rel="icon" id="faviconLink" type="image/png" href="img/favicon.png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/ui-light.css">
+    <link rel="stylesheet" href="css/header.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #0f172a; color: white; }
         .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
     </style>
 </head>
-<body class="min-h-screen p-5 md:p-10">
+<body class="bg-slate-900 text-white font-sans">
+    <header class="main-header">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo text-bold text-white">
+                <img src="img/logo.png" alt="Logo" class="h-10"></a>
+            <span class="ml-4 font-bold text-sky-400 uppercase tracking-widest">MatrixSphere</span>
+            <div class="dropdown" id="categoryDropdown">
+                <button class="btn text-white text-bold pd-10">
+                    KATEGORI ▾
+                </button>
+                <div class="dropdown-content card bg-dark shadow-2" id="dropdownCategories"></div>
+            </div>
 
-    <div class="max-w-4xl mx-auto">
-        <a href="produk.html" class="inline-flex items-center text-blue-400 hover:text-blue-300 mb-8 transition">
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-            Kembali ke Katalog
-        </a>
+            <div class="search-bar">
+                <input type="text" id="searchInput" class="form-control" placeholder="Cari produk...">
+            </div>
 
+            <div class="nav-actions">
+                <a id="notifIcon" href="notifikasi.html" class="btn-notif mr-4 text-white hidden" style="text-decoration: none;">🔔</a>
+                <a id="chatIcon" href="chat.html" class="btn-notif mr-4 text-white hidden" style="text-decoration: none;">💬 </a>
+                <a id="cartIcon" href="cart.html" class="btn-notif mr-r-10 text-white hidden" style="text-decoration: none;">🛒</a>
+                <a id="authBtn" href="login.html" class="btn bg-primary pd-l-10 pd-r-10">MASUK</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="index-content container">
+    <div class="max-w-4xl mx-auto px-5">
         <div class="glass rounded-3xl overflow-hidden grid md:grid-cols-2 gap-0">
             <div class="bg-white/5 flex items-center justify-center p-5">
                 <img id="viewImg" src="img/logo.png" class="w-full max-h-[400px] object-contain rounded-2xl shadow-2xl shadow-blue-500/10" onerror="this.onerror=null;this.src='img/logo.png'">
@@ -41,9 +63,9 @@
                 </p>
 
                 <div class="mt-auto pt-10">
-                    <button class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-xl transition shadow-lg shadow-blue-600/20">
-                        Hubungi Penjual
-                    </button>
+                    <a id="btnAddToCart" href="#" class="block w-full bg-blue-600 hover:bg-blue-500 text-white text-center font-bold py-4 rounded-xl transition shadow-lg shadow-blue-600/20">
+                        Keranjang
+                    </a>
                 </div>
             </div>
         </div>
@@ -53,6 +75,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { monitorGudang } from './js/inventory-manager.js';
 
         // Konfigurasi Firebase (Samakan dengan inventory-manager.js)
         const firebaseConfig = {
@@ -68,6 +91,30 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        const auth = getAuth(app);
+
+        const notifIcon = document.getElementById('notifIcon');
+        const chatIcon = document.getElementById('chatIcon');
+        const cartIcon = document.getElementById('cartIcon');
+        const authBtn = document.getElementById('authBtn');
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                notifIcon.classList.remove('hidden');
+                chatIcon.classList.remove('hidden');
+                cartIcon.classList.remove('hidden');
+                authBtn.innerText = user.displayName || 'PROFIL';
+                authBtn.href = 'profile.html';
+            } else {
+                notifIcon.classList.add('hidden');
+                chatIcon.classList.add('hidden');
+                cartIcon.classList.add('hidden');
+                authBtn.innerText = 'MASUK';
+                authBtn.href = 'login.html';
+            }
+        });
+
         // Ambil ID dari URL
         const params = new URLSearchParams(window.location.search);
         const prodId = params.get('id');
@@ -80,19 +127,47 @@
             if (urlMatch && urlMatch[1]) {
                 // Karena view.html di root, kita hapus '../' jika ada agar path sesuai
                 const cleanPath = urlMatch[1].replace('../', '');
-                document.getElementById('faviconLink').href = cleanPath;
+                const favEl = document.getElementById('faviconLink');
+                if (favEl) {
+                    favEl.href = cleanPath;
+                }
             }
         }
 
+        // --- LOGIKA HEADER (DROPDOWN & SEARCH) ---
+        const dropdownCategories = document.getElementById('dropdownCategories');
         const searchInput = document.getElementById('searchInput');
+
+        monitorGudang((products) => {
+            const categories = ['Semua', ...new Set(products.map(p => p.kategori))];
+            if (dropdownCategories) {
+                dropdownCategories.innerHTML = categories.map(cat => `
+                    <a href="kategori.html?c=${encodeURIComponent(cat)}" class="dropdown-item text-white border-bottom">${cat}</a>
+                `).join('');
+            }
+        });
+
         if (searchInput) {
             searchInput.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter') {
+                    e.preventDefault();
                     const term = e.target.value.trim();
                     if (term) window.location.href = `pencarian.html?q=${encodeURIComponent(term)}`;
                 }
             });
         }
+
+        window.updateCartBadge = () => {
+            const cartCountEl = document.getElementById('cart-count');
+            if (!cartCountEl) return;
+            const keranjang = JSON.parse(localStorage.getItem('keranjang')) || [];
+            const totalItems = keranjang.reduce((sum, item) => sum + item.quantity, 0);
+            
+            cartCountEl.innerText = totalItems;
+            cartCountEl.style.display = totalItems > 0 ? 'flex' : 'none';
+        };
+
+        let currentProductData = null;
 
         async function loadProductDetail() {
             if (!prodId) {
@@ -103,13 +178,20 @@
             const snapshot = await get(ref(db, `gudangBarang/${prodId}`));
             if (snapshot.exists()) {
                 const data = snapshot.val();
-                
+                currentProductData = data;
+
                 // Isi data ke HTML
                 document.getElementById('viewNama').innerText = data.nama || "Produk Tanpa Nama";
                 document.getElementById('viewHarga').innerText = `Rp ${Number(data.harga).toLocaleString('id-ID')}`;
                 document.getElementById('viewStok').innerText = `Tersedia: ${data.stok}`;
                 document.getElementById('viewKategori').innerText = data.kategori || "Umum";
-                document.getElementById('viewImg').src = data.img || "img/logo.png";
+
+                // Gunakan proxy weserv agar gambar lebih stabil dan cepat (Direct Link ImgBB)
+                const originalImg = data.img || "img/logo.png";
+                const urlGambarAman = originalImg.startsWith('http') 
+                    ? `https://images.weserv.nl/?url=${originalImg.replace(/^https?:\/\//, '')}` 
+                    : originalImg;
+                document.getElementById('viewImg').src = urlGambarAman;
                 
                 // Tambahkan penanganan error gambar di JS
                 document.getElementById('viewImg').onerror = function() {
@@ -117,8 +199,8 @@
                     this.src = 'img/logo.png';
                 };
                 
-                // Menampilkan kolom detail dari Excel tadi
-                document.getElementById('viewDetail').innerText = data.detail || "Tidak ada deskripsi tambahan untuk produk ini.";
+                // Menampilkan data deskripsi (prioritas) atau detail jika tersedia
+                document.getElementById('viewDetail').innerText = data.deskripsi || data.detail || "Tidak ada deskripsi.";
                 
                 document.title = `${data.nama} | MatrixSphere`;
             } else {
@@ -126,7 +208,34 @@
             }
         }
 
-        window.onload = loadProductDetail;
+        // Handle click tombol keranjang
+        document.getElementById('btnAddToCart').onclick = (e) => {
+            e.preventDefault();
+            if (!currentProductData) return;
+
+            let keranjang = JSON.parse(localStorage.getItem('keranjang')) || [];
+            let index = keranjang.findIndex(p => p.id === prodId);
+
+            if (index > -1) {
+                keranjang[index].quantity += 1;
+            } else {
+                keranjang.push({
+                    id: prodId,
+                    nama: currentProductData.nama,
+                    harga: currentProductData.harga,
+                    img: currentProductData.img || 'img/logo.png',
+                    quantity: 1
+                });
+            }
+            localStorage.setItem('keranjang', JSON.stringify(keranjang));
+            window.updateCartBadge();
+            window.location.href = 'cart.html';
+        };
+
+        window.onload = () => {
+            loadProductDetail();
+            updateCartBadge();
+        };
     </script>
 </body>
 </html>
