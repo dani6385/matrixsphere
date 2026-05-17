@@ -11,42 +11,22 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
+        /* Pastikan body tidak menggunakan flex centering dari style.css agar navbar tidak rusak */
+        body { display: block !important; }
+        #navbar-container { position: relative; z-index: 1000; width: 100%; }
     </style>
 </head>
 <body class="bg-slate-900 text-white font-sans">
-    <header class="main-header">
-        <div class="nav-container">
-            <a href="index.html" class="nav-logo text-bold text-white">
-                <img src="img/logo.png" alt="Logo" class="h-10"></a>
-            <span class="ml-4 font-bold text-sky-400 uppercase tracking-widest">MatrixSphere</span>
-            <div class="dropdown" id="categoryDropdown">
-                <button class="btn text-white text-bold pd-10">
-                    KATEGORI ▾
-                </button>
-                <div class="dropdown-content card bg-dark shadow-2" id="dropdownCategories"></div>
-            </div>
+    <!-- Container Navbar Modular -->
+    <div id="navbar-container"></div>
 
-            <div class="search-bar">
-                <input type="text" id="searchInput" class="form-control" placeholder="Cari produk...">
-            </div>
-
-            <div class="nav-actions">
-                <a id="notifIcon" href="notifikasi.html" class="btn-notif mr-4 text-white hidden" style="text-decoration: none;">🔔</a>
-                <a id="chatIcon" href="chat.html" class="btn-notif mr-4 text-white hidden" style="text-decoration: none;">💬 </a>
-                <a id="cartIcon" href="cart.html" class="btn-notif mr-r-10 text-white hidden" style="text-decoration: none;">🛒</a>
-                <a id="authBtn" href="login.html" class="btn bg-primary pd-l-10 pd-r-10">MASUK</a>
-            </div>
-        </div>
-    </header>
-
-    <main class="index-content container">
-    <div class="max-w-4xl mx-auto px-5">
-        <div class="glass rounded-3xl overflow-hidden grid md:grid-cols-2 gap-0">
-            <div class="bg-white/5 flex items-center justify-center p-5">
+    <main id="matrix-main-content" style="display: flex !important; justify-content: center !important; align-items: center !important; min-height: 80vh !important; width: 100% !important; float: none !important; margin: 0 auto !important; clear: both !important; padding-top: 120px !important;">
+        <div class="glass rounded-3xl overflow-hidden flex flex-col md:flex-row gap-0 mx-auto w-full max-w-5xl my-10" style="float: none !important; margin-left: auto !important; margin-right: auto !important;">
+            <div class="bg-white/5 flex items-center justify-center p-5 md:w-1/2">
                 <img id="viewImg" src="img/logo.png" class="w-full max-h-[400px] object-contain rounded-2xl shadow-2xl shadow-blue-500/10" onerror="this.onerror=null;this.src='img/logo.png'">
             </div>
 
-            <div class="p-8 md:p-12 flex flex-col">
+            <div class="p-8 md:p-12 flex flex-col md:w-1/2">
                 <span id="viewKategori" class="text-blue-400 text-sm font-bold tracking-widest uppercase mb-2">Kategori</span>
                 <h1 id="viewNama" class="text-3xl md:text-4xl font-extrabold mb-4">Nama Produk</h1>
                 
@@ -62,109 +42,80 @@
                     Memuat deskripsi...
                 </p>
 
-                <div class="mt-auto pt-10">
-                    <a id="btnAddToCart" href="#" class="block w-full bg-blue-600 hover:bg-blue-500 text-white text-center font-bold py-4 rounded-xl transition shadow-lg shadow-blue-600/20">
-                        Keranjang
+                <!-- Komponen Input Jumlah Pembelian (Quantity Selector) -->
+                <div class="mt-auto mt-10 mb-[15px] flex items-center justify-start gap-4 bg-white/5 py-[6px] px-3 rounded-xl border border-white/10 w-fit max-w-[180px] ml-0 mr-auto">
+                    <span class="text-white/50 text-[10px] font-bold uppercase tracking-wider">Jumlah:</span>
+                    <div class="flex items-center gap-1">
+                        <button id="btnMinus" class="w-8 h-8 flex items-center justify-center bg-[#1e293b] border border-white/10 rounded-lg hover:bg-slate-700 transition text-white text-base">
+                            -
+                        </button>
+                        <input type="number" id="inputQty" value="1" readonly 
+                            class="w-8 bg-transparent text-center font-bold text-white text-sm focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                        <button id="btnPlus" class="w-8 h-8 flex items-center justify-center bg-[#1e293b] border border-white/10 rounded-lg hover:bg-slate-700 transition text-white text-base">
+                            +
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Barisan Tombol Aksi Baru -->
+                <div class="flex gap-3 items-center w-full">
+                    <!-- Tombol Chat -->
+                    <a href="chat.html" class="flex items-center justify-center w-14 h-14 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 hover:border-white/20 transition-all text-xl shadow-lg" title="Tanya Penjual">
+                        💬
                     </a>
+                    <button id="btnBuyNow" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-emerald-600/20 uppercase tracking-wider text-[10px] md:text-xs lg:text-sm whitespace-nowrap">
+                        Beli Langsung
+                    </button>
+                    <!-- Tombol + Keranjang (Menambah tanpa pindah halaman) -->
+                    <button id="btnAddToCart" class="flex-1 bg-sky-500 hover:bg-sky-400 text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-sky-500/20 uppercase tracking-wider text-[10px] md:text-xs lg:text-sm whitespace-nowrap">
+                        + Keranjang
+                    </button>
+
+                    <!-- Tombol Beli Langsung (Menambah & Langsung ke Keranjang) -->
+                    
                 </div>
             </div>
         </div>
-    </div>
     </main>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        // Gunakan auth & app dari loader agar sinkron dan mencegah bentrokan inisialisasi
+        import { auth, app } from './js/navbar-loader.js';
         import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
         import { monitorGudang } from './js/inventory-manager.js';
 
-        // Konfigurasi Firebase (Samakan dengan inventory-manager.js)
-        const firebaseConfig = {
-            apiKey: "AIzaSyApICU6wUb1dkvHhVDBhsDk9bwVMWAVKeo",
-            authDomain: "matrixsphere-shop.firebaseapp.com",
-            databaseURL: "https://matrixsphere-shop-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "matrixsphere-shop",
-            storageBucket: "matrixsphere-shop.firebasestorage.app",
-            messagingSenderId: "639761938336",
-            appId: "1:639761938336:web:347c97b498ddb1efd156c5"
-        };
-
-        const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
-
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        const auth = getAuth(app);
-
-        const notifIcon = document.getElementById('notifIcon');
-        const chatIcon = document.getElementById('chatIcon');
-        const cartIcon = document.getElementById('cartIcon');
-        const authBtn = document.getElementById('authBtn');
-
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                notifIcon.classList.remove('hidden');
-                chatIcon.classList.remove('hidden');
-                cartIcon.classList.remove('hidden');
-                authBtn.innerText = user.displayName || 'PROFIL';
-                authBtn.href = 'profile.html';
-            } else {
-                notifIcon.classList.add('hidden');
-                chatIcon.classList.add('hidden');
-                cartIcon.classList.add('hidden');
-                authBtn.innerText = 'MASUK';
-                authBtn.href = 'login.html';
-            }
-        });
-
-        // Ambil ID dari URL
         const params = new URLSearchParams(window.location.search);
         const prodId = params.get('id');
-
-        // --- SYNC FAVICON DARI CSS ---
-        const faviconVar = getComputedStyle(document.documentElement).getPropertyValue('--img-favicon');
-        if (faviconVar) {
-            // Ekstrak URL dari format url('../img/favicon.png')
-            const urlMatch = faviconVar.match(/url\(["']?([^"']+)["']?\)/);
-            if (urlMatch && urlMatch[1]) {
-                // Karena view.html di root, kita hapus '../' jika ada agar path sesuai
-                const cleanPath = urlMatch[1].replace('../', '');
-                const favEl = document.getElementById('faviconLink');
-                if (favEl) {
-                    favEl.href = cleanPath;
-                }
-            }
-        }
-
-        // --- LOGIKA HEADER (DROPDOWN & SEARCH) ---
-        const dropdownCategories = document.getElementById('dropdownCategories');
-        const searchInput = document.getElementById('searchInput');
-
-        monitorGudang((products) => {
-            const categories = ['Semua', ...new Set(products.map(p => p.kategori))];
-            if (dropdownCategories) {
-                dropdownCategories.innerHTML = categories.map(cat => `
-                    <a href="kategori.html?c=${encodeURIComponent(cat)}" class="dropdown-item text-white border-bottom">${cat}</a>
-                `).join('');
-            }
-        });
-
-        if (searchInput) {
-            searchInput.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    const term = e.target.value.trim();
-                    if (term) window.location.href = `pencarian.html?q=${encodeURIComponent(term)}`;
-                }
-            });
-        }
 
         window.updateCartBadge = () => {
             const cartCountEl = document.getElementById('cart-count');
             if (!cartCountEl) return;
-            const keranjang = JSON.parse(localStorage.getItem('keranjang')) || [];
+            const keranjang = JSON.parse(localStorage.getItem('grup_keranjang')) || [];
             const totalItems = keranjang.reduce((sum, item) => sum + item.quantity, 0);
             
             cartCountEl.innerText = totalItems;
             cartCountEl.style.display = totalItems > 0 ? 'flex' : 'none';
+        };
+
+        window.tambahKeKeranjang = (idProduk, nama, harga, gambar, redirect = true, qty = 1) => {
+            let keranjang = JSON.parse(localStorage.getItem('grup_keranjang')) || [];
+            let index = keranjang.findIndex(p => p.id === idProduk);
+
+            if (index > -1) {
+                keranjang[index].quantity += qty;
+            } else {
+                keranjang.push({
+                    id: idProduk,
+                    nama: nama,
+                    harga: harga,
+                    img: gambar || 'img/logo.png',
+                    quantity: qty
+                });
+            }
+            localStorage.setItem('grup_keranjang', JSON.stringify(keranjang));
+            window.updateCartBadge();
+            if (redirect) window.location.href = 'cart.html';
         };
 
         let currentProductData = null;
@@ -212,24 +163,44 @@
         document.getElementById('btnAddToCart').onclick = (e) => {
             e.preventDefault();
             if (!currentProductData) return;
+            const qty = parseInt(document.getElementById('inputQty').value) || 1;
 
-            let keranjang = JSON.parse(localStorage.getItem('keranjang')) || [];
-            let index = keranjang.findIndex(p => p.id === prodId);
+            tambahKeKeranjang(
+                prodId, 
+                currentProductData.nama, 
+                currentProductData.harga, 
+                currentProductData.img || 'img/logo.png',
+                false, // Jangan pindah halaman
+                qty
+            );
+            alert("Produk berhasil ditambahkan ke keranjang!");
+        };
 
-            if (index > -1) {
-                keranjang[index].quantity += 1;
-            } else {
-                keranjang.push({
-                    id: prodId,
-                    nama: currentProductData.nama,
-                    harga: currentProductData.harga,
-                    img: currentProductData.img || 'img/logo.png',
-                    quantity: 1
-                });
-            }
-            localStorage.setItem('keranjang', JSON.stringify(keranjang));
-            window.updateCartBadge();
-            window.location.href = 'cart.html';
+        // Handle click tombol beli langsung
+        document.getElementById('btnBuyNow').onclick = (e) => {
+            e.preventDefault();
+            if (!currentProductData) return;
+            const qty = parseInt(document.getElementById('inputQty').value) || 1;
+
+            tambahKeKeranjang(
+                prodId, 
+                currentProductData.nama, 
+                currentProductData.harga, 
+                currentProductData.img || 'img/logo.png',
+                true, // Langsung pindah ke cart.html
+                qty
+            );
+        };
+
+        // Logika Interaktif Quantity Selector
+        const inputQty = document.getElementById('inputQty');
+        document.getElementById('btnMinus').onclick = () => {
+            let val = parseInt(inputQty.value);
+            if (val > 1) inputQty.value = val - 1;
+        };
+        document.getElementById('btnPlus').onclick = () => {
+            let val = parseInt(inputQty.value);
+            inputQty.value = val + 1;
         };
 
         window.onload = () => {

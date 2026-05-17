@@ -30,6 +30,9 @@ async function loadNavbar() {
         container.innerHTML = html;
 
         initNavbarLogic();
+
+        // Pemicu awal agar badge keranjang muncul (misal: angka 7)
+        triggerCartUpdate();
     } catch (error) {
         console.error("Gagal memuat navbar:", error);
     }
@@ -126,9 +129,17 @@ function initNavbarLogic() {
             authBtn.innerText = 'MASUK';
         }
         
-        // Update badge keranjang (jika fungsi tersedia di halaman tersebut)
-        if (window.updateCartBadge) window.updateCartBadge();
+        triggerCartUpdate();
     });
+}
+
+function triggerCartUpdate() {
+    // Jalankan fungsi update badge jika tersedia di scope window halaman
+    try {
+        if (typeof window.updateCartBadge === 'function') window.updateCartBadge();
+    } catch (e) {
+        console.warn("Fungsi updateCartBadge belum siap.");
+    }
 }
 
 // Jalankan saat DOM siap

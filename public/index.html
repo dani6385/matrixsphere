@@ -9,7 +9,11 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/ui-light.css">
     <link rel="stylesheet" href="css/header.css">
-    <script type="module" src="js/navbar-loader.js"></script>
+    <style>
+        /* Mencegah konflik flexbox dari style.css yang merusak baris produk */
+        body { display: block !important; }
+        #navbar-container { position: relative; z-index: 1000; }
+    </style>
 </head>
 
 <body class="bg-slate-900 text-white font-sans">
@@ -76,7 +80,7 @@
         window.updateCartBadge = () => {
             const cartCountEl = document.getElementById('cart-count');
             if (!cartCountEl) return;
-            const keranjang = JSON.parse(localStorage.getItem('keranjang')) || [];
+            const keranjang = JSON.parse(localStorage.getItem('grup_keranjang')) || [];
             const totalItems = keranjang.reduce((sum, item) => sum + item.quantity, 0);
             
             cartCountEl.innerText = totalItems;
@@ -91,42 +95,37 @@
                     : originalImg;
                 return `
                 <div class="col-3 mr-b-10">
-                    <div class="card bg-white text-dark" style="height:100%; display:flex; flex-direction:column;">
-                        <div class="card-body text-center" style="flex:1;">
-                            <img src="${urlGambarAman}" style="width:100%; height:180px; object-fit:cover; border-radius:5px; cursor:pointer;" onclick="window.location.href='view.html?id=${item.id}'" onerror="this.onerror=null;this.src='img/logo.png';">
+                <a href="view.html?id=${item.id}" style="text-decoration:none; color:inherit; display:block;">
+                    <div class="card bg-white text-dark" style="height:100%;">
+                        <div class="card-body text-center" style="padding-bottom: 25px;">
+                            <img src="${urlGambarAman}" style="width:100%; height:180px; object-fit:cover; border-radius:5px;" onerror="this.onerror=null;this.src='img/logo.png';">
                             <h3 class="mr-t-10" style="font-size: 1.1rem;">${item.nama}</h3>
                             <p class="text-primary text-bold">Rp ${Number(item.harga).toLocaleString('id-ID')}</p>
-                            <div style="display: flex; gap: 5px; margin-top: 10px;">
-                                <a href="view.html?id=${item.id}" class="btn bg-success" style="flex: 1; text-align: center; text-decoration: none; line-height: 1.5;">DETAIL</a>
-                                <button onclick="addToCart('${item.id}')" class="btn bg-primary" style="flex: 1; text-align: center;">KERANJANG</button>
-                            </div>
                         </div>
                     </div>
+                </a>
                 </div>`;
             }).join('');
         }
 
-        // FUNGSI TAMBAH KE KERANJANG (LOCALSTORAGE)
-        window.addToCart = (id) => {
-            const item = allProducts.find(p => p.id === id);
-            if (!item) return;
-
-            let keranjang = JSON.parse(localStorage.getItem('keranjang')) || [];
-            let index = keranjang.findIndex(p => p.id === id);
+        // FUNGSI TAMBAH KE KERANJANG SESUAI REQUEST
+        window.tambahKeKeranjang = (idProduk, nama, harga, gambar) => {
+            let keranjang = JSON.parse(localStorage.getItem('grup_keranjang')) || [];
+            let index = keranjang.findIndex(p => p.id === idProduk);
 
             if (index > -1) {
                 keranjang[index].quantity += 1;
             } else {
                 keranjang.push({
-                    id: item.id,
-                    nama: item.nama,
-                    harga: item.harga,
-                    img: item.img || 'img/logo.png',
+                    id: idProduk,
+                    nama: nama,
+                    harga: harga,
+                    img: gambar || 'img/logo.png',
                     quantity: 1
                 });
             }
 
-            localStorage.setItem('keranjang', JSON.stringify(keranjang));
+            localStorage.setItem('grup_keranjang', JSON.stringify(keranjang));
             window.updateCartBadge();
             window.location.href = 'cart.html';
         };
@@ -154,6 +153,7 @@
         // Jalankan saat pertama kali dimuat
         updateCartBadge();
     </script>
+    <script type="module" src="js/navbar-loader.js"></script>
 </body>
 
 </html>

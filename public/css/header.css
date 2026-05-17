@@ -197,30 +197,33 @@ body {
     }
 }
 
-/* --- BADGE KERANJANG --- */
-.cart-wrapper {
+/* --- NOTIFICATION BADGES --- */
+.icon-badge-container {
     position: relative;
-    display: inline-flex !important;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
+    margin-right: 5px;
+    font-size: 22px;
 }
 
-#cart-count {
+.badge-red {
     position: absolute;
-    top: -8px;
-    right: -8px;
-    background-color: #ef4444; /* Warna merah (Tailwind red-500) */
+    top: -6px;
+    right: -6px;
+    background-color: #ef4444;
     color: white;
     font-size: 10px;
     font-weight: bold;
     min-width: 18px;
     height: 18px;
-    border-radius: 999px;
-    display: none; /* Sembunyikan jika kosong */
+    border-radius: 50%;
+    display: flex;
     align-items: center;
     justify-content: center;
     box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-    border: 2px solid #0f172a; /* Agar kontras dengan header */
+    border: 2px solid #0f172a;
+    z-index: 10;
 }
 
 /* --- DROPDOWN PROFIL --- */
