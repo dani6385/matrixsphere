@@ -9,12 +9,18 @@
     <link rel="stylesheet" href="css/ui-light.css">
     <link rel="stylesheet" href="css/header.css">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
         .profile-glass {
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        /* Mencegah konflik z-index leaflet dengan navbar */
+        #mapProfile { 
+            z-index: 10; 
         }
     </style>
 </head>
@@ -47,6 +53,19 @@
                     <label class="text-slate-400 text-[10px] uppercase font-bold tracking-widest">Email Terdaftar</label>
                     <p id="userEmail" class="text-lg font-semibold truncate">-</p>
                 </div>
+                <hr class="border-white/5">
+                <div>
+                    <label class="text-slate-400 text-[10px] uppercase font-bold tracking-widest">Alamat & Panduan Lokasi Pengambilan Toko</label>
+                    <textarea id="shopAddressInput" class="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white text-sm focus:outline-none focus:border-sky-400 mt-2 transition-all" rows="3" placeholder="Contoh: Jl. Merdeka No. 123 (Samping Alfamart), Masuk gang warna biru..."></textarea>
+                    <div id="mapProfile" class="w-full h-64 md:h-80 rounded-2xl border border-white/10 my-4 shadow-xl"></div>
+                    <div class="flex gap-2 mb-3">
+                        <input type="text" id="latInput" readonly class="w-1/2 bg-white/5 border border-white/10 rounded-lg p-2 text-[10px] text-slate-400 focus:outline-none" placeholder="Latitude">
+                        <input type="text" id="lngInput" readonly class="w-1/2 bg-white/5 border border-white/10 rounded-lg p-2 text-[10px] text-slate-400 focus:outline-none" placeholder="Longitude">
+                    </div>
+                    <button id="btnSimpanProfil" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-blue-600/20 uppercase tracking-widest text-[10px] mt-3 active:scale-95">
+                        SIMPAN LOKASI TOKO
+                    </button>
+                </div>
             </div>
 
             <button id="btnLogout" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-red-600/20 uppercase tracking-widest text-sm active:scale-95">
@@ -61,27 +80,103 @@
 
     <script type="module">
         // Mengambil instance auth yang sudah diinisialisasi di navbar-loader
-        import { auth } from './js/navbar-loader.js';
+        import { auth, app } from './js/navbar-loader.js';
         import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+        const db = getFirestore(app);
         const loadingOverlay = document.getElementById('loadingOverlay');
         const welcomeText = document.getElementById('welcomeText');
         const userName = document.getElementById('userName');
         const userEmail = document.getElementById('userEmail');
         const btnLogout = document.getElementById('btnLogout');
+        const shopAddressInput = document.getElementById('shopAddressInput');
+        const btnSimpanProfil = document.getElementById('btnSimpanProfil');
+        const latInput = document.getElementById('latInput');
+        const lngInput = document.getElementById('lngInput');
 
-        onAuthStateChanged(auth, (user) => {
+        // 1. Koordinat Default (Sukagalih Cikalongkulon)
+        const defaultLat = "-6.714104";
+        const defaultLng = "107.216327";
+
+        // 2. Inisialisasi Peta Leaflet
+        const map = L.map('mapProfile').setView([parseFloat(defaultLat), parseFloat(defaultLng)], 15);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        // Marker yang bisa digeser
+        const marker = L.marker([parseFloat(defaultLat), parseFloat(defaultLng)], { draggable: true }).addTo(map);
+
+        // Update input saat marker digeser
+        marker.on('dragend', function() {
+            const pos = marker.getLatLng();
+            latInput.value = pos.lat.toFixed(6);
+            lngInput.value = pos.lng.toFixed(6);
+        });
+
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const name = user.displayName || "User";
                 welcomeText.innerText = `Selamat Datang, ${name}`;
                 userName.innerText = name;
                 userEmail.innerText = user.email;
-                
+
+                // Muat Data Lokasi dari Firestore (Universal)
+                try {
+                    const docRef = doc(db, "toko_settings", "lokasi_utama");
+                    const docSnap = await getDoc(docRef);
+
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        shopAddressInput.value = data.alamat || "";
+                        latInput.value = data.latitude || defaultLat;
+                        lngInput.value = data.longitude || defaultLng;
+
+                        const newPos = [parseFloat(latInput.value), parseFloat(lngInput.value)];
+                        marker.setLatLng(newPos);
+                        map.setView(newPos, 15);
+                    }
+                } catch (error) {
+                    console.error("Gagal sinkronisasi Firestore:", error);
+                }
+
+                map.invalidateSize(); // Refresh ukuran peta setelah loading selesai
+
                 loadingOverlay.style.display = 'none';
             } else {
                 window.location.href = 'login.html';
             }
         });
+
+        // 3. Logika Fungsi Tombol Simpan (Kunci Utama)
+        btnSimpanProfil.onclick = async () => {
+            const user = auth.currentUser;
+
+            btnSimpanProfil.innerText = "MENYIMPAN...";
+            btnSimpanProfil.disabled = true;
+
+            try {
+                // 1. Simpan ke Firestore (Kunci Utama)
+                await setDoc(doc(db, "toko_settings", "lokasi_utama"), {
+                    alamat: shopAddressInput.value,
+                    latitude: latInput.value,
+                    longitude: lngInput.value
+                });
+
+                // 2. Update LocalStorage (Hanya untuk cache lokal)
+                localStorage.setItem('shopAddress', shopAddressInput.value);
+                localStorage.setItem('shopLatitude', latInput.value);
+                localStorage.setItem('shopLongitude', lngInput.value);
+
+                alert("✅ Lokasi toko berhasil diperbarui!");
+            } catch (error) {
+                alert("Gagal menyimpan alamat: " + error.message);
+            } finally {
+                btnSimpanProfil.innerText = "SIMPAN LOKASI TOKO";
+                btnSimpanProfil.disabled = false;
+            }
+        };
 
         btnLogout.onclick = async () => {
             if (confirm("Apakah Anda yakin ingin keluar dari akun MatrixSphere?")) {

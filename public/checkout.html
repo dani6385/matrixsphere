@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | MatrixSphere Shop</title>
+    <link rel="icon" type="image/png" href="img/favicon.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        body { background-color: #0f172a !important; display: block !important; }
+        .glass-card { 
+            background: rgba(30, 41, 59, 0.7); 
+            backdrop-filter: blur(12px); 
+            border: 1px solid rgba(255, 255, 255, 0.05); 
+        }
+        input, textarea, select {
+            background: rgba(15, 23, 42, 0.8) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            color: white !important;
+        }
+        input:focus, textarea:focus {
+            border-color: #3b82f6 !important;
+            outline: none;
+        }
+    </style>
+</head>
+<body class="text-slate-200 font-sans">
+
+    <!-- Container Navbar Modular -->
+    <div id="navbar-container"></div>
+
+    <main class="max-w-7xl mx-auto px-4 pt-32 pb-12">
+        <div class="flex flex-col lg:flex-row gap-8">
+            
+            <!-- BAGIAN KIRI: FORMULIR DATA PEMBELI -->
+            <div class="lg:w-7/12">
+                <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+                    <span class="text-blue-500">01</span> Informasi Pengambilan (Take Away)
+                </h2>
+                
+                <form id="checkoutForm" class="glass-card p-8 rounded-2xl shadow-2xl space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-400 mb-2">Nama Lengkap</label>
+                            <input type="text" id="customerName" required placeholder="Masukkan nama lengkap" 
+                                class="w-full px-4 py-3 rounded-xl focus:ring-2 focus:ring-blue-500 transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-400 mb-2">Nomor WhatsApp</label>
+                            <input type="tel" id="customerPhone" required placeholder="Contoh: 08123456789" 
+                                class="w-full px-4 py-3 rounded-xl focus:ring-2 focus:ring-blue-500 transition-all">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="text-white/70 text-sm font-semibold mb-2 block">Perkiraan Jam Pengambilan:</label>
+                        <input type="time" id="takeawayTime" class="w-full bg-[#1e293b] border border-white/10 rounded-xl p-3 text-white focus:outline-none" required>
+                    </div>
+
+                    <!-- BAGIAN PETA LOKASI TOKO -->
+                    <div class="p-5 bg-white/5 rounded-2xl border border-white/10">
+                        <label class="text-blue-400 text-[10px] uppercase font-bold tracking-widest mb-3 block">📍 Lokasi Pengambilan (Toko):</label>
+                        <p id="displayAddressToko" class="text-gray-300 text-sm mb-3">Memuat alamat toko...</p>
+                        <div id="mapToko" class="w-full h-48 rounded-xl border border-white/10 mb-3"></div>
+                        <a id="btnGoogleMaps" href="#" target="_blank" class="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-4 rounded-xl text-[10px] uppercase tracking-wider transition-all shadow-lg">
+                            🗺️ Buka Rute di Google Maps
+                        </a>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-400 mb-2">Metode Pembayaran</label>
+                        <select id="paymentMethod" required class="w-full px-4 py-3 rounded-xl focus:ring-2 focus:ring-blue-500 transition-all">
+                            <option value="Transfer Bank">Transfer Bank (BCA/Mandiri/BNI)</option>
+                            <option value="E-Wallet">E-Wallet (Dana/OVO/GoPay)</option>
+                            <option value="WhatsApp Manual">Konfirmasi Manual via WhatsApp</option>
+                        </select>
+                    </div>
+
+                    <p class="text-xs text-amber-200/70 italic mb-4">
+                        ⚠️ Catatan: Pesanan Anda baru akan kami persiapkan setelah pembayaran Anda berhasil diverifikasi. Silakan tunjukkan bukti bayar saat mengambil pesanan di toko.
+                    </p>
+
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-600/20 transition-all transform hover:-translate-y-1 uppercase tracking-widest text-sm">
+                        Bayar Sekarang
+                    </button>
+                </form>
+            </div>
+
+            <!-- BAGIAN KANAN: RINGKASAN PESANAN -->
+            <div class="lg:w-5/12">
+                <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+                    <span class="text-blue-500">02</span> Ringkasan Pesanan
+                </h2>
+
+                <div class="glass-card p-6 rounded-2xl shadow-2xl sticky top-28">
+                    <div id="orderItems" class="space-y-4 max-h-[400px] overflow-y-auto pr-2 mb-6">
+                        <!-- Items dirender via JS -->
+                        <p class="text-slate-500 text-center py-4">Memuat keranjang...</p>
+                    </div>
+
+                    <div class="border-t border-white/10 pt-6 space-y-3">
+                        <div class="flex justify-between text-slate-400">
+                            <span>Subtotal</span>
+                            <span id="subtotalPrice">Rp 0</span>
+                        </div>
+                        <div class="flex justify-between text-slate-400">
+                            <span>Biaya Layanan</span>
+                            <span>Gratis</span>
+                        </div>
+                        <div class="flex justify-between items-center pt-4 border-t border-white/10">
+                            <span class="text-lg font-bold">Total Harga</span>
+                            <span id="totalPrice" class="text-2xl font-extrabold text-blue-400">Rp 0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script type="module">
+        import { auth, app } from './js/navbar-loader.js';
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const db = getFirestore(app);
+        const WA_NUMBER = "628212968545"; // Sesuaikan dengan nomor WhatsApp MatrixSphere
+        const orderItemsContainer = document.getElementById('orderItems');
+        const subtotalEl = document.getElementById('subtotalPrice');
+        const totalEl = document.getElementById('totalPrice');
+        const checkoutForm = document.getElementById('checkoutForm');
+
+        // Ambil data keranjang
+        let keranjang = JSON.parse(localStorage.getItem('grup_keranjang')) || [];
+
+        function formatRupiah(number) {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(number);
+        }
+
+        function renderSummary() {
+            if (keranjang.length === 0) {
+                orderItemsContainer.innerHTML = `<div class="text-center py-8"><p class="text-slate-500">Keranjang kosong.</p><a href="index.html" class="text-blue-400 underline mt-2 block text-sm">Kembali belanja</a></div>`;
+                return;
+            }
+
+            let total = 0;
+            orderItemsContainer.innerHTML = keranjang.map(item => {
+                const subtotal = item.harga * item.quantity;
+                total += subtotal;
+                
+                // Gunakan proxy weserv untuk gambar
+                const originalImg = item.img || 'img/logo.png';
+                const urlGambarAman = originalImg.startsWith('http') 
+                    ? `https://images.weserv.nl/?url=${originalImg.replace(/^https?:\/\//, '')}` 
+                    : originalImg;
+
+                return `
+                <div class="flex items-center gap-4 bg-white/5 p-3 rounded-xl border border-white/5">
+                    <img src="${urlGambarAman}" class="w-16 h-16 object-cover rounded-lg" onerror="this.src='img/logo.png'">
+                    <div class="flex-1 min-w-0">
+                        <h4 class="text-sm font-semibold truncate">${item.nama}</h4>
+                        <p class="text-xs text-slate-400">${item.quantity} x ${formatRupiah(item.harga)}</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-sm font-bold text-slate-200">${formatRupiah(subtotal)}</span>
+                    </div>
+                </div>`;
+            }).join('');
+
+            subtotalEl.innerText = formatRupiah(total);
+            totalEl.innerText = formatRupiah(total);
+            return total;
+        }
+
+        checkoutForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            if (keranjang.length === 0) {
+                alert("Keranjang Anda kosong!");
+                return;
+            }
+
+            const name = document.getElementById('customerName').value;
+            const phone = document.getElementById('customerPhone').value;
+            const takeawayTime = document.getElementById('takeawayTime').value;
+            const payment = document.getElementById('paymentMethod').value;
+            const grandTotal = totalEl.innerText;
+
+            // Buat Format Pesan WhatsApp
+            let message = `*PESANAN BARU - MATRIXSPHERE*\n`;
+            message += `------------------------------------------\n`;
+            message += `*Data Pembeli:*\n`;
+            message += `👤 Nama: ${name}\n`;
+            message += `📞 WA: ${phone}\n`;
+            message += `⏰ Jam Ambil: ${takeawayTime} WIB\n`;
+            message += `💳 Metode: ${payment}\n\n`;
+            message += `*Daftar Belanja:*\n`;
+
+            keranjang.forEach((item, index) => {
+                message += `${index + 1}. ${item.nama} (${item.quantity}x) - ${formatRupiah(item.harga * item.quantity)}\n`;
+            });
+
+            message += `\n*TOTAL BAYAR: ${grandTotal}*\n`;
+            message += `------------------------------------------\n`;
+            message += `_Mohon segera diproses, terima kasih!_`;
+
+            // Redirect ke WhatsApp
+            const waUrl = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(message)}`;
+            
+            alert("Pesanan Anda telah dicatat! Anda akan diarahkan ke WhatsApp untuk penyelesaian pembayaran.");
+            
+            window.open(waUrl, '_blank');
+
+            // Bersihkan Keranjang
+            localStorage.removeItem('grup_keranjang');
+            window.location.href = 'index.html'; // Kembali ke home setelah bayar
+        });
+
+        // FUNGSI MEMUAT LOKASI TOKO DARI FIRESTORE (Universal)
+        async function loadShopLocation() {
+            const addressEl = document.getElementById('displayAddressToko');
+            const googleMapsBtn = document.getElementById('btnGoogleMaps');
+
+            try {
+                const docRef = doc(db, "toko_settings", "lokasi_utama");
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    const lat = data.latitude;
+                    const lng = data.longitude;
+                    addressEl.innerText = data.alamat || "Alamat toko belum diatur.";
+
+                    if (lat && lng) {
+                        const mapToko = L.map('mapToko', {
+                            dragging: false,
+                            scrollWheelZoom: false,
+                            zoomControl: false,
+                            touchZoom: false
+                        }).setView([lat, lng], 16);
+
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                            attribution: '© OSM'
+                        }).addTo(mapToko);
+
+                        L.marker([lat, lng]).addTo(mapToko);
+                        googleMapsBtn.href = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+                    }
+                } else {
+                    addressEl.innerText = "Lokasi belum dikonfigurasi di server.";
+                    googleMapsBtn.classList.add('hidden');
+                }
+            } catch (error) {
+                console.error("Gagal memuat lokasi Firestore:", error);
+                addressEl.innerText = "Gagal sinkronisasi alamat.";
+            }
+        }
+
+        // Logika Jam Pengambilan Otomatis (Default & Min Value)
+        function initTakeawayTime() {
+            const timeInput = document.getElementById('takeawayTime');
+            if (timeInput) {
+                const now = new Date();
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                const currentTime = `${hours}:${minutes}`;
+                
+                // Set jam sekarang sebagai default dan batas minimum
+                timeInput.value = currentTime;
+                timeInput.min = currentTime;
+            }
+        }
+
+        // Inisialisasi awal
+        window.addEventListener('DOMContentLoaded', () => {
+            renderSummary();
+            initTakeawayTime();
+            loadShopLocation();
+        });
+    </script>
+</body>
+</html>

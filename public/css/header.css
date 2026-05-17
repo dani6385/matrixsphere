@@ -252,8 +252,8 @@ body {
     gap: 5px;
 }
 
-/* Aktifkan dropdown saat container (profileSection) di-hover */
-#profileSection:hover .profile-dropdown {
+/* Aktifkan dropdown hanya jika user sudah login (memiliki class is-logged-in) dan di-hover */
+#profileSection.is-logged-in:hover .profile-dropdown {
     display: flex !important;
 }
 

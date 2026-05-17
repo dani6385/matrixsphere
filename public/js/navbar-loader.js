@@ -108,12 +108,14 @@ function initNavbarLogic() {
         const userEmail = document.getElementById('userEmail');
         const userPhoto = document.getElementById('userPhoto');
         const adminMenu = document.getElementById('admin-menu');
+        const profileSection = document.getElementById('profileSection');
 
         if (user) {
             if (notifIcon) notifIcon.classList.remove('hidden');
             if (chatIcon) chatIcon.classList.remove('hidden');
             if (cartIcon) cartIcon.classList.remove('hidden');
             
+            if (profileSection) profileSection.classList.add('is-logged-in');
             // Logika pengecekan Admin
             if (adminMenu) adminMenu.classList.toggle('hidden', user.email !== ADMIN_EMAIL);
 
@@ -126,6 +128,7 @@ function initNavbarLogic() {
             if (chatIcon) chatIcon.classList.add('hidden');
             if (cartIcon) cartIcon.classList.add('hidden');
             if (adminMenu) adminMenu.classList.add('hidden');
+            if (profileSection) profileSection.classList.remove('is-logged-in');
             authBtn.innerText = 'MASUK';
         }
         
