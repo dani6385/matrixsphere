@@ -16,6 +16,9 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const ADMIN_EMAIL = "dani6385@gmail.com";
 
+// Fungsi utilitas untuk mencegah XSS
+const escapeHTML = (str) => String(str).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+
 // --- LOGIKA INISIALISASI TEMA GLOBAL ---
 const savedTheme = localStorage.getItem('theme') || 'dark';
 if (savedTheme === 'light') document.body.classList.add('light-mode');
@@ -77,9 +80,9 @@ function initNavbarLogic() {
         monitorGudang((products) => {
             const categories = ['Semua', ...new Set(products.map(p => p.kategori))];
             dropdownCategories.innerHTML = categories.map(cat => `
-                <a href="${pathPrefix}kategori.html?c=${encodeURIComponent(cat)}" 
+                <a href="${pathPrefix}kategori.html?c=${encodeURIComponent(cat || '')}" 
                    class="block px-4 py-3 text-white no-underline hover:bg-sky-500/20 border-b border-white/5 transition-colors">
-                   ${cat}
+                   ${escapeHTML(cat || 'Uncategorized')}
                 </a>
             `).join('');
         });

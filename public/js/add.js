@@ -109,6 +109,7 @@ productForm.addEventListener('submit', async (e) => {
         alert("Berhasil simpan ke ImgBB & Cloud!");
         window.location.href = 'produk.html';
     } catch (error) {
-        alert("Gagal simpan: " + error.message);
+        console.error("Detail Error:", error);
+        alert("Terjadi kesalahan saat menyimpan data. Silakan coba lagi nanti.");
     }
 });
