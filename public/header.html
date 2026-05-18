@@ -18,9 +18,11 @@
 
         <div class="search-bar">
             <input type="text" id="navSearchInput" class="form-control" placeholder="Cari produk di ShopSphere...">
+            <button id="closeSearch" class="hidden text-white px-3 text-lg">✕</button>
         </div>
 
         <div class="nav-actions">
+            <button id="mobileSearchBtn" class="text-white text-xl p-2">🔍</button>
             <a id="notifIcon" href="notifikasi.html" class="icon-badge-container text-white hidden"
                 style="text-decoration: none;">
                 🔔
@@ -33,27 +35,31 @@
                 🛒<span id="cart-count" class="badge-red" style="display: none;">0</span>
             </a>
 
-            <div style="position: relative;" id="profileSection">
-                <button id="authBtn" class="btn bg-primary pd-l-10 pd-r-10">MASUK</button>
+            <div class="flex items-center" style="position: relative;" id="profileSection">
+                <a href="register.html" id="registerBtn" class="btn bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-xl transition-all shadow-md uppercase tracking-wider text-sm mr-2">DAFTAR</a>
+                <button id="authBtn" class="btn bg-primary py-2 px-4">MASUK</button>
+                <button id="userIcon" class="hidden text-white text-2xl p-2 transition-transform hover:scale-110">👤</button>
                 <div id="profileDropdown" class="profile-dropdown">
-                    <a href="profile.html" class="no-underline" style="cursor: pointer;">
-                        <div
-                            class="flex flex-col items-center pb-3 border-b border-white/10 transition-colors hover:bg-white/5 rounded-t-xl">
+                    <!-- Bagian Atas: Info User (Klik ke Profil) -->
+                    <a href="profile.html" class="no-underline block hover:bg-white/5 transition-colors border-b border-white/10 pt-4 pb-3">
+                        <div class="flex flex-col items-center">
                             <img id="userPhoto" src="img/logo.png" class="profile-avatar mb-2" alt="Avatar">
-                            <h4 id="userNameDisplay" class="text-sm font-bold text-white truncate w-full text-center">
-                                Memuat...</h4>
-                            <p id="userEmail" class="text-[10px] text-slate-400 truncate w-full text-center">
-                                email@user.com</p>
-                            <a href="seting.html"
-                                class="flex items-center gap-3 px-3 py-2 hover:bg-white/5 rounded-lg no-underline text-white text-sm"><span
-                                    class="text-sky-400">⚙️</span> Setting</a>
-                            <a href="edit-profile.html"
-                                class="flex items-center gap-3 px-3 py-2 hover:bg-white/5 rounded-lg no-underline text-white text-sm"><span
-                                    class="text-sky-400">⚙️</span> Edit Profil</a>
+                            <h4 id="userNameDisplay" class="text-sm font-bold text-white truncate w-full text-center px-4">Memuat...</h4>
+                            <p id="userEmail" class="text-[10px] text-slate-400 truncate w-full text-center px-4">email@user.com</p>
                         </div>
                     </a>
-                    <div class="dropdown-box mt-2">
 
+                    <!-- Bagian Tengah: Tombol Cepat (Setting & Edit Ke Samping) -->
+                    <div class="flex border-b border-white/10">
+                        <a href="seting.html" class="flex-1 flex items-center justify-center gap-2 py-3 hover:bg-white/5 no-underline text-white text-[10px] border-r border-white/10">
+                            <span class="text-sky-400">⚙️</span> Setting
+                        </a>
+                        <a href="edit-profile.html" class="flex-1 flex items-center justify-center gap-2 py-3 hover:bg-white/5 no-underline text-white text-[10px]">
+                            <span class="text-sky-400">✏️</span> Edit Profil
+                        </a>
+                    </div>
+
+                    <div class="dropdown-box mt-2">
                         <a href="admin/produk.html" id="admin-menu"
                             class="flex items-center gap-3 px-3 py-2 hover:bg-white/5 rounded-lg no-underline text-white text-sm hidden"><span
                                 class="text-sky-400">🛠️</span> Kelola Gudang</a>

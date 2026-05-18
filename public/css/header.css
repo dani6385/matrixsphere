@@ -57,6 +57,11 @@ body {
     position: relative; /* Anchor untuk dropdown absolute */
 }
 
+/* Sembunyikan ikon pencarian di PC secara default */
+#mobileSearchBtn {
+    display: none;
+}
+
 .nav-container {
     display: flex;
     justify-content: space-between;
@@ -64,6 +69,7 @@ body {
     max-width: 1200px;
     margin: auto;
     padding: 0 20px;
+    flex-wrap: nowrap; /* Mencegah elemen turun ke baris baru */
 }
 
 .nav-logo img {
@@ -79,11 +85,12 @@ body {
     object-fit: cover; /* Ensure image fills the circle */
     border: 2px solid #20a8d8; /* Thin cyan border */
     box-shadow: 0 0 8px rgba(32, 168, 216, 0.5); /* Subtle cyan glow */
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .nav-logo .logo-round:hover {
     box-shadow: 0 0 15px rgba(32, 168, 216, 0.8); /* Stronger glow on hover */
+    transform: scale(1.1); /* Efek membesar dari style.css */
 }
 
 /* Ensure brand text is always visible if md:inline is removed or for consistency */
@@ -178,16 +185,75 @@ body {
     transform: translateY(0); /* Kembali ke posisi asli saat hover */
 }
 @media screen and (max-width: 768px) {
+    .nav-container {
+        padding: 0 8px;
+        gap: 5px; /* Memperkecil jarak antar grup elemen */
+    }
+
+    .nav-left-group {
+        gap: 5px !important;
+        flex-shrink: 1; /* Memungkinkan grup kiri mengecil jika perlu */
+    }
+
+    .nav-actions {
+        gap: 4px;
+        flex-shrink: 0; /* Menjaga agar ikon aksi tidak terlalu gepeng */
+    }
+
+    /* Mengecilkan ukuran tombol Daftar & Masuk di HP */
+    #registerBtn, #authBtn {
+        padding: 6px 10px !important;
+        font-size: 10px !important;
+        border-radius: 8px !important;
+        white-space: nowrap;
+    }
+
+    /* Mengecilkan ukuran teks KATEGORI */
+    #categoryDropdown .btn {
+        font-size: 11px !important;
+        padding: 5px !important;
+    }
+
     .brand-text {
         display: none !important; /* Sembunyikan tulisan MatrixSphere */
     }
+
     .nav-logo img {
         height: 35px !important; /* Ukuran lebih pas untuk layar HP */
     }
 
+    /* Munculkan kembali ikon pencarian hanya di tampilan HP */
+    #mobileSearchBtn {
+        display: block;
+    }
+
+    /* --- RESPONSIVE SEARCH LOGIC --- */
+    .search-bar {
+        display: none; /* Sembunyikan bar pencarian default di HP */
+    }
+
+    /* Tampilkan bar pencarian saat mode search aktif */
+    .nav-container.search-mode .search-bar {
+        display: flex;
+        flex-grow: 1;
+        margin: 0 5px;
+        max-width: none;
+        align-items: center;
+    }
+
+    .nav-container.search-mode #closeSearch {
+        display: block !important;
+    }
+
+    /* Sembunyikan elemen lain agar ruang pencarian lega di HP */
+    .nav-container.search-mode .nav-left-group,
+    .nav-container.search-mode #profileSection,
+    .nav-container.search-mode #mobileSearchBtn {
+        display: none !important;
+    }
+
     .nav-container {
         padding: 0 10px;
-        gap: 10px;
     }
 
     /* Opsional: Membuat tombol tambah barang lebih kecil di HP */
@@ -239,32 +305,41 @@ body {
     border-radius: 16px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.5);
     z-index: 1001; /* Di atas elemen konten lain */
-    padding: 15px;
-    display: none; /* Sembunyikan secara default */
+    display: flex; /* Gunakan flex agar struktur tetap terjaga */
     flex-direction: column;
-    gap: 12px;
+    padding: 0;
+    overflow: hidden;
+
+    /* Efek Transisi Halus */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Memastikan elemen menu di dalam dropdown berbaris menurun (Column) */
 .dropdown-box {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    padding: 10px;
+    gap: 2px;
 }
 
-/* Aktifkan dropdown hanya jika user sudah login (memiliki class is-logged-in) dan di-hover */
+/* Tampilkan dropdown saat hover dengan transisi */
 #profileSection.is-logged-in:hover .profile-dropdown {
-    display: flex !important;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
 }
 
 /* Jembatan transparan untuk menutup celah 12px margin-top agar tidak flicker */
 .profile-dropdown::before {
     content: "";
     position: absolute;
-    top: -15px;
+    top: -20px; /* Diperlebar sedikit untuk menjangkau tombol */
     left: 0;
     width: 100%;
-    height: 15px;
+    height: 25px; /* Menutup celah sepenuhnya */
     background: transparent;
 }
 

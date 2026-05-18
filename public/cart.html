@@ -165,21 +165,7 @@
 
         btnCheckout.onclick = () => {
             if (keranjang.length === 0) return;
-            
-            let grandTotal = 0;
-            let listProduk = "";
-            keranjang.forEach(item => {
-                const total = item.harga * item.quantity;
-                grandTotal += total;
-                listProduk += `- ${item.nama} (${item.quantity}x) = Rp ${total.toLocaleString('id-ID')}%0A`;
-            });
-
-            const phone = "628212968545"; 
-            const message = `Halo MatrixSphere, saya ingin memesan:%0A%0A${listProduk}%0A` +
-                            `*Total Pembayaran:* Rp ${grandTotal.toLocaleString('id-ID')}%0A%0A` +
-                            `Mohon diproses, terima kasih!`;
-            
-            window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
+            window.location.href = 'checkout.html?id=cart';
         };
 
         window.onload = bacaIsiKeranjang;

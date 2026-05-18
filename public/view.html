@@ -115,7 +115,7 @@
             }
             localStorage.setItem('grup_keranjang', JSON.stringify(keranjang));
             window.updateCartBadge();
-            if (redirect) window.location.href = 'cart.html';
+            if (redirect) window.location.href = `checkout.html?id=${idProduk}&qty=${qty}`;
         };
 
         let currentProductData = null;

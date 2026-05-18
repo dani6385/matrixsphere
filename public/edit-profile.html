@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profil | MatrixSphere</title>
+    <link rel="icon" type="image/png" href="img/favicon.png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/ui-light.css">
+    <link rel="stylesheet" href="css/header.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        .profile-glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        .input-field {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: all 0.3s;
+        }
+        .input-field:focus {
+            border-color: #3b82f6;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+        }
+        /* Mencegah konflik flex centering dari style.css */
+        body { display: block !important; }
+        #mapEdit { z-index: 10; }
+    </style>
+</head>
+<body class="bg-slate-900 text-white font-sans min-h-screen flex flex-col">
+    <!-- Container Navbar Modular -->
+    <div id="navbar-container" class="w-full"></div>
+
+    <main class="flex-grow flex items-center justify-center px-5 pt-32 pb-12 w-full">
+        <!-- Loading Overlay -->
+        <div id="loadingOverlay" class="fixed inset-0 bg-slate-900 z-50 flex items-center justify-center">
+            <div class="text-sky-400 animate-pulse text-lg font-bold uppercase tracking-widest">Memuat...</div>
+        </div>
+
+        <div class="profile-glass w-full max-w-md p-8 rounded-3xl">
+            <div class="text-center mb-8">
+                <h1 class="text-2xl font-extrabold text-white mb-2">Edit Profil</h1>
+                <p class="text-slate-400 text-[10px] uppercase tracking-widest">Perbarui informasi akun MatrixSphere Anda</p>
+            </div>
+
+            <form id="editProfileForm" class="space-y-6">
+                <!-- Foto Profil Section -->
+                <div class="flex flex-col items-center mb-6">
+                    <div class="relative group cursor-pointer" id="photoContainer">
+                        <img id="photoPreview" src="img/logo.png" class="w-24 h-24 rounded-full object-cover border-2 border-sky-400/50 group-hover:opacity-75 transition-opacity shadow-lg" alt="Avatar">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <span class="text-[10px] font-bold uppercase bg-black/60 px-2 py-1 rounded">Ubah Foto</span>
+                        </div>
+                    </div>
+                    <input type="file" id="photoInput" class="hidden" accept="image/*">
+                    <p class="text-[9px] text-slate-500 mt-2 italic uppercase tracking-tighter">*Klik gambar di atas untuk memilih foto baru</p>
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2 ml-1">Nama Lengkap</label>
+                    <input type="text" id="displayNameInput" required class="input-field w-full px-5 py-3 rounded-xl text-sm" placeholder="Nama Anda">
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2 ml-1">Email Terdaftar (Terkunci)</label>
+                    <input type="email" id="emailDisplay" disabled class="input-field w-full px-5 py-3 rounded-xl text-sm opacity-50 cursor-not-allowed" placeholder="email@user.com">
+                </div>
+
+                <!-- Informasi Toko Section (Khusus Admin) -->
+                <div id="shopInfoSection" class="hidden border-t border-white/10 pt-6 space-y-4">
+                    <h3 class="text-sky-400 text-[10px] font-bold uppercase tracking-widest mb-2">Informasi Toko (Admin Only)</h3>
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2 ml-1">Deskripsi Toko</label>
+                        <textarea id="shopDescriptionInput" class="input-field w-full px-5 py-3 rounded-xl text-sm" rows="2" placeholder="Jelaskan secara singkat tentang toko Anda..."></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2 ml-1">Alamat & Panduan Pengambilan</label>
+                        <textarea id="shopAddressInput" class="input-field w-full px-5 py-3 rounded-xl text-sm" rows="3" placeholder="Contoh: Jl. Merdeka No. 123..."></textarea>
+                    </div>
+                    <div id="mapEdit" class="w-full h-48 rounded-xl border border-white/10 shadow-lg"></div>
+                    <div class="flex gap-2">
+                        <input type="text" id="latInput" readonly class="input-field w-1/2 px-4 py-2 rounded-lg text-[10px] opacity-70" placeholder="Lat">
+                        <input type="text" id="lngInput" readonly class="input-field w-1/2 px-4 py-2 rounded-lg text-[10px] opacity-70" placeholder="Lng">
+                    </div>
+                </div>
+
+                <div class="pt-4 space-y-3">
+                    <button type="submit" id="btnSaveProfile" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-blue-600/20 uppercase tracking-widest text-xs active:scale-95">
+                        Simpan Perubahan
+                    </button>
+                    <a href="profile.html" class="block w-full text-center text-slate-500 hover:text-white text-[10px] font-bold uppercase tracking-widest transition-colors py-2">
+                        Batal dan Kembali
+                    </a>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <footer class="py-10 text-center text-slate-500 text-[10px] uppercase tracking-widest">
+        &copy; 2024 MatrixSphere Digital Store. All rights reserved.
+    </footer>
+
+    <script type="module">
+        import { auth, app } from './js/navbar-loader.js';
+        import { onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { uploadToImgBB } from './js/imgbb.js';
+
+        const db = getFirestore(app);
+        const ADMIN_EMAIL = "dani6385@gmail.com";
+
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const editForm = document.getElementById('editProfileForm');
+        const photoInput = document.getElementById('photoInput');
+        const photoPreview = document.getElementById('photoPreview');
+        const photoContainer = document.getElementById('photoContainer');
+        const nameInput = document.getElementById('displayNameInput');
+        const emailDisplay = document.getElementById('emailDisplay');
+        const btnSave = document.getElementById('btnSaveProfile');
+        const shopInfoSection = document.getElementById('shopInfoSection');
+        const shopDescriptionInput = document.getElementById('shopDescriptionInput');
+        const shopAddressInput = document.getElementById('shopAddressInput');
+        const latInput = document.getElementById('latInput');
+        const lngInput = document.getElementById('lngInput');
+
+        let selectedFile = null;
+        let map, marker;
+
+        function initMap(lat, lng) {
+            if (map) return;
+            map = L.map('mapEdit').setView([lat, lng], 15);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OSM' }).addTo(map);
+            marker = L.marker([lat, lng], { draggable: true }).addTo(map);
+            marker.on('dragend', () => {
+                const pos = marker.getLatLng();
+                latInput.value = pos.lat.toFixed(6);
+                lngInput.value = pos.lng.toFixed(6);
+            });
+        }
+
+        // Memuat Data User Saat Ini
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                nameInput.value = user.displayName || "";
+                emailDisplay.value = user.email || "";
+                photoPreview.src = user.photoURL || "img/logo.png";
+
+                // Muat Data Toko Jika Admin
+                if (user.email === ADMIN_EMAIL) {
+                    shopInfoSection.classList.remove('hidden');
+                    try {
+                        const docRef = doc(db, "toko_settings", "lokasi_utama");
+                        const docSnap = await getDoc(docRef);
+                        
+                        let lat = -6.714104;
+                        let lng = 107.216327;
+
+                        if (docSnap.exists()) {
+                            const data = docSnap.data();
+                            shopDescriptionInput.value = data.deskripsi || "";
+                            shopAddressInput.value = data.alamat || "";
+                            lat = data.latitude || lat;
+                            lng = data.longitude || lng;
+                        }
+                        
+                        latInput.value = lat;
+                        lngInput.value = lng;
+                        initMap(parseFloat(lat), parseFloat(lng));
+                    } catch (err) {
+                        console.error("Gagal muat info toko:", err);
+                    }
+                }
+
+                loadingOverlay.style.display = 'none';
+                if (map) setTimeout(() => map.invalidateSize(), 100);
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        // Pemicu Input File saat Avatar diklik
+        photoContainer.onclick = () => photoInput.click();
+
+        // Pratinjau Gambar Sebelum Upload
+        photoInput.onchange = (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                selectedFile = file;
+                const reader = new FileReader();
+                reader.onload = (ev) => photoPreview.src = ev.target.result;
+                reader.readAsDataURL(file);
+            }
+        };
+
+        editForm.onsubmit = async (e) => {
+            e.preventDefault();
+            const user = auth.currentUser;
+            if (!user) return;
+
+            btnSave.disabled = true;
+            btnSave.innerText = "MENYIMPAN...";
+
+            try {
+                let photoURL = user.photoURL;
+
+                // Upload ke ImgBB hanya jika ada file baru yang dipilih
+                if (selectedFile) {
+                    photoURL = await uploadToImgBB(selectedFile);
+                }
+
+                // Perbarui profil di Firebase Auth
+                await updateProfile(user, {
+                    displayName: nameInput.value,
+                    photoURL: photoURL
+                });
+
+                // Simpan Info Toko Jika Admin
+                if (user.email === ADMIN_EMAIL) {
+                    await setDoc(doc(db, "toko_settings", "lokasi_utama"), {
+                        deskripsi: shopDescriptionInput.value,
+                        alamat: shopAddressInput.value,
+                        latitude: parseFloat(latInput.value),
+                        longitude: parseFloat(lngInput.value),
+                        updatedAt: new Date()
+                    });
+                }
+
+                alert("✅ Profil berhasil diperbarui!");
+                window.location.href = 'profile.html';
+            } catch (error) {
+                alert("❌ Gagal memperbarui profil: " + error.message);
+            } finally {
+                btnSave.disabled = false;
+                btnSave.innerText = "Simpan Perubahan";
+            }
+        };
+    </script>
+    <script type="module" src="js/navbar-loader.js"></script>
+</body>
+</html>

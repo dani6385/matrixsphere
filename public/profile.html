@@ -6,8 +6,6 @@
     <title>Profil Saya | MatrixSphere</title>
     <link rel="icon" type="image/png" href="img/favicon.png">
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/ui-light.css">
-    <link rel="stylesheet" href="css/header.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -18,6 +16,26 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
+        /* Gaya Tab Button */
+        .tab-btn {
+            color: #94a3b8; /* slate-400 */
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+        }
+        .tab-btn.active {
+            background: #0ea5e9 !important; /* sky-500 */
+            color: white;
+        }
+        /* Animasi Transisi Tab */
+        .tab-content {
+            animation: fadeIn 0.4s ease-out;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
         /* Mencegah konflik z-index leaflet dengan navbar */
         #mapProfile { 
             z-index: 10; 
@@ -34,41 +52,105 @@
             <div class="text-sky-400 animate-pulse text-lg font-bold uppercase tracking-widest">Memuat Profil...</div>
         </div>
 
-        <div class="profile-glass w-full max-w-md p-8 rounded-3xl text-center">
-            <div class="mb-6">
-                <div class="w-24 h-24 bg-sky-500/10 border-2 border-sky-400/30 rounded-full mx-auto flex items-center justify-center text-4xl text-sky-400 mb-4 shadow-lg shadow-sky-500/10">
-                    👤
-                </div>
-                <h1 id="welcomeText" class="text-2xl font-extrabold text-white mb-1">Selamat Datang</h1>
-                <p id="accountStatus" class="text-sky-400 text-sm font-bold tracking-widest uppercase">Pelanggan</p>
-            </div>
-
-            <div class="space-y-4 text-left bg-white/5 p-6 rounded-2xl border border-white/10 mb-8">
-                <div>
-                    <label class="text-slate-400 text-[10px] uppercase font-bold tracking-widest">Nama Lengkap</label>
-                    <p id="userName" class="text-lg font-semibold truncate">-</p>
-                </div>
-                <hr class="border-white/5">
-                <div>
-                    <label class="text-slate-400 text-[10px] uppercase font-bold tracking-widest">Email Terdaftar</label>
-                    <p id="userEmail" class="text-lg font-semibold truncate">-</p>
-                </div>
-                <hr class="border-white/5">
-                <div>
-                    <label class="text-slate-400 text-[10px] uppercase font-bold tracking-widest">Alamat & Panduan Lokasi Pengambilan Toko</label>
-                    <textarea id="shopAddressInput" class="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white text-sm focus:outline-none focus:border-sky-400 mt-2 transition-all" rows="3" placeholder="Contoh: Jl. Merdeka No. 123 (Samping Alfamart), Masuk gang warna biru..."></textarea>
-                    <div id="mapProfile" class="w-full h-64 md:h-80 rounded-2xl border border-white/10 my-4 shadow-xl"></div>
-                    <div class="flex gap-2 mb-3">
-                        <input type="text" id="latInput" readonly class="w-1/2 bg-white/5 border border-white/10 rounded-lg p-2 text-[10px] text-slate-400 focus:outline-none" placeholder="Latitude">
-                        <input type="text" id="lngInput" readonly class="w-1/2 bg-white/5 border border-white/10 rounded-lg p-2 text-[10px] text-slate-400 focus:outline-none" placeholder="Longitude">
+        <div class="profile-glass w-full max-w-5xl rounded-3xl overflow-hidden flex flex-col md:flex-row">
+            <!-- Sidebar Navigasi Tab -->
+            <div class="w-full md:w-72 bg-white/5 border-b md:border-b-0 md:border-r border-white/10 p-6 flex flex-col">
+                <div class="mb-8 text-center md:text-left">
+                    <div class="w-16 h-16 bg-sky-500/10 border border-sky-400/30 rounded-full flex items-center justify-center text-2xl text-sky-400 mb-4 mx-auto md:mx-0 shadow-lg">
+                        👤
                     </div>
-                    <button id="btnSimpanProfil" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-blue-600/20 uppercase tracking-widest text-[10px] mt-3 active:scale-95">
-                        SIMPAN LOKASI TOKO
+                    <h2 id="welcomeText" class="text-lg font-bold text-white truncate">Selamat Datang</h2>
+                    <p id="accountStatus" class="text-sky-400 text-[10px] font-bold tracking-widest uppercase">Pelanggan</p>
+                </div>
+
+                <nav class="flex md:flex-col gap-2 overflow-x-auto pb-2 md:pb-0">
+                    <button data-target="tab-akun" class="tab-btn active flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-wider whitespace-nowrap">
+                        <span>👤</span> Akun Saya
+                    </button>
+                    <button data-target="tab-pesanan" class="tab-btn flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-wider whitespace-nowrap">
+                        <span>📦</span> Riwayat Pesanan
+                    </button>
+                    <button data-target="tab-password" class="tab-btn flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-wider whitespace-nowrap">
+                        <span>🔑</span> Ubah Password
+                    </button>
+                </nav>
+
+                <div class="mt-auto pt-6 border-t border-white/10 hidden md:block">
+                    <button id="btnLogoutSidebar" class="flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-red-500/10 rounded-xl text-xs font-bold uppercase tracking-wider w-full transition-all">
+                        <span>🚪</span> Keluar Akun
                     </button>
                 </div>
             </div>
 
-            <button id="btnLogout" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-red-600/20 uppercase tracking-widest text-sm active:scale-95">
+            <!-- Area Konten Dinamis -->
+            <div class="flex-grow p-6 md:p-10">
+                <!-- Tab: Akun Saya -->
+                <div id="tab-akun" class="tab-content space-y-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/5 p-6 rounded-2xl border border-white/10">
+                        <div>
+                            <label class="text-slate-500 text-[10px] uppercase font-bold tracking-widest">Nama Lengkap</label>
+                            <p id="userName" class="text-white font-semibold text-lg truncate">-</p>
+                        </div>
+                        <div>
+                            <label class="text-slate-500 text-[10px] uppercase font-bold tracking-widest">Email Terdaftar</label>
+                            <p id="userEmail" class="text-white font-semibold text-lg truncate">-</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <h3 class="text-sky-400 text-[10px] font-bold uppercase tracking-widest">Informasi Lokasi Toko</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="text-slate-500 text-[10px] uppercase font-bold tracking-widest mb-2 block">Deskripsi Toko</label>
+                                <textarea id="shopDescriptionInput" readonly class="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white text-sm opacity-70 cursor-not-allowed" rows="2"></textarea>
+                            </div>
+                            <div>
+                                <label class="text-slate-500 text-[10px] uppercase font-bold tracking-widest mb-2 block">Alamat Pengambilan</label>
+                                <textarea id="shopAddressInput" readonly class="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white text-sm opacity-70 cursor-not-allowed" rows="2"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div id="mapProfile" class="w-full h-64 rounded-2xl border border-white/10 shadow-xl overflow-hidden"></div>
+                        
+                        <div class="flex gap-4">
+                            <div class="flex-1">
+                                <label class="text-slate-500 text-[8px] uppercase font-bold tracking-widest block mb-1">Latitude</label>
+                                <input type="text" id="latInput" readonly class="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-[10px] text-slate-400" placeholder="Lat">
+                            </div>
+                            <div class="flex-1">
+                                <label class="text-slate-500 text-[8px] uppercase font-bold tracking-widest block mb-1">Longitude</label>
+                                <input type="text" id="lngInput" readonly class="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-[10px] text-slate-400" placeholder="Lng">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab: Riwayat Pesanan -->
+                <div id="tab-pesanan" class="tab-content hidden">
+                    <div class="text-center py-20 bg-white/5 rounded-2xl border border-dashed border-white/20">
+                        <span class="text-4xl block mb-4">📦</span>
+                        <h3 class="text-white font-bold mb-2">Belum Ada Pesanan</h3>
+                        <p class="text-slate-400 text-sm">Riwayat transaksi Anda akan muncul di sini.</p>
+                    </div>
+                </div>
+
+                <!-- Tab: Ubah Password -->
+                <div id="tab-password" class="tab-content hidden">
+                    <div class="max-w-md space-y-6">
+                        <div class="bg-blue-500/10 border border-blue-500/20 p-4 rounded-xl text-xs text-blue-300">
+                            Gunakan tombol di bawah untuk mengirim email pemulihan kata sandi ke alamat Anda.
+                        </div>
+                        <button class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-4 rounded-xl transition-all shadow-lg uppercase tracking-widest text-xs">
+                            Kirim Link Reset Password
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Logout Mobile -->
+        <div class="mt-6 md:hidden w-full max-w-md px-5">
+            <button id="btnLogoutMobile" class="w-full bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white font-bold py-4 rounded-2xl border border-red-600/30 transition-all text-xs uppercase tracking-widest">
                 Keluar Akun
             </button>
         </div>
@@ -82,7 +164,7 @@
         // Mengambil instance auth yang sudah diinisialisasi di navbar-loader
         import { auth, app } from './js/navbar-loader.js';
         import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const db = getFirestore(app);
         const loadingOverlay = document.getElementById('loadingOverlay');
@@ -90,11 +172,12 @@
         const userName = document.getElementById('userName');
         const userEmail = document.getElementById('userEmail');
         const btnLogout = document.getElementById('btnLogout');
+        const shopDescriptionInput = document.getElementById('shopDescriptionInput');
         const shopAddressInput = document.getElementById('shopAddressInput');
-        const btnSimpanProfil = document.getElementById('btnSimpanProfil');
         const latInput = document.getElementById('latInput');
         const lngInput = document.getElementById('lngInput');
 
+        const ADMIN_EMAIL = "dani6385@gmail.com";
         // 1. Koordinat Default (Sukagalih Cikalongkulon)
         const defaultLat = "-6.714104";
         const defaultLng = "107.216327";
@@ -105,15 +188,8 @@
             attribution: '© OpenStreetMap'
         }).addTo(map);
 
-        // Marker yang bisa digeser
-        const marker = L.marker([parseFloat(defaultLat), parseFloat(defaultLng)], { draggable: true }).addTo(map);
-
-        // Update input saat marker digeser
-        marker.on('dragend', function() {
-            const pos = marker.getLatLng();
-            latInput.value = pos.lat.toFixed(6);
-            lngInput.value = pos.lng.toFixed(6);
-        });
+        // Marker statis (tidak bisa digeser di halaman profil)
+        const marker = L.marker([parseFloat(defaultLat), parseFloat(defaultLng)], { draggable: false }).addTo(map);
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
@@ -129,6 +205,7 @@
 
                     if (docSnap.exists()) {
                         const data = docSnap.data();
+                        shopDescriptionInput.value = data.deskripsi || "";
                         shopAddressInput.value = data.alamat || "";
                         latInput.value = data.latitude || defaultLat;
                         lngInput.value = data.longitude || defaultLng;
@@ -149,45 +226,39 @@
             }
         });
 
-        // 3. Logika Fungsi Tombol Simpan (Kunci Utama)
-        btnSimpanProfil.onclick = async () => {
-            const user = auth.currentUser;
+        // 3. Logika Tab Switching
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
 
-            btnSimpanProfil.innerText = "MENYIMPAN...";
-            btnSimpanProfil.disabled = true;
+        tabBtns.forEach(btn => {
+            btn.onclick = () => {
+                const targetId = btn.getAttribute('data-target');
 
-            try {
-                // 1. Simpan ke Firestore (Kunci Utama)
-                await setDoc(doc(db, "toko_settings", "lokasi_utama"), {
-                    alamat: shopAddressInput.value,
-                    latitude: latInput.value,
-                    longitude: lngInput.value
-                });
+                // Reset UI Tombol
+                tabBtns.forEach(b => b.classList.remove('active', 'bg-sky-500', 'text-white'));
+                tabBtns.forEach(b => b.classList.add('text-slate-400', 'hover:bg-white/5'));
+                btn.classList.add('active', 'bg-sky-500', 'text-white');
+                btn.classList.remove('text-slate-400', 'hover:bg-white/5');
 
-                // 2. Update LocalStorage (Hanya untuk cache lokal)
-                localStorage.setItem('shopAddress', shopAddressInput.value);
-                localStorage.setItem('shopLatitude', latInput.value);
-                localStorage.setItem('shopLongitude', lngInput.value);
+                // Ganti Konten
+                tabContents.forEach(content => content.classList.add('hidden'));
+                document.getElementById(targetId).classList.remove('hidden');
 
-                alert("✅ Lokasi toko berhasil diperbarui!");
-            } catch (error) {
-                alert("Gagal menyimpan alamat: " + error.message);
-            } finally {
-                btnSimpanProfil.innerText = "SIMPAN LOKASI TOKO";
-                btnSimpanProfil.disabled = false;
-            }
-        };
-
-        btnLogout.onclick = async () => {
-            if (confirm("Apakah Anda yakin ingin keluar dari akun MatrixSphere?")) {
-                try {
-                    await signOut(auth);
-                    window.location.href = 'index.html';
-                } catch (error) {
-                    alert("Gagal keluar akun: " + error.message);
+                // Paksa peta refresh jika tab akun dibuka
+                if (targetId === 'tab-akun' && map) {
+                    setTimeout(() => map.invalidateSize(), 200);
                 }
-            }
+            };
+        });
+
+        // 4. Logika Logout (Multi-Button)
+        const handleLogout = async () => {
+            if (!confirm("Apakah Anda yakin ingin keluar dari akun MatrixSphere?")) return;
+            try { await signOut(auth); window.location.href = 'index.html'; } 
+            catch (error) { alert("Gagal keluar akun: " + error.message); }
         };
+        document.getElementById('btnLogoutSidebar').onclick = handleLogout;
+        document.getElementById('btnLogoutMobile').onclick = handleLogout;
     </script>
     <script type="module" src="js/navbar-loader.js"></script>
 </body>

@@ -23,11 +23,8 @@ body {
     margin: 0;
     padding: 0;
     font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    height: auto;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    min-height: 100vh; /* Tetap pertahankan min-height untuk scroll halaman penuh */
+    display: block; /* Pastikan body berperilaku sebagai kontainer block secara default */
     overflow-y: auto;
     background: #0f172a;
 }
@@ -44,78 +41,6 @@ body {
     left: 0; 
     width: 100%; 
     height: 100%;
-}
-
-/* Header & Navbar */
-.main-header {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: 1000;
-    background: rgba(15, 23, 42, 0.95);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-
-/* Update bagian Navbar agar lebih rapi */
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 5%; /* Padding diperkecil sedikit */
-    height: 60px;    /* Memberikan tinggi tetap pada header */
-}
-.nav-left-group {
-    display: flex;
-    align-items: center;
-    gap: 40px; /* Jarak antara Logo dan Menu */
-}
-.nav-logo {
-    display: flex;
-    align-items: center;
-    color: white;
-    text-decoration: none;
-    font-weight: 800;
-    font-size: 1.2rem; /* Ukuran teks MatrixSphere */
-    letter-spacing: 1px;
-}
-
-/* Mengatur ukuran logo agar proporsional */
-.logo-img {
-    height: 45px;      /* Membatasi tinggi logo */
-    width: auto;       /* Lebar mengikuti aspek rasio */
-    margin-right: 15px; /* Memberi jarak antara logo dan teks */
-    object-fit: contain;
-    transition: transform 0.3s ease;
-}
-
-.logo-img:hover {
-    transform: scale(1.1); /* Efek sedikit membesar saat diarahkan kursor */
-}
-
-/* Memastikan teks navigasi berada di tengah secara vertikal */
-.nav-links {
-    display: flex;
-    align-items: center;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    gap: 20px;
-}
-
-.nav-links li {
-    margin-left: 25px;
-}
-
-.nav-links a {
-    color: #cbd5e1;
-    text-decoration: none;
-    font-size: 14px;
-    transition: color 0.3s;
-}
-
-.nav-links a:hover {
-    color: #3b82f6;
 }
 
 /* Card Login */
@@ -196,11 +121,6 @@ body {
 
 .btn:hover { opacity: 0.9; transform: translateY(-2px); }
 
-.btn-voucher { background-color: #3498db; }
-.btn-member { background-color: #2ecc71; }
-.btn-scan { background-color: #f1c40f; color: #333; }
-.btn-pay { background-color: #e74c3c; }
-
 /* Input Area (Dinamis dari script.js) */
 #input-area input {
     transition: border-color 0.3s, box-shadow 0.3s;
@@ -231,178 +151,6 @@ body {
     margin-top: 20px;
     padding-top: 10px;
 }
-@media screen and (max-width: 800px) {
-    .nav-links {
-        display: none; /* Sembunyikan menu di HP agar tidak menumpuk */
-    }
-    .nav-left-group {
-        gap: 10px;
-    }
-    .navbar {
-        flex-direction: column;
-        height: auto;
-        padding: 15px;
-        gap: 15px;
-    }
-    .nav-left-group {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-        width: 100%;
-    }
-    .search-container {
-        margin-left: 0;
-        width: 100%;
-    }
-    .search-container input {
-        width: 100%;
-    }
-    .nav-right-group {
-        width: 100%;
-    }
-    
-}
-
-.search-container {
-    display: flex;
-    align-items: center;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 20px;
-    padding: 2px 10px;
-    margin-left: 20px;
-}
-
-.search-container input {
-    background: transparent;
-    border: none;
-    color: white;
-    padding: 5px;
-    outline: none;
-    font-size: 14px;
-    width: 400px;
-    transition: width 0.4s ease;
-}
-
-.search-container input:focus {
-    width: 200px; /* Melebar saat diklik */
-}
-
-.search-container button {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    color: white;
-    font-size: 14px;
-}
-
-.search-container input::placeholder {
-    color: #cbd5e1;
-}
-/* --- GAYA DASAR --- */
-body {
-    font-family: -apple-system, BlinkMacSystemFont, "segoe ui", Roboto, Arial, sans-serif;
-    margin: 0;
-    color: white;
-}
-
-.background {
-    background-image: var(--img-background);
-    background-size: cover;
-    background-attachment: fixed;
-    background-position: center;
-    min-height: 100vh;
-}
-
-/* --- NAVIGASI LAYOUT KE SAMPING --- */
-/* --- HEADER FIX DI ATAS --- */
-.nav-bar-split {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 15px; /* Memberi ruang agar logo tidak terlalu mepet ke pinggir */
-    min-height: 60px; /* Header lebih ramping agar area produk lebih luas */
-    
-    /* Properti Fixed agar header tetap di atas saat di-scroll */
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
-
-    /* Efek Glassmorphism MatrixSphere */
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-/* --- MEMBERI JARAK AGAR KONTEN TIDAK TERTUTUP --- */
-.index-content {
-    margin-top: 100px; /* Jarak agar konten tidak tertutup header */
-    padding: 20px;
-}
-
-/* Memastikan body tidak memiliki margin default */
-body {
-    margin: 0;
-    padding: 0;
-}
-.nav-group-left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.auth-logo-nav {
-    height: 45px; 
-    width: auto; /* Agar logo tidak gepeng saat ditarik */
-    
-    /* Memberikan sedikit ruang agar tidak menempel ke tepi */
-    margin: 5px 0; 
-    
-    display: block;
-    transition: transform 0.3s ease;
-}
-
-/* Efek opsional: sedikit membesar saat diarahkan kursor */
-.auth-logo-nav:hover {
-    transform: scale(1.05);
-}
-/* --- PENCARIAN --- */
-.search-container {
-    display: flex;
-    align-items: center;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 6px;
-    padding: 2px 12px;
-    margin: 0 15px; /* Memberi jarak antara pencarian dengan tombol lainnya */
-}
-
-.search-input {
-    background: transparent;
-    border: none;
-    color: white;
-    padding: 8px;
-    outline: none;
-    /* Ubah ukuran di bawah ini */
-    width: 300px; /* Lebar default yang lebih panjang */
-    transition: width 0.4s ease-in-out;
-}
-
-/* Jika ingin kolom melebar lebih jauh lagi saat diklik */
-.search-input:focus {
-    width: 400px; 
-    background: rgba(255, 255, 255, 0.05); /* Sedikit highlight saat aktif */
-    border-radius: 4px;
-}
-.search-btn {
-    background: transparent;
-    border: none;
-    color: white;
-    cursor: pointer;
-}
-
 /* --- DROPDOWN (HIDDEN DEFAULT) --- */
 /* --- PERBAIKAN DROPDOWN --- */
 .dropdown {
@@ -455,38 +203,6 @@ body {
     backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.18) !important;
     border-radius: 12px;
-}
-/* Container Ikon */
-.nav-icons {
-    display: flex;
-    gap: 15px; /* Jarak antar ikon */
-    align-items: center;
-    margin-left: 10px;
-}
-
-/* Gaya Tombol Ikon */
-.icon-btn img {
-    width: 24px; /* Sesuaikan ukuran ikon */
-    height: 24px;
-    transition: transform 0.2s, opacity 0.2s;
-    filter: brightness(0) invert(1); /* Membuat ikon hitam menjadi putih jika perlu */
-}
-
-/* Efek saat kursor menyentuh ikon */
-.icon-btn:hover img {
-    transform: scale(1.2); /* Ikon sedikit membesar */
-    opacity: 0.8;
-}
-
-/* Menghilangkan background bawaan tombol jika menggunakan tag <a> */
-.icon-btn {
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.icon-btn:hover i {
-    color: #20a8d8; /* Warna saat disentuh kursor */
 }
 /* Pengaturan khusus perangkat */
 
