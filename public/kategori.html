@@ -57,22 +57,9 @@
     </main>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { auth } from './js/navbar-loader.js';
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { monitorGudang } from './js/inventory-manager.js';
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyApICU6wUb1dkvHhVDBhsDk9bwVMWAVKeo",
-            authDomain: "matrixsphere-shop.firebaseapp.com",
-            databaseURL: "https://matrixsphere-shop-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "matrixsphere-shop",
-            storageBucket: "matrixsphere-shop.firebasestorage.app",
-            messagingSenderId: "639761938336",
-            appId: "1:639761938336:web:347c97b498ddb1efd156c5"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
 
         const notifIcon = document.getElementById('notifIcon');
         const chatIcon = document.getElementById('chatIcon');
@@ -149,6 +136,8 @@
             renderProducts(filtered);
             updateCartBadge();
         });
+        
+        const escapeHTML = (str) => String(str).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
 
         function renderProducts(items) {
             if (items.length === 0) {
@@ -163,11 +152,11 @@
                     : originalImg;
                 return `
                 <div class="col-3 mr-b-10">
-                <a href="view.html?id=${item.id}" style="text-decoration:none; color:inherit; display:block;">
+                <a href="view.html?id=${encodeURIComponent(item.id)}" style="text-decoration:none; color:inherit; display:block;">
                     <div class="card bg-white text-dark" style="height:100%;">
                         <div class="card-body text-center" style="padding-bottom: 25px;">
                             <img src="${urlGambarAman}" style="width:100%; height:180px; object-fit:cover; border-radius:5px;" onerror="this.onerror=null;this.src='img/logo.png';">
-                            <h3 class="mr-t-10" style="font-size: 1.1rem;">${item.nama}</h3>
+                            <h3 class="mr-t-10" style="font-size: 1.1rem;">${escapeHTML(item.nama)}</h3>
                             <p class="text-primary text-bold">Rp ${Number(item.harga).toLocaleString('id-ID')}</p>
                         </div>
                     </div>
