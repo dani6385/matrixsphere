@@ -16,6 +16,10 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const ADMIN_EMAIL = "dani6385@gmail.com";
 
+// --- LOGIKA INISIALISASI TEMA GLOBAL ---
+const savedTheme = localStorage.getItem('theme') || 'dark';
+if (savedTheme === 'light') document.body.classList.add('light-mode');
+
 async function loadNavbar() {
     const container = document.getElementById('navbar-container');
     if (!container) return;

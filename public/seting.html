@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengaturan | MatrixSphere</title>
+    <link rel="icon" type="image/png" href="img/favicon.png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/header.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Tambahkan gaya khusus untuk halaman pengaturan jika diperlukan */
+        .profile-glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        .setting-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease; /* Tambahkan transisi untuk mode terang */
+        }
+        body.light-mode .setting-card {
+            background: #ffffff;
+            border-color: #e2e8f0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-white font-sans min-h-screen flex flex-col transition-colors duration-300">
+    <div id="navbar-container"></div>
+
+    <main class="flex-grow flex items-center justify-center px-5 pt-32 pb-12 w-full">
+        <!-- Loading Overlay (Opsional, disamakan dengan profile.html) -->
+        <div id="loadingOverlay" class="fixed inset-0 bg-slate-900 z-50 flex items-center justify-center hidden">
+            <div class="text-sky-400 animate-pulse text-lg font-bold uppercase tracking-widest">Memuat Pengaturan...</div>
+        </div>
+
+        <div class="profile-glass w-full max-w-5xl rounded-3xl overflow-hidden flex flex-col md:flex-row">
+            <!-- Sidebar Navigasi (Dikosongkan karena tidak ada tab di pengaturan) -->
+            <div class="w-full md:w-72 bg-white/5 border-b md:border-b-0 md:border-r border-white/10 p-6 flex flex-col">
+                <div class="mb-8 text-center md:text-left">
+                    <div class="w-16 h-16 bg-sky-500/10 border border-sky-400/30 rounded-full flex items-center justify-center text-2xl text-sky-400 mb-4 mx-auto md:mx-0 shadow-lg">
+                        ⚙️
+                    </div>
+                    <h2 class="text-lg font-bold text-white truncate">Pengaturan Aplikasi</h2>
+                    <p class="text-sky-400 text-[10px] font-bold tracking-widest uppercase">MatrixSphere</p>
+                </div>
+            </div>
+
+            <!-- Area Konten Pengaturan -->
+            <div class="flex-grow p-6 md:p-10">
+                <h1 class="text-2xl font-extrabold text-sky-400 mb-6 uppercase tracking-widest">Pengaturan</h1>
+                
+                <div class="setting-card">
+                    <h2 class="text-lg font-bold mb-4">Tampilan</h2>
+                    <div class="flex items-center justify-between">
+                        <span class="text-slate-300">Mode Gelap/Terang</span>
+                        <button id="themeToggle" class="bg-sky-600 hover:bg-sky-500 text-white font-bold py-2 px-4 rounded-lg transition-all shadow-md">
+                            Ganti Tema 🌓
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tambahkan pengaturan lain di sini -->
+                <div class="setting-card">
+                    <h2 class="text-lg font-bold mb-4">Notifikasi</h2>
+                    <p class="text-slate-400">Pengaturan notifikasi akan datang segera.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="py-10 text-center text-slate-500 text-[10px] uppercase tracking-widest">
+        &copy; 2024 MatrixSphere Digital Store. All rights reserved.
+    </footer>
+
+    <script type="module" src="js/navbar-loader.js"></script>
+    <script type="module">
+        const themeToggle = document.getElementById('themeToggle');
+
+        if (themeToggle) {
+            themeToggle.onclick = () => {
+                // Toggle class light-mode pada body
+                const isLight = document.body.classList.toggle('light-mode');
+                
+                // Simpan preferensi ke LocalStorage
+                localStorage.setItem('theme', isLight ? 'light' : 'dark');
+                
+                // Tidak perlu reload, perubahan CSS akan langsung diterapkan
+            };
+        }
+    </script>
+</body>
+</html>

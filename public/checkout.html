@@ -8,8 +8,43 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/header.css">
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .payment-card {
+            background: var(--card-bg, rgba(255, 255, 255, 0.03));
+            border: 1px solid var(--card-border, rgba(255, 255, 255, 0.1));
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+        .payment-card:hover {
+            background: var(--card-hover, rgba(255, 255, 255, 0.05));
+            border-color: rgba(59, 130, 246, 0.5);
+        }
+        .payment-card.selected {
+            border-color: #3b82f6;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        /* Gaya Khusus Mode Terang (Light Mode) */
+        body.light-mode {
+            background-color: #f8fafc !important;
+            color: #1e293b !important;
+            --card-bg: #ffffff;
+            --card-border: #e2e8f0;
+            --card-hover: #f1f5f9;
+        }
+        body.light-mode .glass {
+            background: rgba(255, 255, 255, 0.8);
+            border-color: #cbd5e1;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+        body.light-mode .text-white, 
+        body.light-mode .text-slate-300 { color: #1e293b !important; }
+        body.light-mode .text-slate-400 { color: #64748b !important; }
+        body.light-mode .bg-white\/5 { background-color: rgba(0,0,0,0.03); }
+    </style>
 </head>
-<body class="bg-slate-900 text-white font-sans">
+<body class="bg-slate-900 text-white font-sans transition-colors duration-300">
     <div id="navbar-container"></div>
 
     <main class="container mx-auto px-5 pt-32 pb-12 max-w-2xl">
@@ -41,6 +76,28 @@
                     <span id="finalPrice" class="text-3xl font-bold text-emerald-400">Rp 0</span>
                 </div>
 
+                <!-- Pilih Metode Pembayaran -->
+                <div class="mb-8">
+                    <h3 class="text-slate-400 text-[10px] font-bold uppercase tracking-widest mb-4 ml-1">Pilih Metode Pembayaran</h3>
+                    <div class="space-y-3">
+                        <div class="payment-card p-4 rounded-2xl flex items-center gap-4" onclick="selectPayment('QRIS (Otomatis/E-Wallet)', this)">
+                            <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-slate-900 text-xl font-black shadow-inner">QR</div>
+                            <div>
+                                <div class="text-sm font-bold text-white">QRIS (Otomatis/E-Wallet)</div>
+                                <div class="text-[10px] text-slate-400">Dana, OVO, GoPay, ShopeePay, LinkAja</div>
+                            </div>
+                            <div class="ml-auto text-emerald-400 text-[10px] font-bold uppercase tracking-tighter">Otomatis</div>
+                        </div>
+                        <div class="payment-card p-4 rounded-2xl flex items-center gap-4" onclick="selectPayment('Transfer Bank', this)">
+                            <div class="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center text-blue-400 text-2xl">🏦</div>
+                            <div>
+                                <div class="text-sm font-bold text-white">Transfer Bank</div>
+                                <div class="text-[10px] text-slate-400">Transfer manual (BCA, Mandiri, BRI)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <button id="btnConfirmOrder" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-4 rounded-xl transition shadow-lg uppercase tracking-widest text-sm">
                     Konfirmasi & Pesan (WA)
                 </button>
@@ -60,6 +117,15 @@
         const addressText = document.getElementById('addressText');
         const btnConfirmOrder = document.getElementById('btnConfirmOrder');
         const btnOpenMap = document.getElementById('btnOpenMap');
+
+        let selectedPaymentMethod = "";
+
+        // Global function agar bisa dipanggil dari atribut onclick di HTML
+        window.selectPayment = (method, element) => {
+            selectedPaymentMethod = method;
+            document.querySelectorAll('.payment-card').forEach(card => card.classList.remove('selected'));
+            element.classList.add('selected');
+        };
 
         let sellerLat = null;
         let sellerLng = null;
@@ -155,13 +221,18 @@
         // Logika Pengiriman Pesanan ke WhatsApp
         btnConfirmOrder.onclick = () => {
             if (itemsToOrder.length === 0) return;
+            if (!selectedPaymentMethod) {
+                alert("Silakan pilih metode pembayaran terlebih dahulu!");
+                return;
+            }
 
             let listProduk = itemsToOrder.map(item => `- ${item.nama} (${item.quantity}x)`).join('%0A');
             let totalHarga = itemsToOrder.reduce((sum, item) => sum + (item.harga * item.quantity), 0);
             
             const phone = "628212968545"; // Nomor WhatsApp Penjual
             const message = `Halo MatrixSphere,%0A%0ASaya ingin memesan (TAKE AWAY):%0A${listProduk}%0A%0A` +
-                            `*Total Bayar:* Rp ${totalHarga.toLocaleString('id-ID')}%0A%0A` +
+                            `*Total Bayar:* Rp ${totalHarga.toLocaleString('id-ID')}%0A` +
+                            `*Metode Pembayaran:* ${selectedPaymentMethod}%0A%0A` +
                             `*Catatan:* Pesanan akan saya ambil langsung di lokasi: _${addressText.innerText}_%0A%0A` +
                             `Mohon dikonfirmasi ketersediaannya, terima kasih!`;
 
